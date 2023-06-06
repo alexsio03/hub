@@ -1,12 +1,10 @@
 import Link from 'next/link';
+import Nav from '../components/nav';
 
 export default function Market() {
   return (
     <div>
-      <h1 className="title">
-        Go <Link href="/">home</Link>
-      </h1>
-      
+      <Nav></Nav>
     </div>
   )
 }
