@@ -4,12 +4,12 @@ import Nav from '../components/nav';
 import data from '../skin-info/skins.json';
 
 export default function Market() {
-  const autoDisp = [];
+  const autoDisplay = [];
   for (let i=0; i<20; i++){
-    let randNum = Math.floor(Math.random()*1713);
+    let randomSkin = Math.floor(Math.random()*1713);
     // 1713 is total skins in CSGO, found by this calc:
     // (Lines in src\app\skin-info\skins.json - 2)/13
-    autoDisp[i] = data[randNum];
+    autoDisplay[i] = data[randomSkin];
   }
   return (
     <div className='m-6'>
@@ -18,7 +18,7 @@ export default function Market() {
         SEARCH FILTERS and allat
       </div>
         <div className='flex flex-row flex-wrap'>
-          <Marketcard itemName="StatTrak™ M4A4 | Howl (Factory New)"></Marketcard>
+          {autoDisplay.map(randomSkin => <Marketcard itemNum={randomSkin}></Marketcard>)}
         </div>
     </div>
   )
