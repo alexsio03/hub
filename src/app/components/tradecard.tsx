@@ -1,4 +1,4 @@
-import Itemcard from "./itemcard"
+import ItemcardRandom from "./itemcardR"
 
 export default function Tradecard(props) {
     return (
@@ -10,17 +10,11 @@ export default function Tradecard(props) {
                 <div className="bg-[#452427] mx-6 my-3 p-3 rounded-xl">
                     <h1>Offering:</h1>
                     <div className="flex flex-row">
-                        <Itemcard itemname="Karambit Doppler" 
-                        price="$2500" steamprice="$3500"
-                        img="https://www.csgodatabase.com/images/knives/webp/Karambit_Doppler.webp"></Itemcard>
-                        <Itemcard itemname="Karambit Doppler" 
-                        price="$2500" steamprice="$3500"
-                        img="https://www.csgodatabase.com/images/knives/webp/Karambit_Doppler.webp"></Itemcard>
+                        <ItemcardRandom></ItemcardRandom>
+                        <ItemcardRandom></ItemcardRandom>
                     </div>
                     <h1>Requesting:</h1>
-                    <Itemcard itemname="Bayonet Doppler" 
-                    price="$1700" steamprice="$2800"
-                    img="https://www.csgodatabase.com/images/knives/webp/Bayonet_Doppler.webp"></Itemcard>
+                        <ItemcardRandom></ItemcardRandom>
                 </div>
             </div>
         </div>
