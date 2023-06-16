@@ -8,10 +8,6 @@ export default function Nav() {
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
 
-  if(loading) {
-    return <div>Loading...</div>
-  }
-
   return <div className="px-2 py-1 font-medium text-slate-400 flex flex-row">
       <a
         href="../"
@@ -31,9 +27,11 @@ export default function Nav() {
       >
         Trades
       </a>
-      <a className="flex px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 ml-auto flex-row">
-        {user ? <><img className='mr-2 rounded-full h-8 w-8' src={user.photoURL}></img><button onClick={() => auth.signOut()}>{user.displayName}: Logout</button></> 
-        : <button onClick={signIn}>Login</button>}
+      <a className='px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 ml-auto mr-10' href='/auth/steam'>Steam</a>
+      <a className="flex px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 flex-row">
+        {user 
+        ? <><img className='mr-2 rounded-full h-8 w-8' src={user.photoURL}></img><button onClick={() => auth.signOut()}>{user.displayName}: Logout</button></> 
+        : loading ? <>Loading...</> : <button onClick={signIn}>Login</button>} 
       </a>
     </div>
   }
