@@ -19,6 +19,7 @@
     "express-session": "^1.17.3",
     "firebase": "^9.22.2",
     "next": "13.4.4",
+    "nodemon": "^2.0.22",
     "passport": "^0.6.0",
     "passport-steam": "^1.0.17",
     "postcss": "8.4.24",
