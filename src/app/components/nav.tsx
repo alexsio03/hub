@@ -27,6 +27,12 @@ export default function Nav() {
       >
         Trades
       </a>
+      <a
+        href="./inventory"
+        className="block px-3 py-3 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+      >
+        Inventory
+      </a>
       <a className='px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 ml-auto mr-10' href='/auth/steam'>Steam</a>
       <a className="flex px-3 py-2 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 flex-row">
         {user 
