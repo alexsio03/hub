@@ -14,7 +14,7 @@ export default function ItemcardRandom() {
     let priceBuff = null;
 
     for (let skin in priceData){
-        if (skin.includes(itemName)){
+        if (skin == itemName){
             // Steam pricing
             if (priceData[skin].steam.last_24h != 0){
                 priceSteam = priceData[skin].steam.last_24h;
