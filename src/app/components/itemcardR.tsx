@@ -16,31 +16,31 @@ export default function ItemcardRandom() {
     for (let skin in priceData){
         if (skin == itemName){
             // Steam pricing
-            if (priceData[skin].steam.last_24h != 0){
-                priceSteam = priceData[skin].steam.last_24h;
+            if (priceData[skin as keyof typeof priceData]['steam']['last_24h'] != 0){
+                priceSteam = priceData[skin as keyof typeof priceData]['steam']['last_24h'];
                 steamPriceRecency = "(24h)";
-            } else if (priceData[skin].steam.last_7d != 0){
-                priceSteam = priceData[skin].steam.last_7d;
+            } else if (priceData[skin as keyof typeof priceData]['steam']['last_7d'] != 0){
+                priceSteam = priceData[skin as keyof typeof priceData]['steam']['last_7d'];
                 steamPriceRecency = "(7d)";
-            } else if (priceData[skin].steam.last_30d != 0){
-                priceSteam = priceData[skin].steam.last_30d;
+            } else if (priceData[skin as keyof typeof priceData]['steam']['last_30d'] != 0){
+                priceSteam = priceData[skin as keyof typeof priceData]['steam']['last_30d'];
                 steamPriceRecency = "(30d)";
-            } else if (priceData[skin].steam.last_90d != 0){
-                priceSteam = priceData[skin].steam.last_90d;
+            } else if (priceData[skin as keyof typeof priceData]['steam']['last_90d'] != 0){
+                priceSteam = priceData[skin as keyof typeof priceData]['steam']['last_90d'];
                 steamPriceRecency = "(90d)";
             } else {
                 priceSteam = "Unknown";
                 steamPriceRecency = "(>90d)";
             }
-
             // Buff pricing
-            if (priceData[skin].buff163.starting_at.price != null){
-                priceBuff =  priceData[skin].buff163.starting_at.price;
-            } else {
+            try {
+                priceBuff = priceData[skin as keyof typeof priceData]['buff163']['starting_at.price'];
+            } catch (error){
                 priceBuff = "Unknown";
             }
         }
     }
+    
     return (
         <div className="bg-neutral-900 m-3 p-1 items-center rounded-xl w-74 h-60">
             <div className="flex flex-col p-3">

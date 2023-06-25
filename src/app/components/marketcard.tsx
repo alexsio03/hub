@@ -1,5 +1,5 @@
 import Itemcard from "./itemcard"
 
-export function Marketcard(listing) {
+export function Marketcard() {
 
 }
