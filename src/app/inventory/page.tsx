@@ -1,7 +1,7 @@
 import Nav from '../components/nav';
 import data from '../helpers/wakInv.json'; // Won't be needed once inventory accessing works with loadinventory.js
-import LoadInventory from '../helpers/loadinventory.js';
-import Inventorycard from "../components/inventorycard";
+import Inventorycard from '../components/inventorycard';
+import SetIcon from '../helpers/seticon.js';
 
 export default function Inventory(/*steamid*/){
   // const data = LoadInventory(); // THIS WORKS, but commented out to not get rate limited
@@ -29,12 +29,4 @@ export default function Inventory(/*steamid*/){
       </div>
     </div>
   )
-}
-
-// Will return big item icon if it exists
-function SetIcon(item: string){
-  if (data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].icon_url_large == undefined){
-    return data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].icon_url;
-  }
-  return data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].icon_url_large;
 }
