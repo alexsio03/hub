@@ -18,8 +18,9 @@ export default async function IconRequest(skinName){
   const urlData = ExtraEncode(encodeURIComponent(skinName));
   const url = url1 + urlData;
 
+  // Write url to file, helps with debugging
   const fs = require('fs');
-  fs.writeFile('src/app/helpers/FULLHTML.txt', "\n" + url + "\n\n", {flag: 'a+'}, (err) => {
+  fs.writeFile('src/app/helpers/urls.txt', "\n" + url + "\n\n", {flag: 'a+'}, (err) => {
     if (err) throw err;
   });
 
