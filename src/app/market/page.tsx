@@ -11,6 +11,10 @@ export default function Market() {
       </div>
         <div className='flex flex-row flex-wrap'>
           <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
         </div>
     </div>
   )

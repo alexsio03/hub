@@ -25,7 +25,11 @@ export default function SetPrice(itemName){
                 steamPriceRecency = "(>90d)";
             }
             // Buff pricing
-            priceBuff = "$" + PriceJSON[skin]['buff163']['starting_at']['price'];
+            try{
+                priceBuff = "$" + PriceJSON[skin]['buff163']['starting_at']['price'];
+            } catch(err){
+                console.log("\n\nsetprice.js: " + err + "\n\n");
+            }
         }
     }
     return {
