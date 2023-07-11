@@ -20,6 +20,7 @@ export default async function RandomSkin(){
 }
 
 function addSkinToList(name, icon){
+  if (icon.length != 67){
     const fs = require('fs');
     fs.readFile('../TradingApp/src/app/skin-info/skinIcons.json', 'utf8', (err, data) => {
       if (err) throw err;
@@ -30,4 +31,5 @@ function addSkinToList(name, icon){
         if (err) throw err;
       });
     });
+  }
 }
