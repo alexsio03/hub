@@ -4,13 +4,11 @@ var passport = require('passport');
 var session = require('express-session');
 var passportSteam = require('passport-steam');
 var SteamStrategy = passportSteam.Strategy;
-const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
-var steamprof;
 
 app.prepare().then(() => {
   passport.serializeUser(function(user, done) {
@@ -47,15 +45,10 @@ app.prepare().then(() => {
   server.use("/auth", steamRoutes(server));
 
   server.get("/api/steam", (req, res) => {
-    if(req.isAuthenticated()) {
-        res.send(req.session);
-    } else {
-        res.status(401).json({message: "Unauthorized"})
-    }
+    res.send(req.session);
   });
 
   server.get("*", (req, res) => {
-    //console.log(req.session)
     return handle(req, res);
   });
 
