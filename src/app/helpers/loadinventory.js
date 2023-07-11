@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
 
+// Loads steam inventory
 export default function LoadInventory(/*steamid*/){
   let steamid = '76561198186248643'; // sample steam id
   const url1 = 'http://steamcommunity.com/inventory/';
@@ -8,11 +9,8 @@ export default function LoadInventory(/*steamid*/){
 
   axios.get(url)
   .then((getResponse) => {
-    // console.log("\n\n\nSTART OF DATA\n\n\n");
-    // console.log(getResponse.data);
-    // console.log("\n\n\nEND OF DATA\n\n\n");
     data = getResponse.data;
     return data;
   })
-  .catch(err=>console.log("\n\n\nloadinventory.js: " + err + "\n\n\n"))
+  .catch(err=>console.log("\n\nERROR IN loadinventory.js: " + err + "\n\n"))
 }

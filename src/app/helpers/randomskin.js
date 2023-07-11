@@ -1,30 +1,33 @@
-import data from '../skin-info/skins.json';
+import data from '../skin-info/skinPrices.json';
+import IconRequest from './iconrequest.js';
+import GetIconFromJSON from './checkiconjson.js';
 
-export default function RandomSkin(){
-    const randomSkin = Math.floor(Math.random()*1713);
-    // 1713 is total skins in CSGO, found by this calc:
-    // (Lines in src\app\skin-info\skins.json - 2)/13
-    const itemToDisplay = data[randomSkin];
-    const itemMinFloat = itemToDisplay.min_float;
-    const itemMaxFloat = itemToDisplay.max_float;
-    const floatRange = itemMaxFloat - itemMinFloat;
-    const rf = itemMinFloat + Math.random()*floatRange;
-    let rw = "";
+// Gets random skin name using numskinsingame and uses IconRequest to get its icon
+export default async function RandomSkin(){
+  const randomSkinNumber = Math.floor(Math.random()*23743); // 23743 is found using numskinsingame.js
+  const allSkinNames = Object.keys(data);
+  const randomSkinName = allSkinNames[randomSkinNumber];
+  const randomSkinIcon = await IconRequest(randomSkinName);
 
-    if (rf < 0.07){
-        rw = "(Factory New)";
-    } else if (rf >= 0.07 && rf < 0.15){
-        rw = "(Minimal Wear)";
-    } else if (rf >= 0.15 && rf < 0.38){
-        rw = "(Field-Tested)";
-    } else if (rf >= 0.38 && rf < 0.45){
-        rw = "(Well-Worn)";
-    } else {
-        rw = "(Battle-Scarred)";
-    }
+  if (GetIconFromJSON(randomSkinName) == undefined){
+    addSkinToList(randomSkinName, randomSkinIcon);
+  }
 
-    return {
-        'RandomSkin': randomSkin,
-        'RandomWear': rw
-    };
+  return {
+    itemName: randomSkinName,
+    itemIcon: randomSkinIcon
+  }
+}
+
+function addSkinToList(name, icon){
+    const fs = require('fs');
+    fs.readFile('../TradingApp/src/app/skin-info/skinIcons.json', 'utf8', (err, data) => {
+      if (err) throw err;
+      const removeEnd = data.substring(0, data.length-2);
+      const newEnd =  ",\n\t\"" + name + "\": \"" + icon + "\"\n}";
+      const newFileContents = removeEnd + newEnd;
+      fs.writeFile('../TradingApp/src/app/skin-info/skinIcons.json', newFileContents, (err) => {
+        if (err) throw err;
+      });
+    });
 }
