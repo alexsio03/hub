@@ -6,5 +6,5 @@ export default function NumberSkins(){
     for (let skin in SkinList){
         num++;
     }
-    console.log("\n\n\n" + num + "\n\n\n");
+    console.log("\n\n" + num + "\n\n");
 }

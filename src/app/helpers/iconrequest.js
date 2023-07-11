@@ -6,11 +6,6 @@ var fullURL;
 // Finds icon of a skin when given the name
 export default async function IconRequest(skinName){
   if (GetIconFromJSON(skinName) != undefined){
-    const fd = require('fs');
-    fd.writeFile('src/app/helpers/HAPPEN.txt', "DUPLICATE WAS CAUGHT", {flag: 'a+'}, (err) => {
-      if (err) throw err;
-    });
-
     return GetIconFromJSON(skinName);
   }
 
@@ -20,7 +15,7 @@ export default async function IconRequest(skinName){
 
   // Write url to file, helps with debugging
   const fs = require('fs');
-  fs.writeFile('src/app/helpers/urls.txt', "\n" + url + "\n\n", {flag: 'a+'}, (err) => {
+  fs.writeFile('src/app/helpers/urls.txt', "\n" + url + "\n", {flag: 'a+'}, (err) => {
     if (err) throw err;
   });
 
