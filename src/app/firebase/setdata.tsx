@@ -15,16 +15,10 @@ export const signIn = async() => {
         email: result.user.email,
         name: result.user.displayName,
         verified: result.user.emailVerified,
-        photo_link: result.user.photoURL,
-        steam_info: 
-        {
-          id: null,
-          url: null,
-          name: null
-        }
+        photo_link: result.user.photoURL
       }
       try {
-        setDoc(doc(db, "users", result.user.uid), data);
+        setDoc(doc(db, "users", result.user.uid), data, { merge: true });
       } catch (e) {
         console.error("Error adding document: ", e);
       }

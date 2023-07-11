@@ -7,7 +7,7 @@ function routes(app) {
     function(req, res) {});
 
     router.get('/steam/return', passport.authenticate('steam', {failureRedirect: '/'}), function (req, res) {
-        res.redirect("/")
+        res.redirect("/steamlogin")
     });
 
     return router;
