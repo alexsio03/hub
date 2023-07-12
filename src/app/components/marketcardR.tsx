@@ -1,4 +1,4 @@
-import ItemcardRandom from "./itemcardR"
+import ItemcardRandom from "./itemcardR";
 
 export default function MarketcardRandom() {
     return (

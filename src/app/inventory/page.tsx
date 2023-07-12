@@ -1,10 +1,10 @@
 import Nav from '../components/nav';
 import data from '../helpers/wakInv.json'; // Won't be needed once inventory accessing works with loadinventory.js
 import Inventorycard from '../components/inventorycard';
-import SetIcon from '../helpers/seticon.js';
+import SetIcon from '../helpers/icons/seticon.js';
 
 export default function Inventory(/*steamid*/){
-  // const data = LoadInventory(); // THIS WORKS, but commented out to not get rate limited
+  // const data = LoadInventory(/*steamid*/); // THIS WORKS, but commented out to not get rate limited
   const itemsInInventory = [];
   let i = 0;
   for (let item in data['rgDescriptions']){

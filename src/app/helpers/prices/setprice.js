@@ -1,4 +1,4 @@
-import PriceJSON from '../skin-info/skinPrices.json';
+import PriceJSON from './skinPrices.json';
 
 // Parses JSON for steam price and last steam purchase, also finds buff price
 export default function SetPrice(itemName){
@@ -28,7 +28,7 @@ export default function SetPrice(itemName){
             try{
                 priceBuff = "$" + PriceJSON[skin]['buff163']['starting_at']['price'];
             } catch(err){
-                console.log("\n\nsetprice.js: " + err + "\n\n");
+                console.log("\n\nsetprice.js (buff163): " + err + "\n\n");
             }
         }
     }

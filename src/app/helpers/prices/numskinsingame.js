@@ -1,4 +1,4 @@
-import SkinList from '../skin-info/skinPrices.json';
+import SkinList from './skinPrices.json';
 
 // 23743 as of 6/26/2023, maybe update with priceupdate.js
 export default function NumberSkins(){
