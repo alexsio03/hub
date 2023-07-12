@@ -1,4 +1,4 @@
-import SetPrice from '../helpers/setprice.js'
+import SetPrice from '../helpers/prices/setprice.js';
 
 export default function Itemcard(item: { itemInfo: any; }) {
     let myinfo = item.itemInfo;

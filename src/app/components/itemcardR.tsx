@@ -1,4 +1,4 @@
-import SetPrice from '../helpers/setprice.js'
+import SetPrice from '../helpers/prices/setprice.js';
 import RandomSkin from '../helpers/randomskin.js';
 
 export default async function ItemcardRandom() {

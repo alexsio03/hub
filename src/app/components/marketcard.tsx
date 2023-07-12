@@ -1,4 +1,4 @@
-import Itemcard from "./itemcard"
+import Itemcard from "./itemcard";
 
 export function Marketcard() {
 
