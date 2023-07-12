@@ -1,3 +1,4 @@
+import Itemcard from "./itemcard";
 import ItemcardRandom from "./itemcardR";
 
 export default function Tradecard(props) {
@@ -9,7 +10,10 @@ export default function Tradecard(props) {
             <div className="flex flex-col">
                 <div className="bg-[#452427] mx-6 my-3 p-3 rounded-xl">
                     <h1>Offering:</h1>
+                    <ItemcardRandom></ItemcardRandom>
                     <h1>Requesting:</h1>
+                    <ItemcardRandom></ItemcardRandom>
+                    <ItemcardRandom></ItemcardRandom>
                 </div>
             </div>
         </div>
