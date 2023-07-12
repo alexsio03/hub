@@ -34,31 +34,16 @@ export default function Inventory(){
     getUser().then(async (user) => {
         var json;
         if (user) {
-          const inventoryData = await LoadInventory(user.steam_info.id);
-          if(inventoryData) {
-            const jsonData = JSON.stringify(inventoryData);
-            const storageRef = ref(storage, `user_inventories/${user.user_id}.json`);
-
-            uploadString(storageRef, jsonData, 'raw', { contentType: 'application/json' })
-              .then(() => {
-                console.log('JSON uploaded successfully!');
-              })
-              .catch(error => {
-                console.error('Error uploading JSON:', error);
-              });
-            json = jsonData;
-          } else {
-            const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
-            try {
-              const response = await axios.get('/fb-proxy', {
-                params: {
-                  downloadURL: downloadURL,
-                },
-              });
-              json = response.data;
-            } catch (error) {
-              console.error('Error occurred:', error);
-            }
+          const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
+          try {
+            const response = await axios.get('/fb-proxy', {
+              params: {
+                downloadURL: downloadURL,
+              },
+            });
+            json = response.data;
+          } catch (error) {
+            console.error('Error occurred:', error);
           }
           var newItems = [];
           var length = Object.keys(json.descriptions).length

@@ -9,7 +9,12 @@ export default function Tradecard(props) {
             <div className="flex flex-col">
                 <div className="bg-[#452427] mx-6 my-3 p-3 rounded-xl">
                     <h1>Offering:</h1>
+                    <div className="flex flex-row">
+                        <ItemcardRandom></ItemcardRandom>
+                        <ItemcardRandom></ItemcardRandom>
+                    </div>
                     <h1>Requesting:</h1>
+                        <ItemcardRandom></ItemcardRandom>
                 </div>
             </div>
         </div>
