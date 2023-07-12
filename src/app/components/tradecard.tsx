@@ -1,3 +1,4 @@
+import Itemcard from "./itemcard";
 import ItemcardRandom from "./itemcardR";
 
 export default function Tradecard(props) {

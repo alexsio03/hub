@@ -1,29 +1,44 @@
-import PriceData from './skinPrices.json';
+import fs from 'fs';
+import { promisify } from 'util';
+
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
 
 // Edits prices json so that only valid items will
 // remain as keys in the json
-export default function RemoveBadItems(){
-    const badItems = GetBadItems();
-
-    for (var badItem in badItems){
-        for (item in PriceData){
-            if (badItem == item){
-                delete PriceData[item];
-                continue;
-            }
-        }
+export default async function RemoveBadItems(priceData){
+  try {
+    const badItems = await GetBadItems();
+  
+    for await (const badItem of badItems) {
+      delete priceData[badItem];
     }
+
+    await WritePriceDataToJsonFile(priceData);
+  } catch (err) {
+    console.log(`\nhelpers/prices/removebaditems.js: ${err}\n`);
+  }
 }
 
-function GetBadItems(){
-    const fs = require('fs');
+// Fills array with each element being a line in baditems.txt
+// These "bad items" are things like pickem trophies that can't be listed
+async function GetBadItems(){
+  try {
+    const data = await readFileAsync('../TradingApp/src/app/helpers/prices/baditems.txt', 'utf8');
+    const lines = data.split('\n');
+    const nonEmptyLines = lines.map(line => line.trim()).filter(line => line !== '');
+    return nonEmptyLines;
+  } catch (err) {
+    console.log(`\nhelpers/prices/removebaditems.js: ${err}\n`);
+    return [];
+  }
+}
 
-    // Read the text file
-    fs.readFile('baditems.txt', 'utf8', (err, data) => {
-        if (err) { console.log(err); return; }
-        const lines = data.split('\n');
-        const nonEmptyLines = lines.filter(line => line.trim() !== '');
-
-        return nonEmptyLines;
-    });
+async function WritePriceDataToJsonFile(pricejson){
+  try {
+    const jsonData = JSON.stringify(pricejson, null, 2);
+    await writeFileAsync('../TradingApp/src/app/helpers/prices/skinPrices.json', jsonData, 'utf8');
+  } catch (err) {
+    console.log(`\n\nhelpers/prices/removebaditems.js: ${err}\n`);
+  }
 }
