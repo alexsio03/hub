@@ -1,7 +1,7 @@
 "use client"
 import axios from "axios";
 import {useRouter} from 'next/navigation'
-import {initFirebase,initDB} from '../firebase/config';
+import {initFirebase,initDB} from '../fb/config';
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth} from "firebase/auth";
 import {doc,updateDoc} from "firebase/firestore";
@@ -10,7 +10,7 @@ initFirebase();
 const db = initDB();
 export default function Home() {
     const auth = getAuth();
-    const [user, loading] = useAuthState(auth);
+    const [user] = useAuthState(auth);
     const router = useRouter()
 
     const fetchData = async () => {

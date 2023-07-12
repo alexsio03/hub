@@ -1,32 +1,100 @@
+"use client"
 import Nav from '../components/nav';
-import data from '../helpers/wakInv.json'; // Won't be needed once inventory accessing works with loadinventory.js
 import Inventorycard from '../components/inventorycard';
-import SetIcon from '../helpers/icons/seticon.js';
+import SetIcon from '../helpers/seticon.js';
+import LoadInventory from '../helpers/loadinventory'
+import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getAuth } from 'firebase/auth';
+import { initDB, initFirebase } from '../fb/config';
+import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-export default function Inventory(/*steamid*/){
-  // const data = LoadInventory(/*steamid*/); // THIS WORKS, but commented out to not get rate limited
-  const itemsInInventory = [];
-  let i = 0;
-  for (let item in data['rgDescriptions']){
-    let marketable = data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].marketable;
+initFirebase();
+const db = initDB();
+const storage = getStorage();
 
-    let currentItem = {
-      itemIcon: SetIcon(item),
-      itemName: data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].market_name,
-      itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
-      itemTradeStatus: data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].tradable, // 0 or 1 (1 can be traded)
-      //itemDateTradable: marketable ? data['rgDescriptions'][item as keyof typeof data['rgDescriptions']].cache_expiration : 'notmarketable',
+export default function Inventory(){
+  const auth = getAuth();
+  const [user] = useAuthState(auth);
+  const [inventory, setInventory] = useState([]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (user) {
+        const dbUser = await doc(db, "users", user.uid);
+        const userSnap = await getDoc(dbUser);
+        return userSnap.data();
+      } else {
+        return null;
+      }
     };
-    itemsInInventory[i] = currentItem;
-    i++;
-  }
+
+    getUser().then(async (user) => {
+        var json;
+        if (user) {
+          const inventoryData = await LoadInventory(user.steam_info.id);
+          if(inventoryData) {
+            const jsonData = JSON.stringify(inventoryData);
+            const storageRef = ref(storage, `user_inventories/${user.user_id}.json`);
+
+            uploadString(storageRef, jsonData, 'raw', { contentType: 'application/json' })
+              .then(() => {
+                console.log('JSON uploaded successfully!');
+              })
+              .catch(error => {
+                console.error('Error uploading JSON:', error);
+              });
+            json = jsonData;
+          } else {
+            const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
+            try {
+              const response = await axios.get('/fb-proxy', {
+                params: {
+                  downloadURL: downloadURL,
+                },
+              });
+              json = response.data;
+            } catch (error) {
+              console.error('Error occurred:', error);
+            }
+          }
+          var newItems = [];
+          var length = Object.keys(json.descriptions).length
+          for (var i = 0; i < length; i++) {
+            var invItem = json.descriptions[i]
+            let marketable = invItem.marketable;
+
+            let currentItem = {
+              itemIcon: SetIcon(invItem),
+              itemName: invItem.market_name,
+              itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
+              itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
+              itemDateTradable: marketable ? invItem.cache_expiration : 'notmarketable',
+            };
+            newItems[i] = currentItem;
+          }
+          setInventory(newItems);
+      } else {
+        console.log("User not found.");
+      }
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error);
+      });
+  }, [user]);
 
   return(
-    <div className='m-6'>
+    <>
       <Nav></Nav>
-      <div className='flex flex-row flex-wrap'>
-        {itemsInInventory.map(itemInformation=><Inventorycard itemInfo={itemInformation}></Inventorycard>)}
+      <div className='m-6'>
+        <div className='flex flex-row flex-wrap'>
+          {inventory.map((itemInformation, index) => (
+            <Inventorycard key={index} itemInfo={itemInformation} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
