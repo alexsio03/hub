@@ -2,8 +2,6 @@ import data from '../wakInv.json'; // Won't be needed once inventory accessing w
 
 // Returns large icon if it exists, normal icon otherwise
 export default function SetIcon(item){
-    if (data['rgDescriptions'][item].icon_url_large == undefined){
-      return data['rgDescriptions'][item].icon_url;
-    }
-    return data['rgDescriptions'][item].icon_url_large;
-  }
+  const description = data['rgDescriptions'][item];
+  return description.icon_url_large || description.icon_url;
+}
