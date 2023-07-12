@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth"; 
-import { signIn } from '../firebase/setdata';
+import { signIn } from '../fb/setdata';
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
-import { initDB, initFirebase } from '../firebase/config';
+import { initDB, initFirebase } from '../fb/config';
 import { doc, getDoc } from 'firebase/firestore';
 
 const navigation = [
@@ -250,30 +250,4 @@ export default function Nav() {
       )}
     </Disclosure>
   )
-    // <div className="px-2 py-1 font-medium text-slate-400 flex flex-row">
-    //   <a
-    //     href="../"
-    //     className="block px-3 py-3 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-    //   >
-    //     Home
-    //   </a>
-    //   <a
-    //     href="./market"
-    //     className="block px-3 py-3 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-    //   >
-    //     Market
-    //   </a>
-    //   <a
-    //     href="./trades"
-    //     className="block px-3 py-3 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-    //   >
-    //     Trades
-    //   </a>
-    //   <a
-    //     href="./inventory"
-    //     className="block px-3 py-3 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-    //   >
-    //     Inventory
-    //   </a>
-    // </div>
   }
