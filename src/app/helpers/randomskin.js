@@ -1,6 +1,6 @@
-import data from '../skin-info/skinPrices.json';
-import IconRequest from './iconrequest.js';
-import GetIconFromJSON from './checkiconjson.js';
+import data from './prices/skinPrices.json';
+import IconRequest from './icons/iconrequest.js';
+import GetIconFromJSON from './icons/checkiconjson.js';
 
 // Gets random skin name using numskinsingame and uses IconRequest to get its icon
 export default async function RandomSkin(){
@@ -19,15 +19,25 @@ export default async function RandomSkin(){
   }
 }
 
+// Prevents adding an empty icon, as bad links will always be 
+// 67 characters long. They look like this:
+/* https://community.cloudflare.steamstatic.com/economy/image//360fx360f */
+// Will write name of any "bad item" without icon to a txt file
 function addSkinToList(name, icon){
-    const fs = require('fs');
-    fs.readFile('../TradingApp/src/app/skin-info/skinIcons.json', 'utf8', (err, data) => {
+  const fs = require('fs');
+  if (icon.length != 67){
+    fs.readFile('../TradingApp/src/app/helpers/icons/skinIcons.json', 'utf8', (err, data) => {
       if (err) throw err;
       const removeEnd = data.substring(0, data.length-2);
       const newEnd =  ",\n\t\"" + name + "\": \"" + icon + "\"\n}";
       const newFileContents = removeEnd + newEnd;
-      fs.writeFile('../TradingApp/src/app/skin-info/skinIcons.json', newFileContents, (err) => {
+      fs.writeFile('../TradingApp/src/app/helpers/icons/skinIcons.json', newFileContents, (err) => {
         if (err) throw err;
       });
     });
+  } else {
+    fs.writeFile('../TradingApp/src/app/helpers/prices/baditems.txt', name + "\n", {flag: "a"}, (err) => {
+      if (err) throw err;
+    });
+  }
 }

@@ -5,24 +5,19 @@ var fullURL;
 
 // Finds icon of a skin when given the name
 export default async function IconRequest(skinName){
-  if (GetIconFromJSON(skinName) != undefined){
-    const fd = require('fs');
-    fd.writeFile('src/app/helpers/HAPPEN.txt', "DUPLICATE WAS CAUGHT", {flag: 'a+'}, (err) => {
-      if (err) throw err;
-    });
-
-    return GetIconFromJSON(skinName);
+  const cachedIcon = GetIconFromJSON(skinName);
+  if (cachedIcon != undefined) {
+    return cachedIcon;
   }
 
-  const url1 = 'https://steamcommunity.com/market/listings/730/'
-  const urlData = ExtraEncode(encodeURIComponent(skinName));
-  const url = url1 + urlData;
+  const encodedSkinName = encodeURIComponent(skinName);
+  const url = `https://steamcommunity.com/market/listings/730/${ExtraEncode(encodedSkinName)}`;
 
   // Write url to file, helps with debugging
-  const fs = require('fs');
-  fs.writeFile('src/app/helpers/urls.txt', "\n" + url + "\n\n", {flag: 'a+'}, (err) => {
-    if (err) throw err;
-  });
+  // const fs = require('fs');
+  // fs.writeFile('src/app/helpers/urls.txt', "\n" + url + "\n", {flag: 'a+'}, (err) => {
+  //   if (err) throw err;
+  // });
 
   await axios.get(url)
   .then((getResponse) => {
@@ -49,9 +44,5 @@ export default async function IconRequest(skinName){
 
 // Extra character encoding to comply with steam url convention
 function ExtraEncode(str){
-  const opening = str.replace("(", "%28");
-  const closing = opening.replace(")", "%29");
-  const apost = closing.replace("\'", "%27")
-  const revert = apost.replace("%2F", "-");
-  return revert;
+  return str.replace(/[()']/g, (match) => `%${match.charCodeAt(0).toString(16)}`);
 }
