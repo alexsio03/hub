@@ -34,6 +34,7 @@ async function GetBadItems(){
   }
 }
 
+// Puts new, modified json into skinPrices.json
 async function WritePriceDataToJsonFile(pricejson){
   try {
     const jsonData = JSON.stringify(pricejson, null, 2);

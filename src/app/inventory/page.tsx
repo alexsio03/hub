@@ -1,7 +1,7 @@
 "use client"
 import Nav from '../components/nav';
 import Inventorycard from '../components/inventorycard';
-import SetIcon from '../helpers/seticon.js';
+import SetIcon from '../helpers/icons/seticon.js';
 import LoadInventory from '../helpers/loadinventory'
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -18,7 +18,7 @@ const storage = getStorage();
 export default function Inventory(){
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<{ [key: string]: any }[]>([]);
 
   useEffect(() => {
     const getUser = async () => {
