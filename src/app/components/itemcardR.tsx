@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import SetPrice from '../helpers/prices/setprice.js';
 import RandomSkin from '../helpers/randomskin.js';
