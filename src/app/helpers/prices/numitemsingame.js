@@ -1,7 +1,7 @@
 import SkinList from './skinPrices.json';
 
-// 23743 as of 6/26/2023, maybe update with priceupdate.js
-export default function NumberSkins(){
+// Counts all items in the prices json
+export default function NumberItems(){
     const num = Object.keys(SkinList).length;
     return num;
 }

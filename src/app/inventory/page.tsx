@@ -19,7 +19,7 @@ const storage = getStorage();
 export default function Inventory() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<{ [key: string]: any }[]>([]);
 
   // Run this effect whenever the "user" state changes
   useEffect(() => {
