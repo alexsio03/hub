@@ -1,4 +1,4 @@
-import Link from 'next/link';
+"use client"
 import MarketcardRandom from '../components/marketcardR';
 import Nav from '../components/nav';
 
