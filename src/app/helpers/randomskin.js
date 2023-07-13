@@ -4,7 +4,8 @@ import GetIconFromJSON from './icons/checkiconjson.js';
 
 // Gets random skin name using numskinsingame and uses IconRequest to get its icon
 export default async function RandomSkin(){
-  const randomSkinNumber = Math.floor(Math.random()*22916); // 22916 is found using priceupdate.js
+  const numSkinsInGame = 21672; // Found using priceupdate.js
+  const randomSkinNumber = Math.floor(Math.random()*numSkinsInGame);
   const allSkinNames = Object.keys(data);
   const randomSkinName = allSkinNames[randomSkinNumber];
   const randomSkinIcon = await IconRequest(randomSkinName);
