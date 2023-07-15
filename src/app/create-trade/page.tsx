@@ -1,27 +1,28 @@
-// Import necessary dependencies and components
 "use client"
-import Nav from '../components/nav';
-import Inventorycard from '../components/inventorycard';
-import SetIcon from '../helpers/icons/seticon';
-import { doc, getDoc } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth } from 'firebase/auth';
-import { initDB, initFirebase } from '../fb/config';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { initDB, initFirebase } from "../fb/config";
+import Inventorycard from "../components/inventorycard";
+import SetIcon from "../helpers/icons/seticon";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import axios from "axios";
+import Tradecard from "../components/tradecard";
 
-// Initialize Firebase + db and storage
 initFirebase();
 const db = initDB();
 const storage = getStorage();
 
-export default function Inventory() {
+export default function CreateTradePage() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  const [inventory, setInventory] = useState<{ [key: string]: any }[]>([]);
+  const [inventory, setInventory] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [requestedItem, setRequestedItem] = useState("");
+  const router = useRouter();
 
-  // Run this effect whenever the "user" state changes
   useEffect(() => {
     // Define an async function to fetch user data
     const getUser = async () => {
@@ -79,18 +80,58 @@ export default function Inventory() {
       console.error("Error occurred:", error);
     });
   }, [user]);
+  const handleItemSelected = (item) => {
+    const updatedSelectedItems = [...selectedItems];
+    const index = updatedSelectedItems.findIndex((selectedItem) => selectedItem.id === item.id);
+    if (index !== -1) {
+      updatedSelectedItems.splice(index, 1);
+    } else {
+      updatedSelectedItems.push(item);
+    }
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const handleRequestedItemChange = (event) => {
+    setRequestedItem(event.target.value);
+  };
+
+  const handleSubmitTrade = async () => {
+    // Validate selected items and requested item
+
+    // Create trade object
+    const trade = {
+      user: user.uid,
+      userItems: selectedItems,
+      requestedItem: requestedItem,
+    };
+
+    // Save trade to the database
+
+    // Redirect to the TradesPage
+    router.push("/");
+  };
 
   return (
     <>
-      <Nav></Nav>
-      <div className='m-6'>
-        <div className='flex flex-row flex-wrap'>
-          {/* Render Inventorycard component for each item in the inventory */}
-          {inventory.map((itemInformation, index) => (
-            <Inventorycard key={index} itemInfo={itemInformation} />
-          ))}
+      <div className="flex flex-row justify-between">
+        <div>
+          <h2>User Inventory:</h2>
+          <div className='flex flex-row flex-wrap'>
+            {inventory.map((itemInformation, index) => (
+                <Inventorycard key={index} itemInfo={itemInformation} />
+              ))}
+          </div>
+        </div>
+        <div>
+          <Tradecard></Tradecard>
+        </div>
+        <div>
+          <h2>Requested Item</h2>
+          <input className="text-black" type="text" value={requestedItem} onChange={handleRequestedItemChange} />
         </div>
       </div>
+      {/* Additional trade setup */}
+      <button onClick={handleSubmitTrade}>Submit Trade</button>
     </>
-  )
+  );
 }
