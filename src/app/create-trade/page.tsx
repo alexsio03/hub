@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { initDB, initFirebase } from "../fb/config";
 import Inventorycard from "../components/inventorycard";
 import SetIcon from "../helpers/icons/seticon";
@@ -20,7 +20,7 @@ export default function CreateTradePage() {
   const [user] = useAuthState(auth);
   const [inventory, setInventory] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [requestedItem, setRequestedItem] = useState("");
+  const [requestedItems, setRequestedItems] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -68,7 +68,8 @@ export default function CreateTradePage() {
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
-            itemDateTradable: marketable ? invItem.cache_expiration : 'notmarketable',
+            itemDateTradable: marketable ? 'no hold' : invItem.cache_expiration,
+            id: hash(invItem.market_name + user.user_id + invItem.classid)
           };
           newItems[i] = currentItem;
         }
@@ -80,58 +81,99 @@ export default function CreateTradePage() {
       console.error("Error occurred:", error);
     });
   }, [user]);
-  const handleItemSelected = (item) => {
-    const updatedSelectedItems = [...selectedItems];
-    const index = updatedSelectedItems.findIndex((selectedItem) => selectedItem.id === item.id);
+
+  function handleItemSelected(clickedItem) {
+    // Perform actions using itemInformation
+    var updatedSelectedItems = [...selectedItems];
+    const index = updatedSelectedItems.findIndex((selectedItem) => selectedItem.id === clickedItem.id);
     if (index !== -1) {
       updatedSelectedItems.splice(index, 1);
     } else {
-      updatedSelectedItems.push(item);
+      updatedSelectedItems.push(clickedItem);
     }
     setSelectedItems(updatedSelectedItems);
-  };
+  }
 
-  const handleRequestedItemChange = (event) => {
-    setRequestedItem(event.target.value);
+  const handleItemRequested = (requested) => {
+    var updatedRequestedItems = [...requestedItems];
+    const index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id === requested.id);
+    if (index !== -1) {
+      updatedRequestedItems.splice(index, 1);
+    } else {
+      updatedRequestedItems.push(requested);
+    }
+    setRequestedItems(updatedRequestedItems);
   };
 
   const handleSubmitTrade = async () => {
     // Validate selected items and requested item
+    if (!user || !selectedItems || !requestedItems) {
+      console.error("Invalid trade data. Some required fields are missing.");
+      return;
+    }
 
     // Create trade object
     const trade = {
-      user: user.uid,
-      userItems: selectedItems,
-      requestedItem: requestedItem,
+      owner: user.uid,
+      offered_items: selectedItems,
+      requested_items: requestedItems,
     };
 
     // Save trade to the database
+    try {
+      const tradesRef = collection(db, "trades");
+      await addDoc(tradesRef, trade);
 
-    // Redirect to the TradesPage
-    router.push("/");
+      // Redirect to the TradesPage
+      router.push("/trades");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
+
 
   return (
     <>
-      <div className="flex flex-row justify-between">
-        <div>
-          <h2>User Inventory:</h2>
-          <div className='flex flex-row flex-wrap'>
+      <div className="flex flex-row justify-around">
+        <div className="max-w-2xl min-w-2xl">
+          <h2 className="text-center">User Inventory:</h2>
+          <div className='flex flex-row flex-wrap justify-center'>
             {inventory.map((itemInformation, index) => (
-                <Inventorycard key={index} itemInfo={itemInformation} />
-              ))}
+              <button key={index} onClick={() => handleItemSelected(itemInformation)} className="item-button">
+                <Inventorycard itemInfo={itemInformation} />
+              </button>
+            ))}
           </div>
         </div>
-        <div>
-          <Tradecard></Tradecard>
+        <div className="flex flex-col max-w-3xl min-w-3xl">
+          <div className='flex flex-row flex-wrap justify-center'>
+            <Tradecard offers={selectedItems} requests={requestedItems}/>
+          </div>
+          {/* Additional trade setup */}
+          <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
-        <div>
-          <h2>Requested Item</h2>
-          <input className="text-black" type="text" value={requestedItem} onChange={handleRequestedItemChange} />
+        <div className="max-w-2xl min-w-2xl">
+          <h2 className="text-center">Requested Items</h2>
+          {/* <input className="text-black" type="text" value={requestedItem} onChange={handleRequestedItemChange} /> */}
+          <div className='flex flex-row flex-wrap justify-center'>
+            {inventory.map((itemInformation, index) => (
+              <button key={index} onClick={() => {handleItemRequested(itemInformation)}} className="item-button">
+                <Inventorycard itemInfo={itemInformation} />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-      {/* Additional trade setup */}
-      <button onClick={handleSubmitTrade}>Submit Trade</button>
     </>
   );
+}
+
+function hash(str) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
 }
