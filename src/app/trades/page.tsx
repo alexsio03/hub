@@ -20,6 +20,7 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { initDB, initFirebase } from "../fb/config";
 import LoadInventory from "../helpers/loadinventory";
 import { useRouter } from 'next/navigation';
+import Tradecard from '../components/tradecard';
 
 // Initialize Firebase
 initFirebase();
@@ -53,14 +54,12 @@ export default function TradesPage() {
     <>
       <Nav></Nav>
       <div>
-      <h1>All Trades</h1>
-      {trades.map((trade) => (
-        <div key={trade.id}>
-          <p>{trade.description}</p>
-          {/* Display trade details */}
+        {user && <button onClick={handleCreateTrade}>Create Trade</button>}
+        <div className='flex flex-row flex-wrap items-start'>
+          {trades.map((trade) => (
+            <Tradecard offers={trade.offered_items} requests={trade.requested_items}/>
+          ))}
         </div>
-      ))}
-      {user && <button onClick={handleCreateTrade}>Create Trade</button>}
     </div>
     </>
   );
