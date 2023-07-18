@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Itemcard from './itemcard';
 import SetPrice from '../helpers/prices/setprice';
 
-const TradeCard = ({ owner, offers, requests }) => {
+const TradeCard = ({ owner, owner_url, offers, requests }) => {
   return (
     <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto">
       <div className="p-2">
-        <h1 className="text-white text-2xl">Trade Owner: {owner}</h1>
+        <h1 className="text-white text-2xl">Trade Owner: <a className='hover:underline' href={owner_url}>{owner}</a></h1>
       </div>
       <div className="flex flex-row">
         <Section title="Offering" items={offers} />
