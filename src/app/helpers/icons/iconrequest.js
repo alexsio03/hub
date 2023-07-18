@@ -13,16 +13,16 @@ export default async function IconRequest(skinName){
   // Useful as a backup in case the JSON fails for some reason
   // Any code below this will only RARELY be executed
   const encodedSkinName = encodeURIComponent(skinName);
-  const url = `https://steamcommunity.com/market/listings/730/${ExtraEncode(encodedSkinName)}`;
+  const url = `https://localhost:3000/steam-item-proxy/${ExtraEncode(encodedSkinName)}`;
 
   // Will be set to the full url where the item icon is stored
   var fullURL;
 
   // Get full HTML from item market page
-  await axios.get(url)
+  axios.get(url)
   .then((getResponse) => {
     let data = getResponse.data;
-    console.log(data)
+    //console.log(data)
 
     // Locate the item's image link by parsing the html
     let startPos = data.indexOf('https://community.cloudflare.steamstatic.com/economy/image/');

@@ -57,7 +57,7 @@ export default function TradesPage() {
         {user && <button onClick={handleCreateTrade}>Create Trade</button>}
         <div className='flex flex-col flex-wrap items-start mx-6'>
           {trades[0] ? trades.map((trade) => (
-            <Tradecard owner={trade.owner} offers={trade.offered_items} requests={trade.requested_items}/>
+            <Tradecard owner={trade.owner_name} offers={trade.offered_items} requests={trade.requested_items}/>
           )) : <p>Loading</p>}
         </div>
     </div>

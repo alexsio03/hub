@@ -13,6 +13,7 @@ import Tradecard from "../components/tradecard";
 import skindata from "../helpers/skindata.json"
 import Itemcard from "../components/itemcard";
 import Nav from "../components/nav";
+import SizeIcon from "../helpers/icons/sizeicon";
 
 initFirebase();
 const db = initDB();
@@ -34,7 +35,7 @@ export default function CreateTradePage() {
       itemName: itemName.replaceAll('&#39', '\''),
       itemIsMarketable: 1,
       id: hash(itemName),
-      itemData: skinArr.find((item) => item[0] == itemName)
+      itemIcon: SizeIcon(skinArr.find((item) => item[0] == itemName)[1])
   }));
 
   useEffect(() => {
@@ -78,7 +79,7 @@ export default function CreateTradePage() {
           }
 
           let currentItem = {
-            itemIcon: IconRequest(invItem),
+            itemIcon: SizeIcon(invItem),
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
@@ -102,10 +103,12 @@ export default function CreateTradePage() {
       console.error("Invalid trade data. Some required fields are missing.");
       return;
     }
+    console.log(user)
 
     // Create trade object
     const trade = {
       owner: user.uid,
+      owner_name: user.displayName,
       offered_items: offeredItems,
       requested_items: requestedItems,
     };
@@ -215,7 +218,7 @@ export default function CreateTradePage() {
             <div className='flex flex-row flex-wrap justify-center'>
               {filteredItems.map((skin, index) => (
                 <button key={index} onClick={() => handleItemRequested(skin)} className="item-button">
-                  {<Itemcard item={skin} />}
+                  {<Itemcard itemData={skin} />}
                 </button>
               ))}
             </div>
