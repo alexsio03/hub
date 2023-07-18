@@ -12,6 +12,7 @@ import axios from "axios";
 import Tradecard from "../components/tradecard";
 import skindata from "../helpers/skindata.json"
 import Itemcard from "../components/itemcard";
+import Nav from "../components/nav";
 
 initFirebase();
 const db = initDB();
@@ -21,17 +22,19 @@ export default function CreateTradePage() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const [inventory, setInventory] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [offeredItems, setOfferedItems] = useState([]);
   const [requestedItems, setRequestedItems] = useState([]);
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const skinArr = Object.entries(skindata.items_list);
-  const skin25 = skinArr.slice(0, 25).map(([itemName, itemInfo]) => ({
-    itemInfo: {
-        itemName: itemName.replaceAll('&#39', '\''),
-        itemIsMarketable: 1,
-        id: hash(itemName),
-        itemData: skinArr.find((item) => item[0] == itemName)
-      }
+  const filteredItems = skinArr.filter(([itemName]) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+    return keywords.every((keyword) => itemName.toLowerCase().includes(keyword));
+  }).slice(0, 25).map(([itemName, itemInfo]) => ({
+      itemName: itemName.replaceAll('&#39', '\''),
+      itemIsMarketable: 1,
+      id: hash(itemName),
+      itemData: skinArr.find((item) => item[0] == itemName)
   }));
 
   useEffect(() => {
@@ -93,32 +96,9 @@ export default function CreateTradePage() {
     });
   }, [user]);
 
-  function handleItemSelected(clickedItem) {
-    // Perform actions using itemInformation
-    var updatedSelectedItems = [...selectedItems];
-    const index = updatedSelectedItems.findIndex((selectedItem) => selectedItem.id === clickedItem.id);
-    if (index !== -1) {
-      updatedSelectedItems.splice(index, 1);
-    } else {
-      updatedSelectedItems.push(clickedItem);
-    }
-    setSelectedItems(updatedSelectedItems);
-  }
-
-  const handleItemRequested = (requested) => {
-    var updatedRequestedItems = [...requestedItems];
-    const index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id === requested.id);
-    if (index !== -1) {
-      updatedRequestedItems.splice(index, 1);
-    } else {
-      updatedRequestedItems.push(requested);
-    }
-    setRequestedItems(updatedRequestedItems);
-  };
-
   const handleSubmitTrade = async () => {
     // Validate selected items and requested item
-    if (!user || !selectedItems || !requestedItems) {
+    if (!user || !offeredItems || !requestedItems) {
       console.error("Invalid trade data. Some required fields are missing.");
       return;
     }
@@ -126,7 +106,7 @@ export default function CreateTradePage() {
     // Create trade object
     const trade = {
       owner: user.uid,
-      offered_items: selectedItems,
+      offered_items: offeredItems,
       requested_items: requestedItems,
     };
 
@@ -142,35 +122,103 @@ export default function CreateTradePage() {
     }
   };
 
+  function handleItemOffered(clickedItem) {
+    // Perform actions using itemInformation
+    var updatedOfferedItems = [...offeredItems];
+    var updateInv = [...inventory];
+    const index = updatedOfferedItems.findIndex((offeredItem) => offeredItem.id === clickedItem.id);
+    if (index !== -1) {
+      updatedOfferedItems.splice(index, 1);
+    } else {
+      updatedOfferedItems.push(clickedItem);
+      setOfferedItems(updatedOfferedItems);
+      updateInv.splice(inventory.findIndex((offeredItem) => offeredItem.id === clickedItem.id), 1)
+      setInventory(updateInv)
+    }
+  }
+
+  function handleItemRequested(clickedItem) {
+    // Perform actions using itemInformation
+    var updatedRequestedItems = [...requestedItems];
+    const index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id === clickedItem.id);
+    if (index !== -1) {
+      updatedRequestedItems.splice(index, 1);
+    } else {
+      updatedRequestedItems.push(clickedItem);
+      setRequestedItems(updatedRequestedItems);
+    }
+  }
+
+  const removeItem = (item) => {
+    var updatedOfferedItems = [...offeredItems];
+    var updatedRequestedItems = [...requestedItems];
+    var updateInv = [...inventory];
+    const itemID = item.target.alt;
+    const isOffered = offeredItems.find((offeredItem) => offeredItem.id == itemID);
+    var index;
+    if(isOffered) {
+      index = updatedOfferedItems.findIndex((offeredItem) => offeredItem.id == itemID);
+      if (index !== -1) {
+        var removingItem = updatedOfferedItems.at(index)
+        updatedOfferedItems.splice(index, 1);
+        updateInv.push(removingItem)
+        setInventory(updateInv)
+      }
+      setOfferedItems(updatedOfferedItems);
+    } else {
+      index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id == itemID);
+      if (index !== -1) {
+        var removingItem = updatedRequestedItems.at(index)
+        updatedRequestedItems.splice(index, 1);
+      }
+      setRequestedItems(updatedRequestedItems);
+    }
+  }
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <>
-      <div className="flex flex-row justify-around">
-        <div className="max-w-2xl min-w-2xl">
-          <h2 className="text-center">User Inventory:</h2>
-          <div className='flex flex-row flex-wrap justify-center'>
-            {inventory.map((itemInformation, index) => (
-              <button key={index} onClick={() => handleItemSelected(itemInformation)} className="item-button">
-                <Inventorycard itemInfo={itemInformation} />
+      <Nav></Nav>
+      <div className="flex flex-col">
+        <div className="flex flex-col min-w-3xl items-center justify-center">
+            <div className='flex flex-col flex-wrap items-start mx-6'>
+              <button onClick={(item) => removeItem(item)}>
+                <Tradecard offers={offeredItems} requests={requestedItems}/>
               </button>
-            ))}
-          </div>
+            </div>
+            {/* Additional trade setup */}
+            <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
-        <div className="flex flex-col max-w-3xl min-w-3xl">
-          <div className='flex flex-row flex-wrap justify-center'>
-            <Tradecard offers={selectedItems} requests={requestedItems}/>
+        <div className="flex flex-row justify-around">
+          <div className="max-w-5xl">
+            <h2 className="text-center">User Inventory:</h2>
+            <div className='flex flex-row flex-wrap justify-center'>
+              {inventory.map((itemInformation, index) => (
+                <button key={index} onClick={() => handleItemOffered(itemInformation)} className="item-button m-1">
+                  <Inventorycard itemInfo={itemInformation} />
+                </button>
+              ))}
+            </div>
           </div>
-          {/* Additional trade setup */}
-          <button onClick={handleSubmitTrade}>Submit Trade</button>
-        </div>
-        <div className="max-w-2xl min-w-2xl">
-          <h2 className="text-center">Requested Items</h2>
-          {/* <input className="text-black" type="text" value={requestedItem} onChange={handleRequestedItemChange} /> */}
-          <div className='flex flex-row flex-wrap justify-center'>
-            {skin25.map((skin, index) => (
-              <button key={index} onClick={() => {}} className="item-button">
-                {<Itemcard item={skin} />}
-              </button>
-            ))}
+          <div className="max-w-4xl">
+            <h2 className="text-center">Requested Items</h2>
+            <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearch}
+                placeholder="Search items..."
+                className="text-black ml-14"
+              />
+            <div className='flex flex-row flex-wrap justify-center'>
+              {filteredItems.map((skin, index) => (
+                <button key={index} onClick={() => handleItemRequested(skin)} className="item-button">
+                  {<Itemcard item={skin} />}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
