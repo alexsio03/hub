@@ -11,7 +11,7 @@ export default async function IconRequest(skinName){
 
   // If icon not already stored, generate link to go to its market page
   const encodedSkinName = encodeURIComponent(skinName);
-  const url = `https://steamcommunity.com/market/listings/730/${ExtraEncode(encodedSkinName)}`;
+  const url = `http://csgobackpack.net/api/GetItemPrice/?id=${ExtraEncode(encodedSkinName)}&icon=1`;
 
   // Will be set to the full url where the item icon is stored
   var fullURL;
@@ -20,6 +20,7 @@ export default async function IconRequest(skinName){
   await axios.get(url)
   .then((getResponse) => {
     let data = getResponse.data;
+    console.log(data)
 
     // Locate the item's image link by parsing the html
     let startPos = data.indexOf('https://community.cloudflare.steamstatic.com/economy/image/');
