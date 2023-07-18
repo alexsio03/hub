@@ -12,6 +12,7 @@ import axios from "axios";
 import Tradecard from "../components/tradecard";
 import skindata from "../helpers/skindata.json"
 import Itemcard from "../components/itemcard";
+import SizeIcon from "../helpers/icons/sizeicon.js";
 
 initFirebase();
 const db = initDB();
@@ -75,7 +76,7 @@ export default function CreateTradePage() {
           }
 
           let currentItem = {
-            itemIcon: IconRequest(invItem),
+            itemIcon: `https://community.cloudflare.steamstatic.com/economy/image/${SizeIcon(invItem)}/330x192`,
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)

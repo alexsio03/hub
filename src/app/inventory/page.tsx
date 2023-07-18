@@ -12,6 +12,7 @@ import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { useEffect, useState } from 'react';
+import SizeIcon from '../helpers/icons/sizeicon';
 
 // Initialize Firebase + db and storage
 initFirebase();
@@ -59,7 +60,7 @@ export default function Inventory() {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
           let currentItem = {
-            itemIcon: await IconRequest(invItem.market_name),
+            itemIcon: `https://community.cloudflare.steamstatic.com/economy/image/${SizeIcon(invItem)}/330x192`,
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)

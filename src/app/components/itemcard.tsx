@@ -2,7 +2,6 @@ import SetPrice from '../helpers/prices/setprice.js';
 import magnifyingGlassImage from './images/magnifyingglass.png';
 
 export default function Itemcard(item: any) {
-  console.log(item.itemIcon)
   const { itemName, itemIcon, itemInspectLink, itemIsMarketable } = item.itemData;
   const priceData = itemIsMarketable ? SetPrice(itemName) : null;
   const cleanedLink = itemInspectLink ? itemInspectLink.replace(/["']/g, '') : '';
