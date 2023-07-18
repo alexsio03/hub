@@ -2,7 +2,7 @@
 "use client"
 import Nav from '../components/nav';
 import Inventorycard from '../components/inventorycard';
-import SetIcon from '../helpers/icons/seticon';
+import IconRequest from '../helpers/icons/iconrequest.js';
 import axios from 'axios';
 import GenerateInspectLink from '../helpers/getinspectlink';
 
@@ -11,7 +11,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 // Initialize Firebase + db and storage
@@ -60,7 +59,7 @@ export default function Inventory() {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
           let currentItem = {
-            itemIcon: SetIcon(invItem),
+            itemIcon: await IconRequest(invItem.market_name),
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
