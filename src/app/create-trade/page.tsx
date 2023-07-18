@@ -25,6 +25,7 @@ export default function CreateTradePage() {
   const [inventory, setInventory] = useState([]);
   const [offeredItems, setOfferedItems] = useState([]);
   const [requestedItems, setRequestedItems] = useState([]);
+  const [steamInfo, setSteamInfo] = useState({});
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const skinArr = Object.entries(skindata.items_list);
@@ -54,6 +55,10 @@ export default function CreateTradePage() {
     getUser().then(async (user) => {
       var json;
       if (user) {
+        setSteamInfo({
+          steam_name: user.steam_info.name,
+          steam_url: user.steam_info.url
+        })
         // Get the download URL for the user's inventory JSON file
         const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
         try {
@@ -108,7 +113,7 @@ export default function CreateTradePage() {
     // Create trade object
     const trade = {
       owner: user.uid,
-      owner_name: user.displayName,
+      owner_steam: steamInfo,
       offered_items: offeredItems,
       requested_items: requestedItems,
     };
