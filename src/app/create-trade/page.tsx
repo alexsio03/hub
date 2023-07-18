@@ -10,6 +10,8 @@ import SetIcon from "../helpers/icons/seticon";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import axios from "axios";
 import Tradecard from "../components/tradecard";
+import skindata from "../helpers/skindata.json"
+import Itemcard from "../components/itemcard";
 
 initFirebase();
 const db = initDB();
@@ -22,6 +24,15 @@ export default function CreateTradePage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [requestedItems, setRequestedItems] = useState([]);
   const router = useRouter();
+  const skinArr = Object.entries(skindata.items_list);
+  const skin25 = skinArr.slice(0, 25).map(([itemName, itemInfo]) => ({
+    itemInfo: {
+        itemName: itemName.replaceAll('&#39', '\''),
+        itemIsMarketable: 1,
+        id: hash(itemName),
+        itemData: skinArr.find((item) => item[0] == itemName)
+      }
+  }));
 
   useEffect(() => {
     // Define an async function to fetch user data
@@ -131,7 +142,6 @@ export default function CreateTradePage() {
     }
   };
 
-
   return (
     <>
       <div className="flex flex-row justify-around">
@@ -156,9 +166,9 @@ export default function CreateTradePage() {
           <h2 className="text-center">Requested Items</h2>
           {/* <input className="text-black" type="text" value={requestedItem} onChange={handleRequestedItemChange} /> */}
           <div className='flex flex-row flex-wrap justify-center'>
-            {inventory.map((itemInformation, index) => (
-              <button key={index} onClick={() => {handleItemRequested(itemInformation)}} className="item-button">
-                <Inventorycard itemInfo={itemInformation} />
+            {skin25.map((skin, index) => (
+              <button key={index} onClick={() => {}} className="item-button">
+                {<Itemcard item={skin} />}
               </button>
             ))}
           </div>

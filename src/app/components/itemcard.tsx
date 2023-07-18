@@ -1,9 +1,18 @@
+import SetIcon from '../helpers/icons/seticon.js';
 import SetPrice from '../helpers/prices/setprice.js';
 
-export default function Itemcard(item: { itemInfo: any; }) {
+export default function Itemcard({item}) {
+    console.log(item)
     let myinfo = item.itemInfo;
     const itemName = myinfo.itemName;
-    const imgData = myinfo.itemIcon;
+    var imgData;
+    if(myinfo.itemIcon) {
+        console.log("yes")
+        imgData = myinfo.itemIcon;
+    } else {
+        console.log("no")
+        imgData = SetIcon(myinfo.itemData[1]);
+    }
     const imgURL1 = "https://community.cloudflare.steamstatic.com/economy/image/";
     const imgURL2 = "/330x192";
     const itemImage = imgURL1 + imgData + imgURL2;

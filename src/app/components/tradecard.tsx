@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
-import InventoryCard from '../components/inventorycard';
 
-const TradeCard = ({ user, offers, requests }) => {
+import Itemcard from './itemcard';
+
+const TradeCard = ({ owner, offers, requests }) => {
   return (
-    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col max-w-2xl mx-auto">
+    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto">
       <div className="p-2">
-        <h1 className="text-white text-2xl">{user}</h1>
+        <h1 className="text-white text-2xl">{owner}</h1>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-row">
         <Section title="Offering" items={offers} />
         <Section title="Requesting" items={requests} />
       </div>
@@ -21,7 +22,7 @@ const Section = ({ title, items }) => {
       <h1 className="text-white text-lg font-bold mb-2">{title}:</h1>
       <div className="flex flex-wrap -mx-2">
         {items.map((itemInformation, index) => (
-          <InventoryCard key={index} itemInfo={itemInformation} />
+          <Itemcard key={index} itemInfo={itemInformation} />
         ))}
       </div>
     </div>
