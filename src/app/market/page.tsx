@@ -16,6 +16,21 @@ export default function Market() {
           <MarketcardRandom></MarketcardRandom>
           <MarketcardRandom></MarketcardRandom>
           <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
+          <MarketcardRandom></MarketcardRandom>
         </div>
     </div>
   </>

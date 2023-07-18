@@ -11,7 +11,7 @@ export default async function IconRequest(skinName){
 
   // If icon not already stored, generate link to go to its market page
   // Useful as a backup in case the JSON fails for some reason
-  // Any code below this will only RARELY be executed
+  // Any code below this should only RARELY be executed
   const encodedSkinName = encodeURIComponent(skinName);
   const url = `https://localhost:3000/steam-item-proxy/${ExtraEncode(encodedSkinName)}`;
 
