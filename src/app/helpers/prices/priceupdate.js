@@ -1,6 +1,7 @@
 import axios from 'axios';
 import RemoveBadItems from './removebaditems.js';
 import NumberItems from './numitemsingame.js';
+import WriteNullObjects from './fillbaditems.js';
 
 // Gets new prices from prices endpoint
 // Removes the "bad items": non-marketables like coins and trophies
@@ -11,6 +12,7 @@ export default async function PriceUpdate(){
   try {
     const response = await axios.get(url);
     const data = response.data;
+    await WriteNullObjects(data);
     await RemoveBadItems(data);
     console.log(`\nNumber of items in game: ${NumberItems()}\n`);
   } catch (err) {
