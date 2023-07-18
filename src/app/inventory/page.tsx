@@ -3,12 +3,14 @@
 import Nav from '../components/nav';
 import Inventorycard from '../components/inventorycard';
 import SetIcon from '../helpers/icons/seticon';
+import axios from 'axios';
+import GenerateInspectLink from '../helpers/getinspectlink';
+
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 // Initialize Firebase + db and storage
@@ -56,13 +58,14 @@ export default function Inventory() {
         for (var i = 0; i < length; i++) {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
-
+          
           let currentItem = {
             itemIcon: SetIcon(invItem),
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
             itemDateTradable: marketable ? invItem.cache_expiration : 'notmarketable',
+            itemInspectLink: GenerateInspectLink(json, invItem.market_name, user.steam_info.id)
           };
           newItems[i] = currentItem;
         }
