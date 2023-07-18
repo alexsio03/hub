@@ -6,7 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { initDB, initFirebase } from "../fb/config";
 import Inventorycard from "../components/inventorycard";
-import SetIcon from "../helpers/icons/seticon";
+import IconRequest from "../helpers/icons/iconrequest.js";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import axios from "axios";
 import Tradecard from "../components/tradecard";
@@ -75,7 +75,7 @@ export default function CreateTradePage() {
           }
 
           let currentItem = {
-            itemIcon: SetIcon(invItem),
+            itemIcon: IconRequest(invItem),
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)

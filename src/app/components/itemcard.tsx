@@ -1,21 +1,11 @@
-import SetIcon from '../helpers/icons/seticon.js';
 import SetPrice from '../helpers/prices/setprice.js';
 import magnifyingGlassImage from './images/magnifyingglass.png';
 
-export default function Itemcard({item}) {
-    let myinfo = item.itemInfo;
-    const itemName = myinfo.itemName;
-    var imgData;
-    if(myinfo.itemIcon) {
-        console.log("yes")
-        imgData = myinfo.itemIcon;
-    } else {
-        console.log("no")
-        imgData = SetIcon(myinfo.itemData[1]);
-    }
-    const imgURL1 = "https://community.cloudflare.steamstatic.com/economy/image/";
-    const imgURL2 = "/330x192";
-    const itemImage = imgURL1 + imgData + imgURL2;
+export default function Itemcard(item: any) {
+  console.log(item.itemIcon)
+  const { itemName, itemIcon, itemInspectLink, itemIsMarketable } = item.itemData;
+  const priceData = itemIsMarketable ? SetPrice(itemName) : null;
+  const cleanedLink = itemInspectLink ? itemInspectLink.replace(/["']/g, '') : '';
 
   return (
     <div className="bg-neutral-900 m-3 p-1 items-center rounded-xl w-74 h-60 relative">
@@ -28,7 +18,7 @@ export default function Itemcard({item}) {
           </>
         )}
       </div>
-      <img className="mx-auto object-contain w-32 h-32" src={imgURL} alt="Item Image" />
+      <img className="mx-auto object-contain w-32 h-32" src={itemIcon} alt="Item Image" />
       {itemInspectLink && (
         <div className="absolute bottom-2 right-2">
           <a href={cleanedLink} target="_blank" rel="noopener noreferrer">
