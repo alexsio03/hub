@@ -7,7 +7,7 @@ const TradeCard = ({ owner, offers, requests }) => {
   return (
     <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto">
       <div className="p-2">
-        <h1 className="text-white text-2xl">{owner}</h1>
+        <h1 className="text-white text-2xl">Trade Owner: {owner}</h1>
       </div>
       <div className="flex flex-row">
         <Section title="Offering" items={offers} />
@@ -24,7 +24,7 @@ const Section = ({ title, items }) => {
       <h4>Total Buff Price: ${getTotal(items)}</h4>
       <div className="flex flex-wrap -mx-2">
         {items.map((item, index) => (
-          <Itemcard key={index} item={item} />
+          <Itemcard key={index} itemData={item} />
         ))}
       </div>
     </div>

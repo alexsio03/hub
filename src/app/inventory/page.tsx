@@ -5,6 +5,7 @@ import Inventorycard from '../components/inventorycard';
 import IconRequest from '../helpers/icons/iconrequest.js';
 import axios from 'axios';
 import GenerateInspectLink from '../helpers/getinspectlink';
+import skindata from "../helpers/skindata.json"
 
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,6 +13,7 @@ import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { useEffect, useState } from 'react';
+import SizeIcon from '../helpers/icons/sizeicon';
 
 // Initialize Firebase + db and storage
 initFirebase();
@@ -22,6 +24,7 @@ export default function Inventory() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const [inventory, setInventory] = useState<{ [key: string]: any }[]>([]);
+  const skinArr = Object.entries(skindata.items_list)
 
   // Run this effect whenever the "user" state changes
   useEffect(() => {
@@ -59,7 +62,7 @@ export default function Inventory() {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
           let currentItem = {
-            itemIcon: await IconRequest(invItem.market_name),
+            itemIcon: SizeIcon(invItem),
             itemName: invItem.market_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
@@ -83,8 +86,8 @@ export default function Inventory() {
       <div className='m-6'>
         <div className='flex flex-row flex-wrap'>
           {/* Render Inventorycard component for each item in the inventory */}
-          {inventory.map((itemInformation, index) => (
-            <Inventorycard key={index} itemInfo={itemInformation} />
+          {inventory.map((item, index) => (
+            <Inventorycard key={index} itemInfo={item} />
           ))}
         </div>
       </div>
