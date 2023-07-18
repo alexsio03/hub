@@ -1,6 +1,5 @@
-import Tradecard from '../components/tradecard';
+"use client"
 import Nav from '../components/nav';
-
 /*
 Flow:
   1. Load user inventory
@@ -13,17 +12,55 @@ Flow:
   4. Refresh page
 */
 
-export default function Trades() {
+// Import necessary dependencies
+import { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { initDB, initFirebase } from "../fb/config";
+import LoadInventory from "../helpers/loadinventory";
+import { useRouter } from 'next/navigation';
+import Tradecard from '../components/tradecard';
+
+// Initialize Firebase
+initFirebase();
+const db = initDB();
+
+export default function TradesPage() {
+  const auth = getAuth();
+  const [user] = useAuthState(auth);
+  const [trades, setTrades] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const loadTrades = async () => {
+      const tradesCollection = collection(db, "trades");
+      const tradesSnapshot = await getDocs(tradesCollection);
+      const tradesData = tradesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTrades(tradesData);
+    };
+
+    loadTrades();
+  }, []);
+
+  const handleCreateTrade = () => {
+    router.push("/create-trade");
+  };
+
   return (
-      <>
-        <Nav></Nav>
-        <div className='m-6'>
-          <div className='flex flex-row justify-center'>
-            <button className='my-5 hover:text-gray-500'>Add Trade Listing!</button>
-          </div>
-          <div className='flex flex-row flex-wrap'>
-          </div>
+    <>
+      <Nav></Nav>
+      <div>
+        {user && <button onClick={handleCreateTrade}>Create Trade</button>}
+        <div className='flex flex-row flex-wrap items-start'>
+          {trades.map((trade) => (
+            <Tradecard offers={trade.offered_items} requests={trade.requested_items}/>
+          ))}
         </div>
-      </>
-  )
+    </div>
+    </>
+  );
 }

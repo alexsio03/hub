@@ -10,7 +10,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 // Initialize Firebase + db and storage
@@ -58,7 +59,6 @@ export default function Inventory() {
         for (var i = 0; i < length; i++) {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
-          
           let currentItem = {
             itemIcon: SetIcon(invItem),
             itemName: invItem.market_name,
