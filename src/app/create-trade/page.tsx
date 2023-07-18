@@ -168,7 +168,7 @@ export default function CreateTradePage() {
           <div className='flex flex-row flex-wrap justify-center'>
             {skin25.map((skin, index) => (
               <button key={index} onClick={() => {}} className="item-button">
-                {<Itemcard item={skin} />}
+                {<Itemcard itemData={skin} />}
               </button>
             ))}
           </div>

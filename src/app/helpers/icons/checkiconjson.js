@@ -16,5 +16,13 @@ export default function GetIconFromJSON(skinName) {
 // Single quote is encoded as &#39
 // The small "TM" that comes after StatTrak is \u2122
 function EncodeSkinName(skin){
-  return skin.replace(/★/g, '\\u2605').replace(/'/g, '&#39;').replace(/™/g, '\\u2122');
+  try{
+    return skin.replace(/★/g, '\\u2605').replace(/'/g, '&#39;').replace(/™/g, '\\u2122');
+  } 
+  catch {
+    console.log("ERROR: skin in checkiconjson.js is not a string");
+    console.log(skin);
+    console.log(skin['market_name']);
+    return skin;
+  }
 }

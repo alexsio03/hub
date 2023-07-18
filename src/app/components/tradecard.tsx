@@ -22,7 +22,7 @@ const Section = ({ title, items }) => {
       <h1 className="text-white text-lg font-bold mb-2">{title}:</h1>
       <div className="flex flex-wrap -mx-2">
         {items.map((itemInformation, index) => (
-          <Itemcard key={index} itemInfo={itemInformation} />
+          <Itemcard key={index} itemData={itemInformation} />
         ))}
       </div>
     </div>
