@@ -24,6 +24,7 @@
     "express-session": "^1.17.3",
     "firebase": "^9.23.0",
     "firebase-admin": "^11.9.0",
+    "fuzzball": "^2.1.2",
     "next": "13.4.4",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
