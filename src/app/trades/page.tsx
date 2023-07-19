@@ -50,8 +50,6 @@ export default function TradesPage() {
     router.push("/create-trade");
   };
 
-  console.log(trades)
-
   return (
     <>
       <Nav></Nav>
