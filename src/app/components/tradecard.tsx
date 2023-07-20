@@ -1,17 +1,39 @@
 import PropTypes from 'prop-types';
-
+import { initDB, initFirebase } from "../fb/config";
+import { doc, collection, deleteDoc } from "firebase/firestore";
 import Itemcard from './itemcard';
 import SetPrice from '../helpers/prices/setprice';
 
-const TradeCard = ({ owner, owner_url, offers, requests }) => {
+initFirebase();
+const db = initDB();
+
+const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteTrade }) => {
+  const handleDelete = async () => {
+    try {
+      // Get the reference to the "trades" collection
+      const tradesRef = collection(db, 'trades');
+
+      // Delete the trade document with the given ID
+      await deleteDoc(doc(tradesRef, id));
+
+      // The trade has been successfully deleted
+      console.log('Trade deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting trade:', error);
+    }
+  };
+
   return (
-    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto">
+    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto relative">
       <div className="p-2">
-        <h1 className="text-white text-2xl">Trade Owner: <a className='hover:underline' href={owner_url}>{owner}</a></h1>
+        <h1 className="text-white text-xl">Trade Owner: <a className='hover:underline' href={owner_url}>{owner}</a></h1>
       </div>
       <div className="flex flex-row">
         <Section title="Offering" items={offers} />
         <Section title="Requesting" items={requests} />
+      </div>
+      <div className="m-2 flex justify-end">
+        {is_owner ? <button onClick={() => onDeleteTrade(id)} className="bg-red-500 hover:bg-red-600 rounded-md text-white font-semibold py-1 px-2">Delete</button> : <></>}
       </div>
     </div>
   );
@@ -20,8 +42,8 @@ const TradeCard = ({ owner, owner_url, offers, requests }) => {
 const Section = ({ title, items }) => {
   return (
     <div className="bg-[#452427] mx-2 my-3 p-4 rounded-xl">
-      <h1 className="text-white text-lg font-bold mb-2">{title}:</h1>
-      <h4>Total Buff Price: ${getTotal(items)}</h4>
+      <h1 className="text-white tracking-wide text-lg font-bold mb-2">{title}:</h1>
+      <h4 className='text-sm'>Total Buff Price: ${getTotal(items)}</h4>
       <div className="flex flex-wrap -mx-2">
         {items.map((item, index) => (
           <Itemcard key={index} itemData={item} />

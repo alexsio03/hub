@@ -8,17 +8,17 @@ export default function Itemcard(item: any) {
   const itemUrl = `https://community.cloudflare.steamstatic.com/economy/image/${itemIcon}/330x192`
 
   return (
-    <div className="bg-neutral-900 m-3 p-1 items-center rounded-xl w-44 h-64 relative">
-      <div className="flex flex-col p-3">
-        <h3>{itemName}</h3>
+    <div className="bg-neutral-900 m-3 p-1 items-center rounded-xl w-52 h-64 overflow-hidden">
+      <div className="flex flex-col p-2">
+        <h6 className='h-14 text-md'>{itemName}</h6>
+        <img className="mx-auto object-contain w-32 h-32" src={itemUrl} alt={id} />
         {priceData && (
           <>
-            <p className="text-xs">Steam Price: {priceData.steam} {priceData.recency}</p>
-            <p className="text-xs">Buff price: {priceData.buff}</p>
+            <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
+            <p className="text-xs opacity-50">Buff: {priceData.buff}</p>
           </>
         )}
       </div>
-      <img className="mx-auto object-contain w-32 h-32" src={itemUrl} alt={id} />
       {itemInspectLink && (
         <div className="absolute bottom-2 right-2">
           <a href={cleanedLink} target="_blank" rel="noopener noreferrer">
