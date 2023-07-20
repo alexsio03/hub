@@ -6,7 +6,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { initDB, initFirebase } from "../fb/config";
 import Inventorycard from "../components/inventorycard";
-import IconRequest from "../helpers/icons/iconrequest.js";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import axios from "axios";
 import Tradecard from "../components/tradecard";
@@ -22,22 +21,30 @@ const storage = getStorage();
 export default function CreateTradePage() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
+
   const [inventory, setInventory] = useState([]);
   const [offeredItems, setOfferedItems] = useState([]);
   const [requestedItems, setRequestedItems] = useState([]);
   const [steamInfo, setSteamInfo] = useState({});
+
   const router = useRouter();
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [invSearchQuery, setInvSearchQuery] = useState("");
+
   const skinArr = Object.entries(skindata.items_list);
   const filteredItems = skinArr.filter(([itemName]) => {
     const keywords = searchQuery.toLowerCase().split(" ");
     return keywords.every((keyword) => itemName.toLowerCase().includes(keyword));
-  }).slice(0, 25).map(([itemName, itemInfo]) => ({
+  }).slice(0, 40).map(([itemName, itemInfo]) => ({
       itemName: itemName.replaceAll('&#39', '\''),
       itemIsMarketable: 1,
       id: hash(itemName),
       itemIcon: SizeIcon(skinArr.find((item) => item[0] == itemName)[1])
   }));
+  const filteredInventory = inventory.filter((item) =>
+    item.itemName.toLowerCase().includes(invSearchQuery)
+  )
 
   useEffect(() => {
     // Define an async function to fetch user data
@@ -93,7 +100,7 @@ export default function CreateTradePage() {
           };
           newItems[i] = currentItem;
         }
-        setInventory(newItems);
+        setInventory(newItems)
       } else {
         console.log("User not found.");
       }
@@ -104,11 +111,10 @@ export default function CreateTradePage() {
 
   const handleSubmitTrade = async () => {
     // Validate selected items and requested item
-    if (!user || !offeredItems || !requestedItems) {
+    if (!user || offeredItems.length == 0 || requestedItems.length == 0) {
       console.error("Invalid trade data. Some required fields are missing.");
       return;
     }
-    console.log(user)
 
     // Create trade object
     const trade = {
@@ -187,12 +193,16 @@ export default function CreateTradePage() {
     setSearchQuery(event.target.value);
   };
 
+  const handleInvSearch = (event) => {
+    setInvSearchQuery(event.target.value);
+  };
+
   return (
     <>
       <Nav></Nav>
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-8">
         <div className="flex flex-col min-w-3xl items-center justify-center">
-            <div className='flex flex-col flex-wrap items-start mx-6'>
+            <div className='flex flex-col flex-wrap items-start'>
               <button onClick={(item) => removeItem(item)}>
                 <Tradecard offers={offeredItems} requests={requestedItems}/>
               </button>
@@ -200,29 +210,36 @@ export default function CreateTradePage() {
             {/* Additional trade setup */}
             <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
-        <div className="flex flex-row justify-around">
-          <div className="max-w-5xl">
+        <div className="flex flex-row justify-around m-4">
+          <div className="max-w-4xl mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">User Inventory:</h2>
-            <div className='flex flex-row flex-wrap justify-center'>
-              {inventory.map((itemInformation, index) => (
-                <button key={index} onClick={() => handleItemOffered(itemInformation)} className="item-button m-1">
+            <input
+              type="text"
+              value={invSearchQuery}
+              onChange={handleInvSearch}
+              placeholder="Search items..."
+              className="text-black p-1 rounded-sm ml-2 mb-6"
+            />
+            <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
+              {filteredInventory.map((itemInformation, index) => (
+                <button key={index} onClick={() => handleItemOffered(itemInformation)} className="item-button m-1 snap-start">
                   <Inventorycard itemInfo={itemInformation} />
                 </button>
               ))}
             </div>
           </div>
-          <div className="max-w-4xl">
+          <div className="max-w-4xl p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">Requested Items</h2>
             <input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
                 placeholder="Search items..."
-                className="text-black ml-14"
+                className="text-black p-1 rounded-sm ml-14 mb-6"
               />
-            <div className='flex flex-row flex-wrap justify-center'>
+            <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredItems.map((skin, index) => (
-                <button key={index} onClick={() => handleItemRequested(skin)} className="item-button">
+                <button key={index} onClick={() => handleItemRequested(skin)} className="item-button snap-start">
                   {<Itemcard itemData={skin} />}
                 </button>
               ))}

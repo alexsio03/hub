@@ -16,7 +16,7 @@ Flow:
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
 import { initDB, initFirebase } from "../fb/config";
 import LoadInventory from "../helpers/loadinventory";
 import { useRouter } from 'next/navigation';
@@ -45,6 +45,21 @@ export default function TradesPage() {
 
     loadTrades();
   }, []);
+  
+  const handleDeleteTrade = async (tradeId) => {
+    try {
+      // Get a reference to the trade document
+      const tradeRef = doc(db, "trades", tradeId);
+      
+      // Delete the trade document from Firestore
+      await deleteDoc(tradeRef);
+
+      // Update the state to remove the deleted trade from the page in real-time
+      setTrades((prevTrades) => prevTrades.filter((trade) => trade.id !== tradeId));
+    } catch (error) {
+      console.error("Error deleting trade:", error);
+    }
+  };
 
   const handleCreateTrade = () => {
     router.push("/create-trade");
@@ -57,7 +72,15 @@ export default function TradesPage() {
         {user && <button onClick={handleCreateTrade}>Create Trade</button>}
         <div className='flex flex-col flex-wrap items-start mx-6'>
           {trades[0] ? trades.map((trade) => (
-            <Tradecard owner={trade.owner_steam.steam_name} owner_url={trade.owner_steam.steam_url} offers={trade.offered_items} requests={trade.requested_items}/>
+            <Tradecard 
+            key={trade.id}
+            owner={trade.owner_steam.steam_name} 
+            owner_url={trade.owner_steam.steam_url} 
+            offers={trade.offered_items} 
+            requests={trade.requested_items} 
+            id={trade.id}
+            is_owner={user?.uid == trade.owner}
+            onDeleteTrade={handleDeleteTrade}/>
           )) : <p>Loading</p>}
         </div>
     </div>
