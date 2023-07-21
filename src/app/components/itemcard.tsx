@@ -23,7 +23,7 @@ export default function Itemcard(item: any) {
     {itemInspectLink && (
     <div className="absolute bottom-2 right-2">
       <a href={cleanedLink} target="_blank" rel="noopener noreferrer">
-      <img className="w-6 h-6" src={magnifyingGlassImage.src} alt="Magnifying Glass" />
+      <img className="w-6 h-6 bg-blue-500 bg-opacity-70 hover:bg-blue-600 rounded-md p-1" src={magnifyingGlassImage.src} alt="Magnifying Glass" />
       </a>
     </div>
     )}
