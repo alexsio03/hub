@@ -1,11 +1,12 @@
 import SetPrice from '../helpers/prices/setprice.js';
 import magnifyingGlassImage from './images/magnifyingglass.png';
+import findImage from '../helpers/findImage.js'
 
 export default function Itemcard(item: any) {
   const { id, itemName, itemIcon, itemInspectLink, itemIsMarketable } = item.itemData;
   const priceData = itemIsMarketable ? SetPrice(itemName) : null;
   const cleanedLink = itemInspectLink ? itemInspectLink.replace(/["']/g, '') : '';
-  const itemUrl = `https://community.cloudflare.steamstatic.com/economy/image/${itemIcon}/330x192`
+  const itemUrl = itemIcon ? `https://community.cloudflare.steamstatic.com/economy/image/${itemIcon}/330x192` : findImage(itemName)
 
   return (
   <div className="bg-neutral-900 m-3 p-1 items-center rounded-xl w-52 h-64 overflow-hidden relative">

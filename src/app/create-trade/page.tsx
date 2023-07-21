@@ -10,9 +10,11 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import axios from "axios";
 import Tradecard from "../components/tradecard";
 import skindata from "../helpers/skindata.json"
+import skinprices from '../helpers/prices/skinPrices.json'
 import Itemcard from "../components/itemcard";
 import Nav from "../components/nav";
 import SizeIcon from "../helpers/icons/sizeicon";
+import SetPrice from "../helpers/prices/setprice";
 
 initFirebase();
 const db = initDB();
@@ -31,20 +33,69 @@ export default function CreateTradePage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [invSearchQuery, setInvSearchQuery] = useState("");
+  const [minReqPrice, setMinReqPrice] = useState("");
+  const [maxReqPrice, setMaxReqPrice] = useState("");
+  const [minInvPrice, setMinInvPrice] = useState("");
+  const [maxInvPrice, setMaxInvPrice] = useState("");
 
   const skinArr = Object.entries(skindata.items_list);
-  const filteredItems = skinArr.filter(([itemName]) => {
+  const skinPrices = Object.entries(skinprices);
+  const filteredItems = skinPrices
+  .filter(([itemName]) => {
     const keywords = searchQuery.toLowerCase().split(" ");
-    return keywords.every((keyword) => itemName.toLowerCase().includes(keyword));
-  }).slice(0, 40).map(([itemName, itemInfo]) => ({
-      itemName: itemName.replaceAll('&#39', '\''),
-      itemIsMarketable: 1,
-      id: hash(itemName),
-      itemIcon: SizeIcon(skinArr.find((item) => item[0] == itemName)[1])
+    return keywords.every((keyword) =>
+      itemName.toLowerCase().includes(keyword)
+    );
+  })
+  .filter(([itemName, itemInfo]) => {
+    const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
+    const minPriceValue = convertPriceToDecimal(minReqPrice);
+    const maxPriceValue = convertPriceToDecimal(maxReqPrice);
+
+    if (price === null || price === '$null') {
+      return false; // Exclude items with null price
+    }
+
+    const itemPriceValue = convertPriceToDecimal(price);
+
+    if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
+      return false; // Exclude items with price lower than the minimum price
+    }
+
+    if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
+      return false; // Exclude items with price higher than the maximum price
+    }
+
+    return true;
+  })
+  .slice(0, 40)
+  .map(([itemName, itemInfo]) => ({
+    itemName: itemName.replaceAll("&#39", "'"),
+    itemIsMarketable: 1,
+    id: hash(itemName),
+    itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
   }));
+
   const filteredInventory = inventory.filter((item) =>
-    item.itemName.toLowerCase().includes(invSearchQuery)
-  )
+    item.itemName.toLowerCase().includes(invSearchQuery)).filter((item) => {
+    const price = item.itemIsMarketable ? SetPrice(item.itemName).buff : null; // Replace 'buff' with 'steam' if needed
+    const minPriceValue = parseFloat(minInvPrice);
+    const maxPriceValue = parseFloat(maxInvPrice);
+
+    if (price === null || price == '$null') {
+      return false; // Exclude items with null price
+    }
+
+    if (!isNaN(minPriceValue) && convertPriceToDecimal(price) < minPriceValue) {
+      return false; // Exclude items with price lower than the minimum price
+    }
+
+    if (!isNaN(maxPriceValue) && convertPriceToDecimal(price) > maxPriceValue) {
+      return false; // Exclude items with price higher than the maximum price
+    }
+
+    return true;
+  });
 
   useEffect(() => {
     // Define an async function to fetch user data
@@ -211,13 +262,27 @@ export default function CreateTradePage() {
             <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
         <div className="flex flex-row justify-around m-4">
-          <div className="max-w-4xl mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="max-w-4xl min-w-4xl mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">User Inventory:</h2>
             <input
               type="text"
               value={invSearchQuery}
               onChange={handleInvSearch}
               placeholder="Search items..."
+              className="text-black p-1 rounded-sm ml-2 mb-6"
+            />
+            <input
+              type="number"
+              value={minInvPrice}
+              onChange={(e) => setMinInvPrice(e.target.value)}
+              placeholder="Min Price"
+              className="text-black p-1 rounded-sm ml-2 mb-6"
+            />
+            <input
+              type="number"
+              value={maxInvPrice}
+              onChange={(e) => setMaxInvPrice(e.target.value)}
+              placeholder="Max Price"
               className="text-black p-1 rounded-sm ml-2 mb-6"
             />
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
@@ -228,14 +293,28 @@ export default function CreateTradePage() {
               ))}
             </div>
           </div>
-          <div className="max-w-4xl p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="max-w-4xl min-w-4xl p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">Requested Items</h2>
             <input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
                 placeholder="Search items..."
-                className="text-black p-1 rounded-sm ml-14 mb-6"
+                className="text-black p-1 rounded-sm ml-2 mb-6"
+              />
+              <input
+                type="number"
+                value={minReqPrice}
+                onChange={(e) => setMinReqPrice(e.target.value)}
+                placeholder="Min Price"
+                className="text-black p-1 rounded-sm ml-2 mb-6"
+              />
+              <input
+                type="number"
+                value={maxReqPrice}
+                onChange={(e) => setMaxReqPrice(e.target.value)}
+                placeholder="Max Price"
+                className="text-black p-1 rounded-sm ml-2 mb-6"
               />
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredItems.map((skin, index) => (
@@ -259,4 +338,14 @@ function hash(str) {
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
+}
+
+function convertPriceToDecimal(price) {
+  // Remove any non-numeric characters from the string (e.g., "$" or commas)
+  const numericString = price.replace(/[^\d.-]/g, "");
+
+  // Parse the string to a float
+  const decimalPrice = parseFloat(numericString);
+
+  return decimalPrice;
 }
