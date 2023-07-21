@@ -80,7 +80,8 @@ export default function TradesPage() {
             requests={trade.requested_items} 
             id={trade.id}
             is_owner={user?.uid == trade.owner}
-            onDeleteTrade={handleDeleteTrade}/>
+            onDeleteTrade={handleDeleteTrade}
+            data={trade}/>
           )) : <p>Loading</p>}
         </div>
     </div>

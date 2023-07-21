@@ -24,7 +24,7 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
   };
 
   return (
-    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto relative">
+    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto relative min-h-[452px]">
       <div className="p-2">
         <h1 className="text-white text-xl">Trade Owner: <a className='hover:underline' href={owner_url}>{owner}</a></h1>
       </div>
@@ -33,7 +33,11 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
         <Section title="Requesting" items={requests} />
       </div>
       <div className="m-2 flex justify-end">
-        {is_owner ? <button onClick={() => onDeleteTrade(id)} className="bg-red-500 hover:bg-red-600 rounded-md text-white font-semibold py-1 px-2">Delete</button> : <></>}
+        {is_owner ? 
+        <>
+          <button onClick={() => onDeleteTrade(id)} className="bg-red-500 hover:bg-red-600 rounded-md text-white font-semibold py-1 px-2">Delete</button>
+        </>
+        : <></>}
       </div>
     </div>
   );
@@ -41,7 +45,7 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
 
 const Section = ({ title, items }) => {
   return (
-    <div className="bg-[#452427] mx-2 my-3 p-4 rounded-xl">
+    <div className="bg-[#452427] mx-2 my-3 p-4 rounded-xl min-h-[336px]">
       <h1 className="text-white tracking-wide text-lg font-bold mb-2">{title}:</h1>
       <h4 className='text-sm'>Total Buff Price: ${getTotal(items)}</h4>
       <div className="flex flex-wrap -mx-2">
@@ -59,7 +63,7 @@ function getTotal(items) {
     const priceData = SetPrice(items[i].itemName);
     total += Number(priceData.buff.substring(1));
   }
-  return total.toPrecision(3);
+  return total.toFixed(2);
 }
 
 TradeCard.propTypes = {

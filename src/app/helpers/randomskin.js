@@ -1,12 +1,7 @@
 import data from './skindata.json';
 import allSkins from './prices/skinPrices.json'
 import SizeIcon from './icons/sizeicon';
-import skins from '../helpers/error_jsons/skins.json'
-import stickers from '../helpers/error_jsons/stickers.json'
-import crates from '../helpers/error_jsons/crates.json'
-import agents from '../helpers/error_jsons/agents.json'
-import music from '../helpers/error_jsons/music_kits.json'
-import * as fuzzball from "fuzzball";
+import findImage from '../helpers/findImage'
 
 // Gets random skin name using numskinsingame and uses IconRequest to get its icon
 export default async function RandomSkin(){
@@ -24,7 +19,7 @@ export default async function RandomSkin(){
   } else {
     randomSkinName = randomSkinPrices
     console.log(randomSkinName)
-    randomSkinIcon = findImageByItemName(randomSkinName, [crates, stickers, skins, agents, music]);
+    randomSkinIcon = findImage(randomSkinName);
     console.log(randomSkinIcon)
   }
 
@@ -32,35 +27,4 @@ export default async function RandomSkin(){
     itemName: randomSkinName,
     itemIcon: randomSkinIcon
   }
-}
-
-function findImageByItemName(itemName, arrays) {
-  const sanitizedItemName = itemName
-    .replace(/★/g, "")
-    .replace(/StatTrak™/g, "")
-    .replace(/\(.+?\)/g, "")
-    .trim();
-
-  for (const array of arrays) {
-    const item = array.find((item) => {
-      const sanitizedArrayItemName = item.name
-        .replace(/★/g, "")
-        .replace(/StatTrak™/g, "")
-        .replace(/\(.+?\)/g, "")
-        .trim();
-
-      const partialRatio = fuzzball.partial_ratio(
-        sanitizedItemName,
-        sanitizedArrayItemName
-      );
-
-      return partialRatio >= 95; // Adjust the threshold as needed
-    });
-
-    if (item) {
-      return item.image;
-    }
-  }
-
-  return null; // Return null if no matching item is found
 }
