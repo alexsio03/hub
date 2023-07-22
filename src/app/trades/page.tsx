@@ -68,23 +68,28 @@ export default function TradesPage() {
   return (
     <>
       <Nav></Nav>
-      <div>
-        {user && <button onClick={handleCreateTrade}>Create Trade</button>}
-        <div className='flex flex-col flex-wrap items-start mx-6'>
-          {trades[0] ? trades.map((trade) => (
-            <Tradecard 
-            key={trade.id}
-            owner={trade.owner_steam.steam_name} 
-            owner_url={trade.owner_steam.steam_url} 
-            offers={trade.offered_items} 
-            requests={trade.requested_items} 
-            id={trade.id}
-            is_owner={user?.uid == trade.owner}
-            onDeleteTrade={handleDeleteTrade}
-            data={trade}/>
-          )) : <p>Loading</p>}
+      <div className='flex flex-row m-10'>
+        <div className='w-3/12 bg-blue-900 bg-opacity-30 p-4 h-96'>
+          <p>Filters</p>
         </div>
-    </div>
+        <div className='ml-24'>
+          {user && <button onClick={handleCreateTrade}>Create Trade</button>}
+          <div className='flex flex-col flex-wrap items-start'>
+            {trades[0] ? trades.map((trade) => (
+              <Tradecard 
+              key={trade.id}
+              owner={trade.owner_steam.steam_name} 
+              owner_url={trade.owner_steam.steam_url} 
+              offers={trade.offered_items} 
+              requests={trade.requested_items} 
+              id={trade.id}
+              is_owner={user?.uid == trade.owner}
+              onDeleteTrade={handleDeleteTrade}
+              data={trade}/>
+            )) : <p>Loading</p>}
+          </div>
+        </div>
+      </div>
     </>
   );
 }
