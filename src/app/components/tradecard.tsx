@@ -24,11 +24,11 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
   };
 
   return (
-    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col mx-auto relative min-h-[452px]">
+    <div className="bg-[#2b2222] rounded-lg my-6 p-1 flex flex-col relative w-11/12 min-h-[452px]">
       <div className="p-2">
         <h1 className="text-white text-xl">Trade Owner: <a className='hover:underline' href={owner_url}>{owner}</a></h1>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-between">
         <Section title="Offering" items={offers} />
         <Section title="Requesting" items={requests} />
       </div>
@@ -45,7 +45,7 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
 
 const Section = ({ title, items }) => {
   return (
-    <div className="bg-[#452427] mx-2 my-3 p-4 rounded-xl min-h-[336px]">
+    <div className="bg-[#452427] mx-2 my-3 p-2 rounded-xl min-h-[336px]">
       <h1 className="text-white tracking-wide text-lg font-bold mb-2">{title}:</h1>
       <h4 className='text-sm'>Total Buff Price: ${getTotal(items)}</h4>
       <div className="flex flex-wrap -mx-2">

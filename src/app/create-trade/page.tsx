@@ -262,29 +262,31 @@ export default function CreateTradePage() {
             <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
         <div className="flex flex-row justify-around m-4">
-          <div className="max-w-4xl min-w-4xl mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="w-1/2 mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">User Inventory:</h2>
-            <input
+            <div className="flex justify-between mx-2 mb-6">
+              <input
               type="text"
               value={invSearchQuery}
               onChange={handleInvSearch}
               placeholder="Search items..."
-              className="text-black p-1 rounded-sm ml-2 mb-6"
-            />
-            <input
-              type="number"
-              value={minInvPrice}
-              onChange={(e) => setMinInvPrice(e.target.value)}
-              placeholder="Min Price"
-              className="text-black p-1 rounded-sm ml-2 mb-6"
-            />
-            <input
-              type="number"
-              value={maxInvPrice}
-              onChange={(e) => setMaxInvPrice(e.target.value)}
-              placeholder="Max Price"
-              className="text-black p-1 rounded-sm ml-2 mb-6"
-            />
+              className="text-black p-1 rounded-sm"
+              />
+              <input
+                type="number"
+                value={minInvPrice}
+                onChange={(e) => setMinInvPrice(e.target.value)}
+                placeholder="Min Price"
+                className="text-black p-1 rounded-sm"
+              />
+              <input
+                type="number"
+                value={maxInvPrice}
+                onChange={(e) => setMaxInvPrice(e.target.value)}
+                placeholder="Max Price"
+                className="text-black p-1 rounded-sm"
+              />
+            </div>
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredInventory.map((itemInformation, index) => (
                 <button key={index} onClick={() => handleItemOffered(itemInformation)} className="item-button m-1 snap-start">
@@ -293,29 +295,31 @@ export default function CreateTradePage() {
               ))}
             </div>
           </div>
-          <div className="max-w-4xl min-w-4xl p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="w-1/2 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">Requested Items</h2>
-            <input
+            <div className="flex justify-between mx-2 mb-6">
+              <input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
                 placeholder="Search items..."
-                className="text-black p-1 rounded-sm ml-2 mb-6"
+                className="text-black p-1 rounded-sm"
               />
               <input
                 type="number"
                 value={minReqPrice}
                 onChange={(e) => setMinReqPrice(e.target.value)}
                 placeholder="Min Price"
-                className="text-black p-1 rounded-sm ml-2 mb-6"
+                className="text-black p-1 rounded-sm"
               />
               <input
                 type="number"
                 value={maxReqPrice}
                 onChange={(e) => setMaxReqPrice(e.target.value)}
                 placeholder="Max Price"
-                className="text-black p-1 rounded-sm ml-2 mb-6"
+                className="text-black p-1 rounded-sm"
               />
+            </div>
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredItems.map((skin, index) => (
                 <button key={index} onClick={() => handleItemRequested(skin)} className="item-button snap-start">
