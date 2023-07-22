@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -37,44 +37,53 @@ export default function CreateTradePage() {
   const [maxReqPrice, setMaxReqPrice] = useState("");
   const [minInvPrice, setMinInvPrice] = useState("");
   const [maxInvPrice, setMaxInvPrice] = useState("");
+  const [updateFilter, setUpdateFilter] = useState(false);
 
   const skinArr = Object.entries(skindata.items_list);
   const skinPrices = Object.entries(skinprices);
-  const filteredItems = skinPrices
-  .filter(([itemName]) => {
-    const keywords = searchQuery.toLowerCase().split(" ");
-    return keywords.every((keyword) =>
-      itemName.toLowerCase().includes(keyword)
-    );
-  })
-  .filter(([itemName, itemInfo]) => {
-    const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
-    const minPriceValue = convertPriceToDecimal(minReqPrice);
-    const maxPriceValue = convertPriceToDecimal(maxReqPrice);
+  const filteredItems = useMemo(() => { // Wrap the filteredItems calculation in useMemo
+    return skinPrices
+      .filter(([itemName]) => {
+        const keywords = searchQuery.toLowerCase().split(" ");
+        return keywords.every((keyword) => itemName.toLowerCase().includes(keyword));
+      })
+      .filter(([itemName, itemInfo]) => {
+        // Add a condition to check if the filter should be updated or not
+        if (!updateFilter) {
+          return true; // Return true to include all items if filter update is not required
+        }
 
-    if (price === null || price === '$null') {
-      return false; // Exclude items with null price
-    }
+        // Rest of the filtering logic remains the same
+        const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
+        const minPriceValue = convertPriceToDecimal(minReqPrice);
+        const maxPriceValue = convertPriceToDecimal(maxReqPrice);
 
-    const itemPriceValue = convertPriceToDecimal(price);
+        if (price === null || price === '$null') {
+          return false; // Exclude items with null price
+        }
 
-    if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
-      return false; // Exclude items with price lower than the minimum price
-    }
+        const itemPriceValue = convertPriceToDecimal(price);
 
-    if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
-      return false; // Exclude items with price higher than the maximum price
-    }
+        if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
+          return false; // Exclude items with price lower than the minimum price
+        }
 
-    return true;
-  })
-  .slice(0, 40)
-  .map(([itemName, itemInfo]) => ({
-    itemName: itemName.replaceAll("&#39", "'"),
-    itemIsMarketable: 1,
-    id: hash(itemName),
-    itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
-  }));
+        if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
+          return false; // Exclude items with price higher than the maximum price
+        }
+
+        return true;
+      })
+      .slice(0, 40)
+      .map(([itemName, itemInfo]) => ({
+        itemName: itemName.replaceAll("&#39", "'"),
+        itemIsMarketable: 1,
+        id: hash(itemName),
+        itemIcon: skinArr.find((item) => item[0] == itemName)
+          ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1])
+          : null,
+      }));
+  }, [searchQuery, minReqPrice, maxReqPrice, updateFilter]);
 
   const filteredInventory = inventory.filter((item) =>
     item.itemName.toLowerCase().includes(invSearchQuery)).filter((item) => {
@@ -214,6 +223,10 @@ export default function CreateTradePage() {
     }
   }
 
+  const handleFilterUpdate = () => {
+    setUpdateFilter(true);
+  };
+
   const removeItem = (item) => {
     var updatedOfferedItems = [...offeredItems];
     var updatedRequestedItems = [...requestedItems];
@@ -319,6 +332,7 @@ export default function CreateTradePage() {
                 placeholder="Max Price"
                 className="text-black p-1 rounded-sm"
               />
+              <button onClick={handleFilterUpdate}>Update Filter</button>
             </div>
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredItems.map((skin, index) => (
