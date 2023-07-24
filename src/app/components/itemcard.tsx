@@ -15,8 +15,8 @@ export default function Itemcard(item: any) {
       <img className="mx-auto object-contain w-32 h-32" src={itemUrl} alt={id} />
       {priceData && (
       <>
-      <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
       <p className="text-xs opacity-50">Buff: {priceData.buff}</p>
+      <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
       </>
       )}
     </div>
