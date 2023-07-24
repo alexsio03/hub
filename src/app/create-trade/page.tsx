@@ -15,6 +15,7 @@ import Itemcard from "../components/itemcard";
 import Nav from "../components/nav";
 import SizeIcon from "../helpers/icons/sizeicon";
 import SetPrice from "../helpers/prices/setprice";
+import findItem from "../helpers/findItem";
 
 initFirebase();
 const db = initDB();
@@ -37,53 +38,45 @@ export default function CreateTradePage() {
   const [maxReqPrice, setMaxReqPrice] = useState("");
   const [minInvPrice, setMinInvPrice] = useState("");
   const [maxInvPrice, setMaxInvPrice] = useState("");
-  const [updateFilter, setUpdateFilter] = useState(false);
 
   const skinArr = Object.entries(skindata.items_list);
   const skinPrices = Object.entries(skinprices);
-  const filteredItems = useMemo(() => { // Wrap the filteredItems calculation in useMemo
-    return skinPrices
-      .filter(([itemName]) => {
-        const keywords = searchQuery.toLowerCase().split(" ");
-        return keywords.every((keyword) => itemName.toLowerCase().includes(keyword));
-      })
-      .filter(([itemName, itemInfo]) => {
-        // Add a condition to check if the filter should be updated or not
-        if (!updateFilter) {
-          return true; // Return true to include all items if filter update is not required
-        }
+  const filteredItems = skinPrices
+  .filter(([itemName]) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+    return keywords.every((keyword) =>
+      itemName.toLowerCase().includes(keyword)
+    );
+  })
+  .filter(([itemName, itemInfo]) => {
+    const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
+    const minPriceValue = convertPriceToDecimal(minReqPrice);
+    const maxPriceValue = convertPriceToDecimal(maxReqPrice);
 
-        // Rest of the filtering logic remains the same
-        const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
-        const minPriceValue = convertPriceToDecimal(minReqPrice);
-        const maxPriceValue = convertPriceToDecimal(maxReqPrice);
+    if (price === null || price === '$null') {
+      return false; // Exclude items with null price
+    }
 
-        if (price === null || price === '$null') {
-          return false; // Exclude items with null price
-        }
+    const itemPriceValue = convertPriceToDecimal(price);
 
-        const itemPriceValue = convertPriceToDecimal(price);
+    if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
+      return false; // Exclude items with price lower than the minimum price
+    }
 
-        if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
-          return false; // Exclude items with price lower than the minimum price
-        }
+    if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
+      return false; // Exclude items with price higher than the maximum price
+    }
 
-        if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
-          return false; // Exclude items with price higher than the maximum price
-        }
+    return true;
+  })
+  .slice(0, 40)
+  .map(([itemName, itemInfo]) => ({
+    itemName: itemName.replaceAll("&#39", "'"),
+    itemIsMarketable: 1,
+    id: hash(itemName),
+    itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
+  }));
 
-        return true;
-      })
-      .slice(0, 40)
-      .map(([itemName, itemInfo]) => ({
-        itemName: itemName.replaceAll("&#39", "'"),
-        itemIsMarketable: 1,
-        id: hash(itemName),
-        itemIcon: skinArr.find((item) => item[0] == itemName)
-          ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1])
-          : null,
-      }));
-  }, [searchQuery, minReqPrice, maxReqPrice, updateFilter]);
 
   const filteredInventory = inventory.filter((item) =>
     item.itemName.toLowerCase().includes(invSearchQuery)).filter((item) => {
@@ -177,6 +170,13 @@ export default function CreateTradePage() {
     }
 
     // Create trade object
+    for (let i = 0; i < requestedItems.length; i++) {
+      requestedItems[i].category = findItem(requestedItems[i].itemName).category || findItem(requestedItems[i].itemName).id;
+    }
+    for (let i = 0; i < offeredItems.length; i++) {
+      offeredItems[i].category = findItem(offeredItems[i].itemName).category || findItem(offeredItems[i].itemName).id; 
+    }
+
     const trade = {
       owner: user.uid,
       owner_steam: steamInfo,
@@ -223,10 +223,6 @@ export default function CreateTradePage() {
     }
   }
 
-  const handleFilterUpdate = () => {
-    setUpdateFilter(true);
-  };
-
   const removeItem = (item) => {
     var updatedOfferedItems = [...offeredItems];
     var updatedRequestedItems = [...requestedItems];
@@ -265,9 +261,9 @@ export default function CreateTradePage() {
     <>
       <Nav></Nav>
       <div className="flex flex-col mb-8">
-        <div className="flex flex-col min-w-3xl items-center justify-center">
-            <div className='flex flex-col flex-wrap items-start'>
-              <button onClick={(item) => removeItem(item)}>
+        <div className="flex flex-col items-center justify-center">
+            <div className='flex flex-col items-center justify-center flex-wrap w-full'>
+              <button className="w-5/6 ml-32" onClick={(item) => removeItem(item)}>
                 <Tradecard offers={offeredItems} requests={requestedItems}/>
               </button>
             </div>
@@ -277,28 +273,37 @@ export default function CreateTradePage() {
         <div className="flex flex-row justify-around m-4">
           <div className="w-1/2 mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">User Inventory:</h2>
-            <div className="flex justify-between mx-2 mb-6">
-              <input
-              type="text"
-              value={invSearchQuery}
-              onChange={handleInvSearch}
-              placeholder="Search items..."
-              className="text-black p-1 rounded-sm"
-              />
-              <input
-                type="number"
-                value={minInvPrice}
-                onChange={(e) => setMinInvPrice(e.target.value)}
-                placeholder="Min Price"
-                className="text-black p-1 rounded-sm"
-              />
-              <input
-                type="number"
-                value={maxInvPrice}
-                onChange={(e) => setMaxInvPrice(e.target.value)}
-                placeholder="Max Price"
-                className="text-black p-1 rounded-sm"
-              />
+            <div className="flex justify-between mx-2 my-6">
+              <div className="flex flex-row">
+                <p className="mt-1">Search: </p>
+                <input
+                  type="text"
+                  value={invSearchQuery}
+                  onChange={handleInvSearch}
+                  placeholder="Karambit Doppler"
+                  className="text-black p-1 rounded-sm ml-2"
+                />
+              </div>
+              <div className="flex flex-row">
+                <p className="mt-1">Minimum: </p>
+                <input
+                  type="number"
+                  value={minInvPrice}
+                  onChange={(e) => setMinInvPrice(e.target.value)}
+                  placeholder="$25"
+                  className="text-black p-1 rounded-sm w-28 ml-2"
+                />
+              </div>
+              <div className="flex flex-row">
+                <p className="mt-1">Maximum: </p>
+                <input
+                  type="number"
+                  value={maxInvPrice}
+                  onChange={(e) => setMaxInvPrice(e.target.value)}
+                  placeholder="$100"
+                  className="text-black p-1 rounded-sm w-28 ml-2"
+                />
+              </div>
             </div>
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredInventory.map((itemInformation, index) => (
@@ -310,29 +315,37 @@ export default function CreateTradePage() {
           </div>
           <div className="w-1/2 p-2 rounded-lg bg-blue-800 bg-opacity-10">
             <h2 className="text-center">Requested Items</h2>
-            <div className="flex justify-between mx-2 mb-6">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={handleSearch}
-                placeholder="Search items..."
-                className="text-black p-1 rounded-sm"
-              />
-              <input
-                type="number"
-                value={minReqPrice}
-                onChange={(e) => setMinReqPrice(e.target.value)}
-                placeholder="Min Price"
-                className="text-black p-1 rounded-sm"
-              />
-              <input
-                type="number"
-                value={maxReqPrice}
-                onChange={(e) => setMaxReqPrice(e.target.value)}
-                placeholder="Max Price"
-                className="text-black p-1 rounded-sm"
-              />
-              <button onClick={handleFilterUpdate}>Update Filter</button>
+            <div className="flex justify-between mx-2 my-6">
+              <div className="flex flex-row">
+                <p className="mt-1">Search: </p>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  placeholder="M9 Bayo"
+                  className="text-black p-1 rounded-sm ml-2"
+                />
+              </div>
+              <div className="flex flex-row">
+                <p className="mt-1">Minimum: </p>
+                <input
+                  type="number"
+                  value={minReqPrice}
+                  onChange={(e) => setMinReqPrice(e.target.value)}
+                  placeholder="$25"
+                  className="text-black p-1 rounded-sm w-28 ml-2"
+                />
+              </div>
+              <div className="flex flex-row">
+                <p className="mt-1">Maximum: </p>
+                <input
+                  type="number"
+                  value={maxReqPrice}
+                  onChange={(e) => setMaxReqPrice(e.target.value)}
+                  placeholder="$100"
+                  className="text-black p-1 rounded-sm w-28 ml-2"
+                />
+              </div>
             </div>
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredItems.map((skin, index) => (
