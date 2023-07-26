@@ -271,7 +271,7 @@ export default function CreateTradePage() {
             <button onClick={handleSubmitTrade}>Submit Trade</button>
         </div>
         <div className="flex flex-row justify-around m-4">
-          <div className="w-1/2 mr-10 p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="w-1/2 mr-10 p-2 rounded-md bg-sky-800 bg-opacity-30">
             <h2 className="text-center">User Inventory:</h2>
             <div className="flex justify-between mx-2 my-6">
               <div className="flex flex-row">
@@ -313,7 +313,7 @@ export default function CreateTradePage() {
               ))}
             </div>
           </div>
-          <div className="w-1/2 p-2 rounded-lg bg-blue-800 bg-opacity-10">
+          <div className="w-1/2 p-2 rounded-md bg-sky-800 bg-opacity-30">
             <h2 className="text-center">Requested Items</h2>
             <div className="flex justify-between mx-2 my-6">
               <div className="flex flex-row">

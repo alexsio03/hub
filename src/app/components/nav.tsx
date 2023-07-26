@@ -16,6 +16,7 @@ const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Market', href: '/market' },
   { name: 'Trades', href: '/trades' },
+  { name: 'Prices', href: '/prices' },
 ]
 
 // Helper function to handle CSS class names
@@ -58,7 +59,7 @@ export default function Nav() {
   checkSteam();
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav">
       {({ open }) => (
         <>
           <div className="px-2 sm:px-6 lg:px-8">

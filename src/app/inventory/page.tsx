@@ -83,7 +83,7 @@ export default function Inventory() {
   return (
     <>
       <Nav></Nav>
-      <div className='m-6'>
+      <div className='my-6 ml-20'>
         <div className='flex flex-row flex-wrap'>
           {/* Render Inventorycard component for each item in the inventory */}
           {inventory.map((item, index) => (

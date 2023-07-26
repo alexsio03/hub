@@ -170,7 +170,7 @@ export default function TradesPage() {
             </div>
           </div>
         </div>
-        <div className='ml-8 pl-14 w-full'>
+        <div className='mx-8 pl-14 w-full'>
           {user && <button onClick={handleCreateTrade}>Create Trade</button>}
           <div className='flex flex-col flex-wrap items-start w-full'>
             {trades[0] ? filteredTrades.map((trade) => (
