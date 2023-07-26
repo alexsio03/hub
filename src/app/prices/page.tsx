@@ -6,6 +6,7 @@ import Itemcard from '../components/itemcard';
 import { useState, MouseEvent, useCallback } from "react";
 import SizeIcon from '../helpers/icons/sizeicon';
 import findImage from '../helpers/findImage';
+import Head from 'next/head'
 
 export default function Prices() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -56,13 +57,15 @@ export default function Prices() {
     };
 
     function handleItemRequested(clickedItem) {
-        console.log(clickedItem.priceData)
         setItem(clickedItem)
         setPriceData(clickedItem.priceData)
     }
 
     return (
         <>
+        <Head>
+            <title>Prices</title>
+        </Head>
             <Nav></Nav>
             <div className='m-3 mr-8 flex flex-row'>
                 <div className='w-1/2 flex items-center flex-col'>

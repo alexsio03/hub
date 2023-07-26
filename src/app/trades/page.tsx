@@ -29,8 +29,6 @@ export default function TradesPage() {
     const bothEmpty = (requestFilters.length == 0 && offerFilters.length == 0)
     var reqFilter = false;
     for (let i = 0; i < reqs.length; i++) {
-      console.log(reqs[i].category)
-      console.log(requestFilters)
       if(requestFilters.includes(reqs[i].category) || bothEmpty) {
         reqFilter = true;
       }
