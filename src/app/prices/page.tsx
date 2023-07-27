@@ -1,77 +1,125 @@
+// Import necessary components and helper functions for the 'Prices' page.
 "use client"
 import Nav from '../components/nav';
-import skindata from "../helpers/skindata.json"
-import skinprices from '../helpers/prices/skinPrices.json'
+import skindata from "../helpers/skindata.json";
+import skinprices from '../helpers/prices/skinPrices.json';
 import Itemcard from '../components/itemcard';
 import { useState, MouseEvent, useCallback } from "react";
 import SizeIcon from '../helpers/icons/sizeicon';
 import findImage from '../helpers/findImage';
-import Head from 'next/head'
+import Head from 'next/head';
 
+// Define the functional component 'Prices'.
 export default function Prices() {
+    // State variables to manage the search query and filtered items.
     const [searchQuery, setSearchQuery] = useState("");
+    const [item, setItem] = useState();
+    const [priceData, setPriceData] = useState();
+    const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
+    // Get an array of items and their prices from the JSON data.
     const skinArr = Object.entries(skindata.items_list);
     const skinPrices = Object.entries(skinprices);
     const filteredItems = skinPrices
-    .filter(([itemName]) => {
-        const keywords = searchQuery.toLowerCase().split(" ");
-        return keywords.every((keyword) =>
-        itemName.toLowerCase().includes(keyword)
-        );
-    })
-    .slice(0, 20)
-    .map(([itemName, itemInfo]) => ({
-        itemName: itemName.replaceAll("&#39", "'"),
-        id: hash(itemName),
-        itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
-        priceData: itemInfo
-    }));
+        .filter(([itemName]) => {
+            const keywords = searchQuery.toLowerCase().split(" ");
+            return keywords.every((keyword) =>
+                itemName.toLowerCase().includes(keyword)
+            );
+        })
+        .slice(0, 20)
+        .map(([itemName, itemInfo]) => ({
+            itemName: itemName.replaceAll("&#39", "'"),
+            id: hash(itemName),
+            itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
+            priceData: itemInfo
+        }));
     
-    const [item, setItem] = useState()
-    const [priceData, setPriceData] = useState()
-    const [rotate, setRotate] = useState({ x: 0, y: 0 });
-
-    const onMouseMove = useCallback(
-        throttle((e: MouseEvent<HTMLDivElement>) => {
-        const card = e.currentTarget;
-        const box = card.getBoundingClientRect();
-        const x = e.clientX - box.left;
-        const y = e.clientY - box.top;
-        const centerX = box.width / 2;
-        const centerY = box.height / 2;
-        const rotateX = (y - centerY) / 1000;
-        const rotateY = (centerX - x) / 1000;
-
-        setRotate({ x: rotateX, y: rotateY });
-        }, 100),
-        []
-    );
-
-    const onMouseLeave = () => {
-        setRotate({ x: 0, y: 0 });
-    };
-
+    // Event handler to handle search query changes.
     const handleSearch = (event) => {
         setSearchQuery(event.target.value);
     };
 
+    // Function to handle item selection and update price data.
     function handleItemRequested(clickedItem) {
         setItem(clickedItem)
         setPriceData(clickedItem.priceData)
     }
 
+    // Function to calculate the Steam price based on the SteamData.
+    function getSteamPrice(steamData) {
+        if(steamData.last_24h) {
+            return "$" + steamData.last_24h + " (24 hours)";
+        } else if (steamData.last_7d) {
+            return "$" + steamData.last_7d + " (7 days)";
+        } else if (steamData.last_30d) {
+            return "$" + steamData.last_30d + " (30 days)";
+        } else {
+            return "$" + steamData.last_90d + " (90 days)";
+        }
+    }
+
+    // Function to throttle mouse move events to prevent excessive calls.
+    function throttle(func, delay) {
+        let lastCall = 0;
+        return (...args) => {
+            const now = new Date().getTime();
+            if (now - lastCall < delay) {
+                return;
+            }
+            lastCall = now;
+            return func(...args);
+        };
+    }
+
+    // Function to hash the given string.
+    function hash(str) {
+        let hash = 0;
+        for (let i = 0, len = str.length; i < len; i++) {
+            let chr = str.charCodeAt(i);
+            hash = (hash << 5) - hash + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
+
+    // Callback to handle mouse move events with throttling.
+    const onMouseMove = useCallback(
+        throttle((e: MouseEvent<HTMLDivElement>) => {
+            const card = e.currentTarget;
+            const box = card.getBoundingClientRect();
+            const x = e.clientX - box.left;
+            const y = e.clientY - box.top;
+            const centerX = box.width / 2;
+            const centerY = box.height / 2;
+            const rotateX = (y - centerY) / 1000;
+            const rotateY = (centerX - x) / 1000;
+
+            setRotate({ x: rotateX, y: rotateY });
+        }, 100),
+        []
+    );
+
+    // Callback to reset rotation on mouse leave.
+    const onMouseLeave = () => {
+        setRotate({ x: 0, y: 0 });
+    };
+
+    // Render the component's UI.
     return (
         <>
-        <Head>
-            <title>Prices</title>
-        </Head>
+            {/* Set the page title using 'Head' component from Next.js */}
+            <Head>
+                <title>Prices</title>
+            </Head>
+            {/* Render the Nav component */}
             <Nav></Nav>
             <div className='m-3 mr-8 flex flex-row'>
                 <div className='w-1/2 flex items-center flex-col'>
                     <div>
                         <div className="flex flex-row">
                             <p className="mt-1">Search: </p>
+                            {/* Input field to search for items */}
                             <input
                                 value={searchQuery}
                                 onChange={handleSearch}
@@ -82,27 +130,33 @@ export default function Prices() {
                         </div>
                     </div>
                     <div className='flex flex-row flex-wrap justify-center h-[820px] mr-8 overflow-y-auto snap-y'>
+                        {/* Render the filtered items */}
                         {filteredItems.map((skin, index) => (
                             <button key={index} onClick={() => handleItemRequested(skin)} className="item-button snap-start">
+                                {/* Render the Itemcard component */}
                                 {<Itemcard itemData={skin} />}
                             </button>
                         ))}
                     </div>
                 </div>
-                <div className='w-1/2 h-1/2 m-auto bg-gradient-to-br from-sky-700 to-cyan-700 p-8 rounded-lg'
-                onMouseMove={onMouseMove}
-                onMouseLeave={onMouseLeave}
-                style={{
-                    transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) scale3d(1, 1, 1)`,
-                    transition: "all 400ms cubic-bezier(0.03, 0.98, 0.52, 0.99) 0s",
-                }}>
+                {/* Display the selected item's details */}
+                <div className='w-1/2 h-1/2 m-auto bg-gradient-to-br from-cyan-700 to-sky-600 shadow-lg shadow-sky-600/50 p-8 rounded-lg'
+                    onMouseMove={onMouseMove}
+                    onMouseLeave={onMouseLeave}
+                    style={{
+                        transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) scale3d(1, 1, 1)`,
+                        transition: "all 400ms cubic-bezier(0.03, 0.98, 0.52, 0.99) 0s",
+                    }}>
                     <div className='flex justify-center text-xl'>
+                        {/* Display the item name or a placeholder message */}
                         <h2>{item?.itemName ? item.itemName : "CLICK ON AN ITEM FOR PRICE DATA"}</h2>
                     </div>
                     <div className='flex justify-center'>
+                        {/* Display the item's image */}
                         <img className="mx-auto object-contain w-64 h-64" src={item ? findImage(item.itemName) : "https://static.thenounproject.com/png/899817-200.png"}></img>
                     </div>
                     <div className='flex flex-row px-10 justify-between'>
+                        {/* Display price data from different sources */}
                         <div className='flex flex-col flex-1 pl-12 space-y-8 leading-loose tracking-wide text-lg'>
                             <p>Buff163: {priceData?.buff163?.starting_at?.price ? "$" + priceData.buff163.starting_at.price : "None Currently Listed"}</p>
                             <p>Skinport: {priceData?.skinport?.starting_at ? "$" + priceData.skinport.starting_at : "None Currently Listed"}</p>
@@ -117,42 +171,5 @@ export default function Prices() {
                 </div>
             </div>
         </>
-    )
-}
-
-function getSteamPrice(steamData) {
-    if(steamData.last_24h) {
-        return "$" + steamData.last_24h + " (24 hours)"
-    } else if (steamData.last_7d) {
-        return "$" + steamData.last_7d + " (7 days)"
-    } else if (steamData.last_30d) {
-        return "$" + steamData.last_30d + " (30 days)"
-    } else {
-        return "$" + steamData.last_90d + " (90 days)"
-    }
-}
-
-function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let lastCall = 0;
-  return (...args: Parameters<T>) => {
-    const now = new Date().getTime();
-    if (now - lastCall < delay) {
-      return;
-    }
-    lastCall = now;
-    return func(...args);
-  };
-}
-
-function hash(str) {
-    let hash = 0;
-    for (let i = 0, len = str.length; i < len; i++) {
-        let chr = str.charCodeAt(i);
-        hash = (hash << 5) - hash + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
+    );
 }

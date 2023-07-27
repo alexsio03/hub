@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
 import { getAuth } from "firebase/auth";
@@ -17,14 +17,17 @@ import SizeIcon from "../helpers/icons/sizeicon";
 import SetPrice from "../helpers/prices/setprice";
 import findItem from "../helpers/findItem";
 
+// Initialize Firebase
 initFirebase();
 const db = initDB();
 const storage = getStorage();
 
 export default function CreateTradePage() {
+  // Authentication
   const auth = getAuth();
   const [user] = useAuthState(auth);
 
+  // State variables
   const [inventory, setInventory] = useState([]);
   const [offeredItems, setOfferedItems] = useState([]);
   const [requestedItems, setRequestedItems] = useState([]);
@@ -32,52 +35,58 @@ export default function CreateTradePage() {
 
   const router = useRouter();
 
+  // State variables for filtering items in the inventory and requested items
   const [searchQuery, setSearchQuery] = useState("");
   const [invSearchQuery, setInvSearchQuery] = useState("");
   const [minReqPrice, setMinReqPrice] = useState("");
   const [maxReqPrice, setMaxReqPrice] = useState("");
   const [minInvPrice, setMinInvPrice] = useState("");
   const [maxInvPrice, setMaxInvPrice] = useState("");
+  // State variable to track the loading state for the "Submit Trade" button
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Convert skindata and skinprices to arrays
   const skinArr = Object.entries(skindata.items_list);
   const skinPrices = Object.entries(skinprices);
+
+  // Filter and map the items based on search query and price range for requested items
   const filteredItems = skinPrices
-  .filter(([itemName]) => {
-    const keywords = searchQuery.toLowerCase().split(" ");
-    return keywords.every((keyword) =>
-      itemName.toLowerCase().includes(keyword)
-    );
-  })
-  .filter(([itemName, itemInfo]) => {
-    const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
-    const minPriceValue = convertPriceToDecimal(minReqPrice);
-    const maxPriceValue = convertPriceToDecimal(maxReqPrice);
+    .filter(([itemName]) => {
+      const keywords = searchQuery.toLowerCase().split(" ");
+      return keywords.every((keyword) =>
+        itemName.toLowerCase().includes(keyword)
+      );
+    })
+    .filter(([itemName, itemInfo]) => {
+      const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
+      const minPriceValue = convertPriceToDecimal(minReqPrice);
+      const maxPriceValue = convertPriceToDecimal(maxReqPrice);
 
-    if (price === null || price === '$null') {
-      return false; // Exclude items with null price
-    }
+      if (price === null || price === '$null' || price ===  'No Data') {
+        return false; // Exclude items with null price
+      }
 
-    const itemPriceValue = convertPriceToDecimal(price);
+      const itemPriceValue = convertPriceToDecimal(price);
 
-    if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
-      return false; // Exclude items with price lower than the minimum price
-    }
+      if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
+        return false; // Exclude items with price lower than the minimum price
+      }
 
-    if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
-      return false; // Exclude items with price higher than the maximum price
-    }
+      if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
+        return false; // Exclude items with price higher than the maximum price
+      }
 
-    return true;
-  })
-  .slice(0, 40)
-  .map(([itemName, itemInfo]) => ({
-    itemName: itemName.replaceAll("&#39", "'"),
-    itemIsMarketable: 1,
-    id: hash(itemName),
-    itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
-  }));
+      return true;
+    })
+    .slice(0, 40)
+    .map(([itemName, itemInfo]) => ({
+      itemName: itemName.replaceAll("&#39", "'"),
+      itemIsMarketable: 1,
+      id: hash(itemName),
+      itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
+    }));
 
-
+  // Filter and map the items in the user's inventory based on search query and price range
   const filteredInventory = inventory.filter((item) =>
     item.itemName.toLowerCase().includes(invSearchQuery)).filter((item) => {
     const price = item.itemIsMarketable ? SetPrice(item.itemName).buff : null; // Replace 'buff' with 'steam' if needed
@@ -99,8 +108,8 @@ export default function CreateTradePage() {
     return true;
   });
 
+  // Fetch user data and inventory data from Firebase
   useEffect(() => {
-    // Define an async function to fetch user data
     const getUser = async () => {
       if (user) {
         const dbUser = await doc(db, "users", user.uid);
@@ -111,7 +120,6 @@ export default function CreateTradePage() {
       }
     };
 
-    // Fetch inventory data and process inventory
     getUser().then(async (user) => {
       var json;
       if (user) {
@@ -119,10 +127,11 @@ export default function CreateTradePage() {
           steam_name: user.steam_info.name,
           steam_url: user.steam_info.url
         })
+
         // Get the download URL for the user's inventory JSON file
         const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
         try {
-          // Make an HTTP request to our backend to fetch the JSON data from our storage
+          // Make an HTTP request to fetch the JSON data from the storage
           const response = await axios.get('/fb-proxy', {
             params: {
               downloadURL: downloadURL,
@@ -132,12 +141,14 @@ export default function CreateTradePage() {
         } catch (error) {
           console.error('Error occurred:', error);
         }
+
+        // Process inventory data and update state
         var newItems = [];
         var length = Object.keys(json.descriptions).length;
         for (var i = 0; i < length; i++) {
           var invItem = json.descriptions[i];
           let marketable = invItem.marketable;
-          if(invItem.actions) {
+          if (invItem.actions) {
             var link = JSON.stringify(invItem.actions[0].link);
             var assetid = json.assets.find((asset) => asset.classid == invItem.classid).assetid;
             link = link.replace("%owner_steamid%", user.steam_info.id).replace("%assetid%", assetid)
@@ -162,13 +173,16 @@ export default function CreateTradePage() {
     });
   }, [user]);
 
+  // Handle the trade submission
   const handleSubmitTrade = async () => {
-    // Validate selected items and requested item
+    
+    // Validate selected items and requested items
     if (!user || offeredItems.length == 0 || requestedItems.length == 0) {
       console.error("Invalid trade data. Some required fields are missing.");
       return;
     }
 
+    setIsSubmitting(true); // Set loading state to true when submitting the trade.
     // Create trade object
     for (let i = 0; i < requestedItems.length; i++) {
       requestedItems[i].category = findItem(requestedItems[i].itemName).category || findItem(requestedItems[i].itemName).id;
@@ -196,8 +210,8 @@ export default function CreateTradePage() {
     }
   };
 
+  // Handle item offered by the user
   function handleItemOffered(clickedItem) {
-    // Perform actions using itemInformation
     var updatedOfferedItems = [...offeredItems];
     var updateInv = [...inventory];
     const index = updatedOfferedItems.findIndex((offeredItem) => offeredItem.id === clickedItem.id);
@@ -211,8 +225,8 @@ export default function CreateTradePage() {
     }
   }
 
+  // Handle item requested by the user
   function handleItemRequested(clickedItem) {
-    // Perform actions using itemInformation
     var updatedRequestedItems = [...requestedItems];
     const index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id === clickedItem.id);
     if (index !== -1) {
@@ -223,6 +237,7 @@ export default function CreateTradePage() {
     }
   }
 
+  // Remove an item from the offered or requested items list
   const removeItem = (item) => {
     var updatedOfferedItems = [...offeredItems];
     var updatedRequestedItems = [...requestedItems];
@@ -230,7 +245,7 @@ export default function CreateTradePage() {
     const itemID = item.target.alt;
     const isOffered = offeredItems.find((offeredItem) => offeredItem.id == itemID);
     var index;
-    if(isOffered) {
+    if (isOffered) {
       index = updatedOfferedItems.findIndex((offeredItem) => offeredItem.id == itemID);
       if (index !== -1) {
         var removingItem = updatedOfferedItems.at(index)
@@ -263,14 +278,31 @@ export default function CreateTradePage() {
       <div className="flex flex-col mb-8">
         <div className="flex flex-col items-center justify-center">
             <div className='flex flex-col items-center justify-center flex-wrap w-full'>
-              <button className="w-5/6 ml-32" onClick={(item) => removeItem(item)}>
+              {/* Display the trade card with selected items */}
+              <button className="w-5/6" onClick={(item) => removeItem(item)}>
                 <Tradecard offers={offeredItems} requests={requestedItems}/>
               </button>
             </div>
-            {/* Additional trade setup */}
-            <button onClick={handleSubmitTrade}>Submit Trade</button>
+            {/* Button to submit the trade */}
+            <button
+              onClick={handleSubmitTrade}
+              className={`bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-indigo-600 hover:to-purple-500 text-white font-bold text-lg py-2 px-4 rounded-md shadow-lg ${
+                isSubmitting ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'
+              }`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-4 h-4 border-t-2 border-l-2 border-white rounded-full animate-spin"></div>
+                  <span>Submitting...</span>
+                </div>
+              ) : (
+                'Submit Trade'
+              )}
+            </button>
         </div>
         <div className="flex flex-row justify-around m-4">
+          {/* User Inventory */}
           <div className="w-1/2 mr-10 p-2 rounded-md bg-sky-800 bg-opacity-30">
             <h2 className="text-center">User Inventory:</h2>
             <div className="flex justify-between mx-2 my-6">
@@ -313,6 +345,7 @@ export default function CreateTradePage() {
               ))}
             </div>
           </div>
+          {/* Requested Items */}
           <div className="w-1/2 p-2 rounded-md bg-sky-800 bg-opacity-30">
             <h2 className="text-center">Requested Items</h2>
             <div className="flex justify-between mx-2 my-6">
@@ -361,6 +394,7 @@ export default function CreateTradePage() {
   );
 }
 
+// Helper function to calculate hash
 function hash(str) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
@@ -371,6 +405,7 @@ function hash(str) {
     return hash;
 }
 
+// Helper function to convert price to decimal
 function convertPriceToDecimal(price) {
   // Remove any non-numeric characters from the string (e.g., "$" or commas)
   const numericString = price.replace(/[^\d.-]/g, "");
