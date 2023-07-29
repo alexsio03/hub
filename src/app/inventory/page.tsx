@@ -2,7 +2,6 @@
 "use client"
 import Nav from '../components/nav';
 import Inventorycard from '../components/inventorycard';
-import IconRequest from '../helpers/icons/iconrequest.js';
 import axios from 'axios';
 import GenerateInspectLink from '../helpers/getinspectlink';
 import skindata from "../helpers/skindata.json"
@@ -14,6 +13,7 @@ import { initDB, initFirebase } from '../fb/config';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 import SizeIcon from '../helpers/icons/sizeicon';
+import ParseTags from '../helpers/parsetags.js';
 
 // Initialize Firebase + db and storage
 initFirebase();
@@ -24,7 +24,7 @@ export default function Inventory() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const [inventory, setInventory] = useState<{ [key: string]: any }[]>([]);
-  const skinArr = Object.entries(skindata.items_list)
+  const skinArr = Object.entries(skindata.items_list);
 
   // Run this effect whenever the "user" state changes
   useEffect(() => {
@@ -63,11 +63,17 @@ export default function Inventory() {
           let marketable = invItem.marketable;
           let currentItem = {
             itemIcon: SizeIcon(invItem),
-            itemName: invItem.market_name,
+            itemName: invItem.market_hash_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
-            itemDateTradable: marketable ? invItem.cache_expiration : 'notmarketable',
-            itemInspectLink: GenerateInspectLink(json, invItem.market_name, user.steam_info.id)
+            itemInspectLink: GenerateInspectLink(json, invItem.market_name, user.steam_info.id),
+            itemWear: ParseTags(json, invItem.market_name, "Exterior"), // Factory New, Minimal Wear, etc.
+            itemType: ParseTags(json, invItem.market_name, "Type"), // Pistol, Container, Graffiti, Rifle, etc.
+            itemWeaponType: ParseTags(json, invItem.market_name, "Weapon"), // Five-Seven, AK-47, M4A4, etc.
+            itemCollection: ParseTags(json, invItem.market_name, "ItemSet"), // Vanguard Collection, Wildfire Collection, etc.
+            itemRarity: ParseTags(json, invItem.market_name, "Rarity"), // Mil-Spec, Contraband, Restricted, Covert, etc.
+            itemRarityColor: ParseTags(json, invItem.market_name, "Color"),
+            itemIsSouvenir: ParseTags(json, invItem.market_name, "Souvenir") // 1 is souvenir, 0 is normal
           };
           newItems[i] = currentItem;
         }
@@ -85,7 +91,6 @@ export default function Inventory() {
       <Nav></Nav>
       <div className='my-6 ml-20'>
         <div className='flex flex-row flex-wrap'>
-          {/* Render Inventorycard component for each item in the inventory */}
           {inventory.map((item, index) => (
             <Inventorycard key={index} itemInfo={item} />
           ))}
