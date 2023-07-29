@@ -1,4 +1,4 @@
-// Inspect link needs to be 
+// Gets inspect link for a given item
 export default function GenerateInspectLink(jsondata, itemName, steamid){
   let invItem;
   for (const item in jsondata.descriptions){
