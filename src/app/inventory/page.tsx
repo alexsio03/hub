@@ -66,14 +66,14 @@ export default function Inventory() {
             itemName: invItem.market_hash_name,
             itemIsMarketable: marketable, // 0 or 1 (1 can be marketed)
             itemTradeStatus: invItem.tradable, // 0 or 1 (1 can be traded)
-            itemInspectLink: GenerateInspectLink(json, invItem.market_name, user.steam_info.id),
+            itemInspectLink: GenerateInspectLink(json, invItem.market_hash_name, user.steam_info.id),
             itemWear: ParseTags(json, invItem.market_name, "Exterior"), // Factory New, Minimal Wear, etc.
             itemType: ParseTags(json, invItem.market_name, "Type"), // Pistol, Container, Graffiti, Rifle, etc.
             itemWeaponType: ParseTags(json, invItem.market_name, "Weapon"), // Five-Seven, AK-47, M4A4, etc.
-            itemCollection: ParseTags(json, invItem.market_name, "ItemSet"), // Vanguard Collection, Wildfire Collection, etc.
             itemRarity: ParseTags(json, invItem.market_name, "Rarity"), // Mil-Spec, Contraband, Restricted, Covert, etc.
             itemRarityColor: ParseTags(json, invItem.market_name, "Color"),
-            itemIsSouvenir: ParseTags(json, invItem.market_name, "Souvenir") // 1 is souvenir, 0 is normal
+            itemIsSouvenir: ParseTags(json, invItem.market_name, "Souvenir"), // 1 is souvenir, 0 is normal
+            itemIsStatTrak: ParseTags(json, invItem.market_name, "StatTrak") // 1 is stattrak, 0 is normal
           };
           newItems[i] = currentItem;
         }
