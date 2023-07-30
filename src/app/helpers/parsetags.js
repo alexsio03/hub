@@ -18,6 +18,17 @@ export default function ParseTags(jsondata, itemName, category){
     return undefined;
   }
 
+  if (category == "StatTrak"){
+    var tagNumber = 0;
+    for (const tag in invItem.tags){
+      if (invItem.tags[tag].category == "Quality"){
+        return (invItem.tags[tag].localized_tag_name == "StatTrak™") ? 1 : 0;
+      }
+      tagNumber++;
+    }
+    return undefined;
+  }
+
   if (category == "Color"){
     var tagNumber = 0;
     for (const tag in invItem.tags){
