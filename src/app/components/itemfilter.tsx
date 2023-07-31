@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 
 export default function ItemFilter() {
   const URLParams = new URLSearchParams(window.location.search);
+  const searchedItem = URLParams.get('search') || "";
   const statusSouvenir = Number(URLParams.get('souvenir')) || 0;
   const statusStatTrak = Number(URLParams.get('stattrak')) || 0;
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchedItem);
   const [souvenirState, setSouvenirState] = useState(statusSouvenir);
   const [stattrakState, setStatTrakState] = useState(statusStatTrak);
   const [clickCount, refreshPage] = useState(0);
@@ -76,8 +77,7 @@ export default function ItemFilter() {
     }
   }, [clickCount]);
 
-  // Makes sure the redirect occurs when there is text in the
-  // search box and enter is pressed
+  // Makes sure the redirect occurs when there is text in the search box and enter is pressed
   useEffect(() => {
     const handleKeyPress = (event) => {
       // Check if the "Enter" key was pressed (keyCode 13) or (key === "Enter" for newer browsers)
