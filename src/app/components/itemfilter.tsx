@@ -150,10 +150,10 @@ export default function ItemFilter() {
           Knife
         </button>
         <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-          Pistol
+          Rifle
         </button>
         <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-          Rifle
+          Pistol
         </button>
         <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           SMG
