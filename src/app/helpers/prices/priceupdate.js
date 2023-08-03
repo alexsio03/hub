@@ -29,7 +29,7 @@ export default async function PriceUpdate() {
     try {
       const response = await axios.get(url);
       const data = response.data;
-      await WriteNullObjects(data);
+      //await WriteNullObjects(data);
       await RemoveBadItems(data);
       console.log(`\nNumber of items in game: ${NumberItems()}\n`);
 
