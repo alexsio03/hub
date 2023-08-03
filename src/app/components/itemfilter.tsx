@@ -11,7 +11,7 @@ export default function ItemFilter() {
   const [souvenirState, setSouvenirState] = useState(statusSouvenir);
   const [stattrakState, setStatTrakState] = useState(statusStatTrak);
   const [wearState, setWearState] = useState(statusWear);
-  const [clickCount, refreshPage] = useState(0);
+  const [refreshTimer, setRefreshTimer] = useState<NodeJS.Timeout | null>(null);
 
   const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchTerm(event.target.value);
@@ -38,7 +38,8 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    refreshPage(1);
+    // refreshPage(1);
+    startRefreshTimer();
   };
 
   const handleStatTrakClick = () => {
@@ -62,7 +63,8 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    refreshPage(1);
+    // refreshPage(1);
+    startRefreshTimer();
   };
 
   const handleWearClick = (updatedWear: string) => {  
@@ -77,20 +79,19 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    refreshPage(1);
+    // refreshPage(1);
+    startRefreshTimer();
   }
 
-  // Reload the page after a 1 second delay
-  useEffect(() => {
-    if (clickCount == 1) {
-      // Wait for 1 second before reloading the page
-      const timeout = setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-      // Clean up the timeout when the component unmounts or the click count changes
-      return () => clearTimeout(timeout);
+  const startRefreshTimer = () => {
+    if (refreshTimer !== null) {
+      clearTimeout(refreshTimer);
     }
-  }, [clickCount]);
+    const timerId = setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+    setRefreshTimer(timerId);
+  };
 
   // Makes sure the redirect occurs when there is text in the search box and enter is pressed
   useEffect(() => {
@@ -120,7 +121,7 @@ export default function ItemFilter() {
       document.removeEventListener("keyup", handleKeyPress);
     };
   }, [searchTerm, souvenirState, stattrakState]);
-
+  
   return (
     <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-60 flex flex-grow items-center justify-between">
       <div className="flex items-center space-x-6 mx-4">
@@ -248,7 +249,7 @@ function WearButtons({ handleAnyClick, wearState }) {
 
   const handleToggle = (itemName: string) => {
     handleAnyClick(selectedItems);
-    setSelectedItems((prevSelectedItems) => {
+    setSelectedItems((prevSelectedItems: string) => {
       const itemIndex = wearItems.indexOf(itemName);
       const newSelectedItems = prevSelectedItems.split('');
       newSelectedItems[itemIndex] = newSelectedItems[itemIndex] === '1' ? '0' : '1';
@@ -256,7 +257,7 @@ function WearButtons({ handleAnyClick, wearState }) {
     });
   };
 
-  const handleOnly = (itemName) => {
+  const handleOnly = (itemName: string) => {
     const newSelectedItems = wearItems.map((item) => (item === itemName ? '1' : '0')).join('');
     setSelectedItems(newSelectedItems);
     handleAnyClick(newSelectedItems);
