@@ -5,17 +5,18 @@ export default function ItemFilter() {
   const searchedItem = URLParams.get('search') || "";
   const statusSouvenir = Number(URLParams.get('souvenir')) || 0;
   const statusStatTrak = Number(URLParams.get('stattrak')) || 0;
+  const statusWear = URLParams.get('wear') || '11111';
 
   const [searchTerm, setSearchTerm] = useState(searchedItem);
   const [souvenirState, setSouvenirState] = useState(statusSouvenir);
   const [stattrakState, setStatTrakState] = useState(statusStatTrak);
+  const [wearState, setWearState] = useState(statusWear);
   const [clickCount, refreshPage] = useState(0);
 
   const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchTerm(event.target.value);
   };
 
-  // This is what happens when souvenir button is clicked
   const handleSouvenirClick = () => {
     // Cycle through the three states (0, 1, and 2)
     const nextState = (souvenirState + 1) % 3;
@@ -40,7 +41,6 @@ export default function ItemFilter() {
     refreshPage(1);
   };
 
-  // This is what happens when stattrak button is clicked
   const handleStatTrakClick = () => {
     // Cycle through the three states (0, 1, and 2)
     const nextState = (stattrakState + 1) % 3;
@@ -64,6 +64,21 @@ export default function ItemFilter() {
     // Refresh page after a short delay
     refreshPage(1);
   };
+
+  const handleWearClick = (updatedWear: string) => {  
+    // Construct the URL and redirect
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    setWearState(updatedWear);
+  
+    params.set("wear", updatedWear);
+
+    url.search = params.toString();
+    window.history.pushState({ path: url.toString() }, "", url.toString());
+  
+    // Refresh page after a short delay
+    refreshPage(1);
+  }
 
   // Reload the page after a 1 second delay
   useEffect(() => {
@@ -107,8 +122,8 @@ export default function ItemFilter() {
   }, [searchTerm, souvenirState, stattrakState]);
 
   return (
-    <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-60 w-screen flex items-center justify-between px-4">
-      <div className="flex items-center space-x-6">
+    <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-60 flex flex-grow items-center justify-between">
+      <div className="flex items-center space-x-6 mx-4">
         {/* Contains search bar, souvenir/stattrak/rarity buttons */}
         <div className="flex flex-col py-2">
           {/* Search bar */}
@@ -124,40 +139,40 @@ export default function ItemFilter() {
             <SouvenirFilter onClick={handleSouvenirClick} souvenirState={souvenirState} />
             <StatTrakFilter onClick={handleStatTrakClick} stattrakState={stattrakState} />
           </div>
-          <RarityFilter></RarityFilter>
+          <RarityFilter/>
         </div>
-        <WearButtons></WearButtons>
+        <WearButtons handleAnyClick={handleWearClick} wearState={wearState} />
       </div>
       {/* Gun Type buttons */}
-      <div className="flex space-x-4">
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+      <div className="flex mx-2 flex-grow space-x-2">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Knife
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Pistol
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Rifle
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           SMG
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Heavy
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Gloves
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Container
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Agent
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Sticker
         </button>
-        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white">
+        <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
           Other
         </button>
       </div>
@@ -226,45 +241,48 @@ function RarityFilter(){
   );
 }
 
-function WearButtons(){
-  const [selectedItems, setSelectedItems] = useState([
-    'Factory New',
-    'Minimal Wear',
-    'Field-Tested',
-    'Well-Worn',
-    'Battle-Scarred',
-  ]);
+function WearButtons({ handleAnyClick, wearState }) {
+  const wearItems = ['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'];
 
-  // Toggles checkbox for wear of items
+  const [selectedItems, setSelectedItems] = useState(wearState);
+
   const handleToggle = (itemName: string) => {
+    handleAnyClick(selectedItems);
     setSelectedItems((prevSelectedItems) => {
-      // Toggle the clicked item as before
-      if (prevSelectedItems.includes(itemName)) {
-        // If the item is already selected, remove it from the selection
-        return prevSelectedItems.filter((item) => item !== itemName);
-      } else {
-        // If the item is not selected, add it to the selection
-        return [...prevSelectedItems, itemName];
-      }
+      const itemIndex = wearItems.indexOf(itemName);
+      const newSelectedItems = prevSelectedItems.split('');
+      newSelectedItems[itemIndex] = newSelectedItems[itemIndex] === '1' ? '0' : '1';
+      return newSelectedItems.join('');
     });
-  };  
+  };
+
+  const handleOnly = (itemName) => {
+    const newSelectedItems = wearItems.map((item) => (item === itemName ? '1' : '0')).join('');
+    setSelectedItems(newSelectedItems);
+    handleAnyClick(newSelectedItems);
+  };
 
   return (
     <div className="bg-sky-700 rounded p-2 flex flex-col items-start">
-    {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map((item) => (
-      <label
-        key={item}
-        className="inline-flex items-center hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer"
-      >
-        <input
-          type="checkbox"
-          className="form-checkbox mr-2"
-          checked={selectedItems.includes(item)}
-          onChange={() => handleToggle(item)}
-        />
-        {item}
-      </label>
-    ))}
-  </div>
+      {wearItems.map((item, index) => (
+        <div key={item} className="flex items-center justify-between">
+          <label className="inline-flex items-center hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer">
+            <input
+              type="checkbox"
+              className="form-checkbox mr-2"
+              checked={selectedItems[index] === '1'}
+              onChange={() => handleToggle(item)}
+            />
+            {item}
+          </label>
+          <button
+            onClick={() => handleOnly(item)}
+            className="px-2 py-1 hover:bg-sky-600 hover:scale-[1.025] rounded"
+          >
+            ONLY
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }

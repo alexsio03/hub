@@ -80,12 +80,12 @@ export default function Nav() {
                   <img
                     className="block h-8 w-auto lg:hidden"
                     src="https://static.thenounproject.com/png/899817-200.png"
-                    alt="Your Company"
+                    alt="Karambit Logo"
                   />
                   <img
                     className="hidden h-8 w-auto lg:block"
                     src="https://static.thenounproject.com/png/899817-200.png"
-                    alt="Your Company"
+                    alt="Karambit Logo"
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">

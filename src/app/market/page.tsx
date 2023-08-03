@@ -24,6 +24,7 @@ export default function Market() {
     const searchQuery = searchParams.get('search');
     const souvenirRequested = Number(searchParams.get('souvenir'));
     const stattrakRequested = Number(searchParams.get('stattrak'));
+    const permittedWears = searchParams.get('wear') || "no wear specified";
     
     if (searchQuery) {
       const skinAttributes = Object.entries(InfoJSONData.items_list);
@@ -57,6 +58,36 @@ export default function Market() {
           return false;
         }
         return true;
+      })
+      .filter(([itemName]) => {
+        if (permittedWears == "no wear specified"){
+          return true;
+        }
+
+        const itemWear = InfoJSONData.items_list[itemName].exterior || "No Wear";
+
+        const FNpermitted = Number(permittedWears?.charAt(0));
+        const MWpermitted = Number(permittedWears?.charAt(1));
+        const FTpermitted = Number(permittedWears?.charAt(2));
+        const WWpermitted = Number(permittedWears?.charAt(3));
+        const BSpermitted = Number(permittedWears?.charAt(4));
+
+        if (FNpermitted == 1 && itemWear == "Factory New"){
+          return true;
+        }
+        if (MWpermitted == 1 && itemWear == "Minimal Wear"){
+          return true;
+        }
+        if (FTpermitted == 1 && itemWear == "Field-Tested"){
+          return true;
+        }
+        if (WWpermitted == 1 && itemWear == "Well-Worn"){
+          return true;
+        }
+        if (BSpermitted == 1 && itemWear == "Battle-Scarred"){
+          return true;
+        }
+        return false;
       })
       .map(([itemName]) => ({
         itemName: itemName.replaceAll("&#39", "'"),
