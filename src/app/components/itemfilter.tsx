@@ -121,14 +121,37 @@ export default function ItemFilter() {
       document.removeEventListener("keyup", handleKeyPress);
     };
   }, [searchTerm, souvenirState, stattrakState]);
+
+  const knifeTypes = ["Bayonet", "Bowie Knife", "Butterfly Knife", "Classic Knife", "Falchion Knife", "Flip Knife", "Gut Knife", "Huntsman Knife", "Karambit", 
+  "M9 Bayonet", "Navaja Knife", "Nomad Knife", "Paracord Knife", "Shadow Daggers", "Skeleton Knife", "Stiletto Knife", "Survival Knife", "Talon Knife", "Ursus Knife"]
+  const rifleTypes = ["AWP", "AK-47", "M4A4", "M4A1-S", "SSG 08", "Galil AR", "AUG", "FAMAS", "SG 553", "SCAR-20", "G3SG1"]
+  const pistolTypes = ["CZ-75 Auto", "Desert Eagle", 'Dual Berettas', 'Five-SeveN', 'Glock-18', 'P2000', 'P250', 'R8 Revolver', 'Tec-9', 'USP-S']
+  const smgTypes = ['MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45']
+  const heavyTypes = ['MAG-7', 'Nova', 'Sawed-Off', 'XM1014', 'M249', 'Negev']
+  const gloveTypes = ['Hand Wraps', 'Moto Gloves', 'Specialist Gloves', 'Sport Gloves', 'Bloodhound Gloves', 'Hydra Gloves', 'Broken Fang Gloves', 'Driver Gloves']
+  const containTypes = ['Weapon Case', 'Sticker Capsule', 'Souvenir Package', 'Patch Pack', 'Graffiti Box']
+
+  const filterTypes = 
+  [
+    ["Knife", knifeTypes],
+    ["Rifle", rifleTypes],
+    ["Pistol", pistolTypes],
+    ["SMG", smgTypes],
+    ["Heavy", heavyTypes],
+    ["Gloves", gloveTypes],
+    ["Container", containTypes],
+    ["Agent", []],
+    ["Sticker", []],
+    ["Other", []]
+  ]
   
   return (
-    <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-60 flex flex-grow items-center justify-between">
+    <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-64 flex">
       <div className="flex items-center space-x-6 mx-4">
         {/* Contains search bar, souvenir/stattrak/rarity buttons */}
-        <div className="flex flex-col py-2">
+        <div className="flex flex-col py-2 w-1/2">
           {/* Search bar */}
-          <input className="w-96 h-12 bg-white text-gray-600 py-1 px-4 rounded-full focus:outline-none my-2"
+          <input className="h-12 bg-white text-gray-600 py-1 px-4 rounded-full focus:outline-none my-2"
             type="text"
             placeholder="Search for items..."
             value={searchTerm}
@@ -145,17 +168,27 @@ export default function ItemFilter() {
         <WearButtons handleAnyClick={handleWearClick} wearState={wearState} />
       </div>
       {/* Gun Type buttons */}
-      <div className="flex mx-2 flex-grow space-x-2">
-        <KnifeButton/>
-        <RifleButton/>
-        <PistolButton/>
-        <SMGButton/>
-        <HeavyButton/>
-        <GlovesButton/>
-        <ContainerButton/>
-        <AgentButton/>
-        <StickerButton/>
-        <OtherButton/>
+      <div className="relative flex flex-row mt-10 w-full justify-between mx-8 h-1/4">
+        {filterTypes.map((type) => (
+          <TypeButton itemType={type[0]} types={type[1]}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TypeButton({itemType, types}: any) {
+  return (
+    <div className="group">
+      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20">
+        <p className="my-auto">{itemType}</p>
+      </div>
+      <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
+        {types.map((type) => (
+          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28" key={type}>
+            <p className="my-auto">{type}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -163,9 +196,9 @@ export default function ItemFilter() {
 
 function SouvenirFilter({ onClick, souvenirState }) {
   const buttonClassNames = [
-    "bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-4",
-    "bg-yellow-400 hover:bg-yellow-300 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-4",
-    "bg-zinc-800 hover:bg-zinc-700 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-4",
+    "bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-2",
+    "bg-yellow-400 hover:bg-yellow-300 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-2",
+    "bg-zinc-800 hover:bg-zinc-700 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-2",
   ];
 
   return (
@@ -244,7 +277,7 @@ function WearButtons({ handleAnyClick, wearState }) {
   };
 
   return (
-    <div className="bg-sky-700 rounded p-2 flex flex-col items-start">
+    <div className="bg-sky-700 rounded p-2 flex flex-col items-start w-64">
       {wearItems.map((item, index) => (
         <div key={item} className="flex items-center justify-between">
           <label className="inline-flex items-center hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer">
@@ -265,179 +298,5 @@ function WearButtons({ handleAnyClick, wearState }) {
         </div>
       ))}
     </div>
-  );
-}
-
-function KnifeButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-        Knife
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Bayonet</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Bowie Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Butterfly Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Classic Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Falchion Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Flip Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Gut Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Huntsman Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Karambit</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">M9 Bayonet</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Navaja Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Nomad Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Paracord Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Shadow Daggers</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Skeleton Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Stiletto Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Survival Knife</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Talon Knife</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Ursus Knife</div>
-      </div>
-    </div>
-  );
-}
-
-function RifleButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-        Rifle
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">AWP</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">AK-47</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">M4A4</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">M4A1-S</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">SSG 08</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Galil AR</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">AUG</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">FAMAS</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">SG 553</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">SCAR-20</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">G3SG1</div> 
-      </div>
-    </div>
-  );
-}
-
-function PistolButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-      Pistol
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">CZ-75 Auto</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Desert Eagle</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Dual Berettas</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Five-SeveN</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Glock-18</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">P2000</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">P250</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">R8 Revolver</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Tec-9</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">USP-S</div> 
-      </div>
-    </div>
-  );
-}
-
-function SMGButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-      SMG
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">MAC-10</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">MP5-SD</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">MP7</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">MP9</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">P90</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">PP-Bizon</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">UMP-45</div> 
-      </div>
-  </div>
-  );
-}
-
-function HeavyButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-        Heavy
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">MAG-7</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Nova</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Sawed-Off</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">XM1014</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">M249</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Negev</div> 
-      </div>
-  </div>
-  );
-}
-
-function GlovesButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-        Gloves
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Hand Wraps</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Moto Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Specialist Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Sport Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Bloodhound Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Hydra Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Broken Fang Gloves</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Driver Gloves</div> 
-      </div>
-  </div>
-  );
-}
-
-function ContainerButton(){
-  return (
-    <div className="relative group flex-grow">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-        Heavy
-      </div>
-      <div className="hidden group-hover:flex absolute top-full left-0 right-0 rounded-sm shadow-md">
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Weapon Case</div>
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Sticker Capsule</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Souvenir Package</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Patch Pack</div> 
-        <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white h-16 flex-grow">Graffiti Box</div> 
-      </div>
-    </div>
-  );
-}
-
-function AgentButton(){
-  return (
-    <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-      Agent
-    </button>
-  );
-}
-
-function StickerButton(){
-  return (
-    <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-      Sticker
-    </button>
-  );
-}
-
-function OtherButton(){
-  return (
-    <button className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer text-white flex-grow h-20">
-      Other
-    </button>
   );
 }
