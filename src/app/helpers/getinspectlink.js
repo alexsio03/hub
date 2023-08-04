@@ -13,5 +13,5 @@ export default function GenerateInspectLink(jsondata, itemName, steamid){
     link = link.replace("%owner_steamid%", steamid).replace("%assetid%", assetid)
     return link;
   }
-  return undefined;
+  return null;
 }

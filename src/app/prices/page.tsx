@@ -153,7 +153,7 @@ export default function Prices() {
                     </div>
                     <div className='flex justify-center'>
                         {/* Display the item's image */}
-                        <img className="mx-auto object-contain w-64 h-64" src={item ? findImage(item.itemName) : "https://static.thenounproject.com/png/899817-200.png"}></img>
+                        <img className="mx-auto object-contain w-64 h-64" src={item ? getImage(item) : "https://static.thenounproject.com/png/899817-200.png"}></img>
                     </div>
                     <div className='flex flex-row px-10 justify-between'>
                         {/* Display price data from different sources */}
@@ -172,4 +172,9 @@ export default function Prices() {
             </div>
         </>
     );
+}
+
+function getImage(item) {
+    const img = item.itemIcon ? `https://community.cloudflare.steamstatic.com/economy/image/${item.itemIcon}/330x192` : findImage(item.itemName)
+    return img
 }

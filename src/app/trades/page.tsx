@@ -10,6 +10,7 @@ import { initDB, initFirebase } from "../fb/config";
 import { useRouter } from 'next/navigation';
 import Tradecard from '../components/tradecard';
 import { PlusIcon } from "@heroicons/react/24/solid"; // Import the PlusIcon from Hero Icons
+import ItemFilter from '../components/itemfilter';
 
 // Initialize Firebase
 initFirebase();
@@ -119,22 +120,34 @@ export default function TradesPage() {
     <>
       {/* Render the Nav component */}
       <Nav></Nav>
-      <div className='flex flex-row m-4'>
-        <div className='w-1/3 mt-6 p-4 bg-blue-900 bg-opacity-30 h-96 rounded-sm'>
+      <ItemFilter></ItemFilter>
+      <div className='flex flex-row m-2'>
+        <div className='w-1/6 mt-6 bg-sky-600 bg-opacity-60 rounded-sm h-1/2'>
           {/* Render the filter section */}
-          <div className='flex justify-center'>
+          <div className='flex justify-center text-lg py-3'>
             <p>Filters</p>
           </div>
-          <div className='flex flex-row'>
-            <div className='flex flex-col w-1/2 m-2 p-2 bg-blue-600 bg-opacity-30 rounded-sm'>
+          <div className='flex flex-row divide-x-2 divide-sky-950 border-t-2 border-sky-950'>
+            <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
               <div className='flex justify-center'>
                 <p>Offers</p>
               </div>
-              <br />
-              <div>
-                <p>Name</p>
+              <div className='px-2'>
+                <div className='flex flex-col'>
+                  <p>Name</p>
+                  <input className='text-black' type='text'></input>
+                </div>
                 <br />
-                <p>Price</p>
+                <div className='flex flex-row justify-between'>
+                  <div className='flex flex-col w-1/3'>
+                    <p>Min</p>
+                    <input className='text-black' type='text'></input>
+                  </div>
+                  <div className='flex flex-col w-1/3'>
+                    <p>Max</p>
+                    <input className='text-black' type='text'></input>
+                  </div>
+                </div>
                 <br />
                 <p>Items:</p>
                 <div>
@@ -158,15 +171,26 @@ export default function TradesPage() {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col w-1/2 m-2 p-2 bg-blue-600 bg-opacity-30 rounded-sm'>
+            <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
               <div className='flex justify-center'>
                 <p>Requests</p>
               </div>
-              <div>
+              <div className='px-2'>
+                <div className='flex flex-col'>
+                  <p>Name</p>
+                  <input className='text-black' type='text'></input>
+                </div>
                 <br />
-                <p>Name</p>
-                <br />
-                <p>Price</p>
+                <div className='flex flex-row justify-between'>
+                  <div className='flex flex-col w-1/3'>
+                    <p>Min</p>
+                    <input className='text-black' type='text'></input>
+                  </div>
+                  <div className='flex flex-col w-1/3'>
+                    <p>Max</p>
+                    <input className='text-black' type='text'></input>
+                  </div>
+                </div>
                 <br />
                 <p>Items:</p>
                 <div>
@@ -196,7 +220,8 @@ export default function TradesPage() {
           {/* Render the "Create Trade" button if a user is authenticated */}
           {user && (
             <button
-              className={`bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-yellow-800 font-bold text-lg py-4 px-8 rounded shadow-lg fixed bottom-8 right-8 z-10 ${
+              className={`bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-yellow-800 
+              font-bold text-lg py-4 px-8 rounded shadow-lg fixed bottom-8 right-9 z-10 ${
                 isLoading ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'
               }`}
               onClick={handleCreateTrade}
@@ -217,11 +242,10 @@ export default function TradesPage() {
               )}
             </button>
           )}
-          <div className='flex flex-col flex-wrap items-start w-full'>
+          <div className='flex flex-col px-2 items-start w-full pb-16 h-[850px] overflow-y-auto snap-y'>
             {/* Render Trade cards based on filtered trades */}
             {trades[0] ? filteredTrades.map((trade) => (
               <Tradecard 
-              user={""}
               key={trade.id}
               owner={trade.owner_steam.steam_name} 
               owner_url={trade.owner_steam.steam_url} 
