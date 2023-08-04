@@ -38,11 +38,11 @@ export default function SetPrice(itemName){
         console.log(`\n\nsetprice.js (skinport): ${err}\n\n`);
     }
 
-    try {
-        priceCSMoney = `$${item.csmoney.price}`;
-    } catch (err) {
-        console.log(`\n\nsetprice.js (csmoney): ${err}\n\n`);
-    }
+    // try {
+    //     priceCSMoney = `$${item.csmoney.price}`;
+    // } catch (err) {
+    //     console.log(`\n\nsetprice.js (csmoney): ${err}\n\n`);
+    // }
 
     try {
         priceBuff = `$${item.buff163.starting_at.price}`;
@@ -53,7 +53,6 @@ export default function SetPrice(itemName){
     return {
         steam: priceSteam,
         buff: priceBuff,
-        csmoney: priceCSMoney,
         skinport: priceSkinport,
         recency: steamPriceRecency
     };

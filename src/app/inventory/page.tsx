@@ -279,7 +279,7 @@ export default function Inventory() {
                             <p className='text-xs text-gray-400'>Buff Price: {SetPrice(item.itemName).buff}</p>
                             <p className='text-xs text-gray-400'>Steam Price: {SetPrice(item.itemName).steam}</p>
                             <p className='text-xs text-gray-400'>Skinport Price: {SetPrice(item.itemName).skinport}</p>
-                            <p className='text-xs text-gray-400'>CSMoney Price: {SetPrice(item.itemName).csmoney}</p>
+                            {/* <p className='text-xs text-gray-400'>CSMoney Price: {SetPrice(item.itemName).csmoney}</p> */}
                           </div>
                         </div>
                       )}
