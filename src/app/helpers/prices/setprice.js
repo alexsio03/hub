@@ -5,6 +5,8 @@ export default function SetPrice(itemName){
     const item = PriceJSON[itemName];
     let priceSteam = 'No Data';
     let priceBuff = 'No Data';
+    let priceSkinport = 'No Data';
+    let priceCSMoney = 'No Data';
     let steamPriceRecency = '(>90d)';
 
 
@@ -31,6 +33,18 @@ export default function SetPrice(itemName){
     }
     
     try {
+        priceSkinport = `$${item.skinport.starting_at}`;
+    } catch (err) {
+        console.log(`\n\nsetprice.js (skinport): ${err}\n\n`);
+    }
+
+    try {
+        priceCSMoney = `$${item.csmoney.price}`;
+    } catch (err) {
+        console.log(`\n\nsetprice.js (csmoney): ${err}\n\n`);
+    }
+
+    try {
         priceBuff = `$${item.buff163.starting_at.price}`;
     } catch (err) {
         console.log(`\n\nsetprice.js (buff163): ${err}\n\n`);
@@ -38,7 +52,9 @@ export default function SetPrice(itemName){
 
     return {
         steam: priceSteam,
-        recency: steamPriceRecency,
-        buff: priceBuff
+        buff: priceBuff,
+        csmoney: priceCSMoney,
+        skinport: priceSkinport,
+        recency: steamPriceRecency
     };
 }
