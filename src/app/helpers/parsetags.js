@@ -15,7 +15,7 @@ export default function ParseTags(jsondata, itemName, category){
       }
       tagNumber++;
     }
-    return undefined;
+    return null;
   }
 
   if (category == "StatTrak"){
@@ -26,7 +26,7 @@ export default function ParseTags(jsondata, itemName, category){
       }
       tagNumber++;
     }
-    return undefined;
+    return null;
   }
 
   if (category == "Color"){
@@ -37,7 +37,7 @@ export default function ParseTags(jsondata, itemName, category){
       }
       tagNumber++;
     }
-    return undefined;
+    return null;
   }
 
   var tagNumber = 0;
@@ -47,5 +47,5 @@ export default function ParseTags(jsondata, itemName, category){
     }
     tagNumber++;
   }
-  return undefined;
+  return null;
 }

@@ -78,7 +78,7 @@ export default function CreateTradePage() {
 
       return true;
     })
-    .slice(0, 40)
+    .slice(0, 39)
     .map(([itemName, itemInfo]) => ({
       itemName: itemName.replaceAll("&#39", "'"),
       itemIsMarketable: 1,
@@ -340,7 +340,7 @@ export default function CreateTradePage() {
             <div className='flex flex-row flex-wrap justify-center h-[700px] overflow-y-auto snap-y'>
               {filteredInventory.map((itemInformation, index) => (
                 <button key={index} onClick={() => handleItemOffered(itemInformation)} className="item-button m-1 snap-start">
-                  <Inventorycard itemInfo={itemInformation} />
+                  <Inventorycard item={itemInformation} />
                 </button>
               ))}
             </div>
