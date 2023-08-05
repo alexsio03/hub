@@ -8,6 +8,8 @@ import SizeIcon from '../helpers/icons/sizeicon.js';
 
 import PriceJSONData from '../helpers/prices/skinPrices.json';
 import InfoJSONData from '../helpers/skindata.json';
+import { collection, getDocs } from 'firebase/firestore';
+import { initDB, initFirebase } from '../fb/config';
 
 type ItemData = {
   itemName: string;
@@ -15,8 +17,27 @@ type ItemData = {
   itemIcon: any;
 };
 
+// Initialize Firebase
+initFirebase();
+const db = initDB(); // Initialize the Firebase database.
+
 export default function Market() {
   const [searchResults, setSearchResults] = useState<ItemData[]>([]);
+  const [market, setMarket] = useState([]);
+
+  useEffect(() => {
+    const loadMarket = async () => {
+      const marketCollection = collection(db, "market");
+      const marketSnap = await getDocs(marketCollection);
+      const marketData = marketSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMarket(marketData);
+    };
+
+    loadMarket();
+  }, []);
   
   useEffect(() => {
     // Parse the search parameters from the URL
@@ -112,13 +133,7 @@ export default function Market() {
         searchResults.map((item, index) => (
           <Marketcard key={index} itemInfo={item} />
         ))
-      ) : (
-        // Show the default market page with random items if no search params exist
-        // 21 items will be displayed
-        Array.from({ length: 21 }, (_, index) => (
-          <MarketcardRandom key={index} />
-        ))
-      )}
+      ) : (market[0] ? market.map((sale) => ( <Marketcard itemInfo={sale.itemInfo}/> )) : <p>Loading</p>)}
     </div>
   </>
   );
