@@ -129,7 +129,10 @@ export default function ItemFilter() {
   const smgTypes = ['MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45']
   const heavyTypes = ['MAG-7', 'Nova', 'Sawed-Off', 'XM1014', 'M249', 'Negev']
   const gloveTypes = ['Hand Wraps', 'Moto Gloves', 'Specialist Gloves', 'Sport Gloves', 'Bloodhound Gloves', 'Hydra Gloves', 'Broken Fang Gloves', 'Driver Gloves']
-  const containTypes = ['Weapon Case', 'Sticker Capsule', 'Souvenir Package', 'Patch Pack', 'Graffiti Box']
+  const containTypes = ['Weapon Case', 'Sticker Capsule', 'Souvenir Package', 'Pins Capsule', 'Patch Pack', 'Graffiti Box']
+  const agentTypes = ['T', 'CT']
+  const stickerTypes = ['Holo', 'Foil', 'Glitter', 'Gold', 'Lenticular', 'Paper']
+  const otherTypes = ['Case Key', 'Patch', 'Graffiti', 'Collectible', 'Pass', 'Music Kit']
 
   const filterTypes = 
   [
@@ -140,9 +143,9 @@ export default function ItemFilter() {
     ["Heavy", heavyTypes],
     ["Gloves", gloveTypes],
     ["Container", containTypes],
-    ["Agent", []],
-    ["Sticker", []],
-    ["Other", []]
+    ["Agent", agentTypes],
+    ["Sticker", stickerTypes],
+    ["Other", otherTypes]
   ]
   
   return (
@@ -179,12 +182,12 @@ export default function ItemFilter() {
 
 function TypeButton({itemType, types}: any) {
   return (
-    <div className="group">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20">
+    <div className="group flex-grow mx-1">
+      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20">
         <p className="my-auto">{itemType}</p>
       </div>
       <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
-        {types.map((type) => (
+        {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
           <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28" key={type}>
             <p className="my-auto">{type}</p>
           </div>
