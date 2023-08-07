@@ -147,7 +147,7 @@ export default function Market() {
   return (
   <>
     <Nav />
-    <ItemFilter />
+    <ItemFilter trade={false}/>
     <div className='m-6 flex flex-row flex-wrap'>
       {searchResults.length !== 0 ? (
         // Show the search results if searchParams exist
