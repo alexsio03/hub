@@ -183,7 +183,7 @@ function TypeButton({itemType, types}: any) {
       <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20">
         <p className="my-auto">{itemType}</p>
       </div>
-      <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
+      <div className="hidden group-hover:flex flex-wrap w-full rounded-sm absolute left-0">
         {types.map((type) => (
           <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28" key={type}>
             <p className="my-auto">{type}</p>
