@@ -13,7 +13,6 @@ import { initDB, initFirebase } from '../fb/config';
 
 type ItemData = {
   itemName: string;
-  itemIsMarketable: number;
   itemIcon: any;
 };
 
@@ -46,6 +45,7 @@ export default function Market() {
     const souvenirRequested = Number(searchParams.get('souvenir'));
     const stattrakRequested = Number(searchParams.get('stattrak'));
     const permittedWears = searchParams.get('wear') || "no wear specified";
+    const itemTypeRequested = searchParams.get('type') || "no type specified";
     
     if (searchQuery) {
       const skinAttributes = Object.entries(InfoJSONData.items_list);
@@ -57,6 +57,14 @@ export default function Market() {
         return keywords.every((keyword) =>
           itemName.toLowerCase().includes(keyword)
         );
+      })
+      .filter(([itemName]) => {
+        if (InfoJSONData.items_list[itemName] == undefined){
+          console.log(InfoJSONData.items_list[itemName])
+          console.log(itemName)
+          return false;
+        }
+        return true;
       })
       .filter(([itemName]) => {
         const itemIsStatTrak = InfoJSONData.items_list[itemName].stattrak || 0;
@@ -110,9 +118,22 @@ export default function Market() {
         }
         return false;
       })
+      .filter(([itemName]) => {
+        if (itemTypeRequested == "no type specified"){
+          return true;
+        }
+
+        const itemWeaponType = InfoJSONData.items_list[itemName].weapon_type || "Not a Weapon";
+        const itemGunType = InfoJSONData.items_list[itemName].gun || "Not a Gun";
+        const itemKnifeType = InfoJSONData.items_list[itemName].knife_type || "Not a Gun";
+
+        if (itemTypeRequested == itemGunType || itemTypeRequested == itemWeaponType || itemTypeRequested == itemKnifeType){
+          return true;
+        }
+        return false;
+      })
       .map(([itemName]) => ({
         itemName: itemName.replaceAll("&#39", "'"),
-        itemIsMarketable: 1,
         itemIcon: skinAttributes.find((item) => item[0] == itemName) ? SizeIcon(skinAttributes.find((item) => item[0] == itemName)[1]) : null,
       }));
       
