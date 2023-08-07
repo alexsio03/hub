@@ -120,102 +120,8 @@ export default function TradesPage() {
     <>
       {/* Render the Nav component */}
       <Nav></Nav>
-      <ItemFilter></ItemFilter>
       <div className='flex flex-row m-2'>
-        <div className='w-1/6 mt-6 bg-sky-600 bg-opacity-60 rounded-sm h-1/2'>
-          {/* Render the filter section */}
-          <div className='flex justify-center text-lg py-3'>
-            <p>Filters</p>
-          </div>
-          <div className='flex flex-row divide-x-2 divide-sky-950 border-t-2 border-sky-950'>
-            <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
-              <div className='flex justify-center'>
-                <p>Offers</p>
-              </div>
-              <div className='px-2'>
-                <div className='flex flex-col'>
-                  <p>Name</p>
-                  <input className='text-black' type='text'></input>
-                </div>
-                <br />
-                <div className='flex flex-row justify-between'>
-                  <div className='flex flex-col w-1/3'>
-                    <p>Min</p>
-                    <input className='text-black' type='text'></input>
-                  </div>
-                  <div className='flex flex-col w-1/3'>
-                    <p>Max</p>
-                    <input className='text-black' type='text'></input>
-                  </div>
-                </div>
-                <br />
-                <p>Items:</p>
-                <div>
-                  {/* Render checkboxes for offer filters */}
-                  <div>
-                    <label htmlFor="Knives">Knives</label>
-                    <input type='checkbox' onClick={() => updateOfferFilter("Knives")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Gloves">Gloves</label>
-                    <input type='checkbox' onClick={() => updateOfferFilter("Gloves")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Rifles">Rifles</label>
-                    <input type='checkbox' onClick={() => updateOfferFilter("Rifles")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Pistols">Pistols</label>
-                    <input type='checkbox' onClick={() => updateOfferFilter("Pistols")}></input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
-              <div className='flex justify-center'>
-                <p>Requests</p>
-              </div>
-              <div className='px-2'>
-                <div className='flex flex-col'>
-                  <p>Name</p>
-                  <input className='text-black' type='text'></input>
-                </div>
-                <br />
-                <div className='flex flex-row justify-between'>
-                  <div className='flex flex-col w-1/3'>
-                    <p>Min</p>
-                    <input className='text-black' type='text'></input>
-                  </div>
-                  <div className='flex flex-col w-1/3'>
-                    <p>Max</p>
-                    <input className='text-black' type='text'></input>
-                  </div>
-                </div>
-                <br />
-                <p>Items:</p>
-                <div>
-                  {/* Render checkboxes for request filters */}
-                  <div>
-                    <label htmlFor="Knives">Knives</label>
-                    <input type='checkbox' onClick={() => updateRequestFilter("Knives")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Gloves">Gloves</label>
-                    <input type='checkbox' onClick={() => updateRequestFilter("Gloves")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Rifles">Rifles</label>
-                    <input type='checkbox' onClick={() => updateRequestFilter("Rifles")}></input>
-                  </div>
-                  <div>
-                    <label htmlFor="Pistols">Pistols</label>
-                    <input type='checkbox' onClick={() => updateRequestFilter("Pistols")}></input>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ItemFilter trade={true}></ItemFilter>
         <div className='mr-3 pl-6 w-full relative'>
           {/* Render the "Create Trade" button if a user is authenticated */}
           {user && (
@@ -261,3 +167,98 @@ export default function TradesPage() {
     </>
   );
 }
+
+        // <div className='w-1/6 mt-6 bg-sky-600 bg-opacity-60 rounded-sm h-1/2'>
+        //   {/* Render the filter section */}
+        //   <div className='flex justify-center text-lg py-3'>
+        //     <p>Filters</p>
+        //   </div>
+        //   <div className='flex flex-row divide-x-2 divide-sky-950 border-t-2 border-sky-950'>
+        //     <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
+        //       <div className='flex justify-center'>
+        //         <p>Offers</p>
+        //       </div>
+        //       <div className='px-2'>
+        //         <div className='flex flex-col'>
+        //           <p>Name</p>
+        //           <input className='text-black' type='text'></input>
+        //         </div>
+        //         <br />
+        //         <div className='flex flex-row justify-between'>
+        //           <div className='flex flex-col w-1/3'>
+        //             <p>Min</p>
+        //             <input className='text-black' type='text'></input>
+        //           </div>
+        //           <div className='flex flex-col w-1/3'>
+        //             <p>Max</p>
+        //             <input className='text-black' type='text'></input>
+        //           </div>
+        //         </div>
+        //         <br />
+        //         <p>Items:</p>
+        //         <div>
+        //           {/* Render checkboxes for offer filters */}
+        //           <div>
+        //             <label htmlFor="Knives">Knives</label>
+        //             <input type='checkbox' onClick={() => updateOfferFilter("Knives")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Gloves">Gloves</label>
+        //             <input type='checkbox' onClick={() => updateOfferFilter("Gloves")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Rifles">Rifles</label>
+        //             <input type='checkbox' onClick={() => updateOfferFilter("Rifles")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Pistols">Pistols</label>
+        //             <input type='checkbox' onClick={() => updateOfferFilter("Pistols")}></input>
+        //           </div>
+        //         </div>
+        //       </div>
+        //     </div>
+        //     <div className='flex flex-col w-1/2 p-2 bg-sky-700 bg-opacity-60 rounded-sm'>
+        //       <div className='flex justify-center'>
+        //         <p>Requests</p>
+        //       </div>
+        //       <div className='px-2'>
+        //         <div className='flex flex-col'>
+        //           <p>Name</p>
+        //           <input className='text-black' type='text'></input>
+        //         </div>
+        //         <br />
+        //         <div className='flex flex-row justify-between'>
+        //           <div className='flex flex-col w-1/3'>
+        //             <p>Min</p>
+        //             <input className='text-black' type='text'></input>
+        //           </div>
+        //           <div className='flex flex-col w-1/3'>
+        //             <p>Max</p>
+        //             <input className='text-black' type='text'></input>
+        //           </div>
+        //         </div>
+        //         <br />
+        //         <p>Items:</p>
+        //         <div>
+        //           {/* Render checkboxes for request filters */}
+        //           <div>
+        //             <label htmlFor="Knives">Knives</label>
+        //             <input type='checkbox' onClick={() => updateRequestFilter("Knives")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Gloves">Gloves</label>
+        //             <input type='checkbox' onClick={() => updateRequestFilter("Gloves")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Rifles">Rifles</label>
+        //             <input type='checkbox' onClick={() => updateRequestFilter("Rifles")}></input>
+        //           </div>
+        //           <div>
+        //             <label htmlFor="Pistols">Pistols</label>
+        //             <input type='checkbox' onClick={() => updateRequestFilter("Pistols")}></input>
+        //           </div>
+        //         </div>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>

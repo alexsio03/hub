@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-export default function ItemFilter() {
+export default function ItemFilter({trade}) {
+  console.log(trade)
   const URLParams = new URLSearchParams(window.location.search);
   const searchedItem = URLParams.get('search') || "";
   const statusSouvenir = Number(URLParams.get('souvenir')) || 0;
@@ -160,10 +161,10 @@ export default function ItemFilter() {
   ]
   
   return (
-    <div className="bg-gradient-to-br from-cyan-700 to-sky-600 h-64 flex">
-      <div className="flex items-center space-x-6 mx-4">
+    <div className={`bg-gradient-to-br from-cyan-700 to-sky-600 flex ${trade ? 'flex-col w-1/3 mt-6' : `h-64`}`}>
+      <div className={`flex items-center mx-4 ${trade ? `flex-col` : `space-x-6 items-center`}`}>
         {/* Contains search bar, souvenir/stattrak/rarity buttons */}
-        <div className="flex flex-col py-2 w-1/2">
+        <div className={`flex flex-col py-2 ${trade ? <></> : `w-1/2`}`}>
           {/* Search bar */}
           <input className="h-12 bg-white text-gray-600 py-1 px-4 rounded-full focus:outline-none my-2"
             type="text"
@@ -177,33 +178,30 @@ export default function ItemFilter() {
             <SouvenirFilter onClick={handleSouvenirClick} souvenirState={souvenirState} />
             <StatTrakFilter onClick={handleStatTrakClick} stattrakState={stattrakState} />
           </div>
-          <RarityFilter/>
+          <RarityFilter trade={trade}/>
         </div>
         <WearButtons handleAnyClick={handleWearClick} wearState={wearState} />
       </div>
       {/* Gun Type buttons */}
-      <div className="relative flex flex-row mt-10 w-full justify-between mx-8 h-1/4">
+      <div className={`relative flex mt-10 mx-8  ${trade ? `flex-wrap w-5/6 justify-around` : `flex flex-row justify-between w-full`} `}>
         {filterTypes.map((type) => (
-          <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick}/>
+          <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick} trade={trade}/>
         ))}
       </div>
     </div>
   );
 }
 
-function TypeButton({itemType, types, handleTypeClick}) {
+function TypeButton({itemType, types, handleTypeClick, trade}) {
   return (
-    <div className="group flex-grow mx-1">
-      {/* <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20" onClick={handleTypeClick(itemType)}>
-        <p className="my-auto">{itemType}</p>
-      </div> */}
-            <div
-        className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20"
+    <div className="group">
+      <div
+        className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20"
         onClick={() => handleTypeClick(itemType)}
       >
         <p className="my-auto">{itemType}</p>
       </div>
-      <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
+      <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `p-2 bg-sky-600 z-10` : <></>}`}>
         {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
           <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28"
            key={type} 
@@ -258,13 +256,13 @@ function StatTrakFilter({ onClick, stattrakState }) {
   );
 }
 
-function RarityFilter(){
+function RarityFilter({trade}){
   return (
     <div className="relative group">
       <div className="bg-sky-700 drop-shadow-lg rounded-sm cursor-pointer text-white flex items-center justify-center py-4 my-2">
         Rarity
       </div>
-      <div className="hidden group-hover:flex absolute top-full w-full bg-white border rounded-sm shadow-md">
+      <div className={`hidden group-hover:flex ${trade ? <></> : `absolute top-full`} w-full bg-white border rounded-sm shadow-md`}>
         <div className="w-5 h-16 flex-grow" style={{backgroundColor: '#b0c3d9'}}></div>
         <div className="w-5 h-16 flex-grow" style={{backgroundColor: '#5e98d9'}}></div>
         <div className="w-5 h-16 flex-grow" style={{backgroundColor: '#4b69ff'}}></div>
