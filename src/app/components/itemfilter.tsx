@@ -161,7 +161,7 @@ export default function ItemFilter({trade}) {
   ]
   
   return (
-    <div className={`bg-gradient-to-br from-cyan-700 to-sky-600 flex ${trade ? 'flex-col w-1/3 mt-6' : `h-64`}`}>
+    <div className={`bg-gradient-to-br from-cyan-700 to-sky-600 flex ${trade ? 'flex-col w-1/3' : `h-64`}`}>
       <div className={`flex items-center mx-4 ${trade ? `flex-col` : `space-x-6 items-center`}`}>
         {/* Contains search bar, souvenir/stattrak/rarity buttons */}
         <div className={`flex flex-col py-2 ${trade ? <></> : `w-1/2`}`}>
@@ -183,7 +183,7 @@ export default function ItemFilter({trade}) {
         <WearButtons handleAnyClick={handleWearClick} wearState={wearState} />
       </div>
       {/* Gun Type buttons */}
-      <div className={`relative flex mt-10 mx-8  ${trade ? `flex-wrap w-5/6 justify-around` : `flex flex-row justify-between w-full`} `}>
+      <div className={`relative flex ${trade ? `flex-wrap w-full justify-around` : `flex flex-row justify-between w-full mt-10 mx-8`} `}>
         {filterTypes.map((type) => (
           <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick} trade={trade}/>
         ))}
@@ -197,16 +197,16 @@ function TypeButton({itemType, types, handleTypeClick, trade}) {
   const secondHalfOfTypes = types.slice(Math.ceil(types.length / 2));
   return (
     trade ?
-    <div className="group">
+    <div className="group mb-10">
       <div
         className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20"
         onClick={() => handleTypeClick(itemType)}
       >
         <p className="my-auto">{itemType}</p>
       </div>
-      <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `p-2 bg-sky-600 z-10` : <></>}`}>
+      <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `pl-8 bg-sky-600 z-10` : <></>}`}>
         {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
-          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28"
+          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-32"
            key={type} 
            onClick={() => handleTypeClick(type)}>
             <p className="my-auto">{type}</p>
