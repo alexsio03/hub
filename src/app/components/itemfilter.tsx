@@ -196,7 +196,7 @@ function TypeButton({itemType, types, handleTypeClick, trade}) {
   const firstHalfOfTypes = types.slice(0, Math.ceil(types.length / 2));
   const secondHalfOfTypes = types.slice(Math.ceil(types.length / 2));
   return (
-    {trade ?
+    trade ?
     <div className="group">
       <div
         className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-12 w-20"
@@ -204,7 +204,7 @@ function TypeButton({itemType, types, handleTypeClick, trade}) {
       >
         <p className="my-auto">{itemType}</p>
       </div>
-       <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `p-2 bg-sky-600 z-10` : <></>}`}>
+      <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `p-2 bg-sky-600 z-10` : <></>}`}>
         {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
           <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28"
            key={type} 
