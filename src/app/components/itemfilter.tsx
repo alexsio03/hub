@@ -38,7 +38,6 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    // refreshPage(1);
     startRefreshTimer();
   };
 
@@ -63,7 +62,6 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    // refreshPage(1);
     startRefreshTimer();
   };
 
@@ -79,9 +77,22 @@ export default function ItemFilter() {
     window.history.pushState({ path: url.toString() }, "", url.toString());
   
     // Refresh page after a short delay
-    // refreshPage(1);
     startRefreshTimer();
-  }
+  };
+
+  const handleTypeClick = (type: string) => {  
+    // Construct the URL and redirect
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+  
+    params.set("type", type);
+
+    url.search = params.toString();
+    window.history.pushState({ path: url.toString() }, "", url.toString());
+  
+    // Refresh page after a short delay
+    startRefreshTimer();
+  };
 
   const startRefreshTimer = () => {
     if (refreshTimer !== null) {
@@ -173,22 +184,30 @@ export default function ItemFilter() {
       {/* Gun Type buttons */}
       <div className="relative flex flex-row mt-10 w-full justify-between mx-8 h-1/4">
         {filterTypes.map((type) => (
-          <TypeButton itemType={type[0]} types={type[1]}/>
+          <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick}/>
         ))}
       </div>
     </div>
   );
 }
 
-function TypeButton({itemType, types}: any) {
+function TypeButton({itemType, types, handleTypeClick}) {
   return (
     <div className="group flex-grow mx-1">
-      <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20">
+      {/* <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20" onClick={handleTypeClick(itemType)}>
+        <p className="my-auto">{itemType}</p>
+      </div> */}
+            <div
+        className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20"
+        onClick={() => handleTypeClick(itemType)}
+      >
         <p className="my-auto">{itemType}</p>
       </div>
       <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
         {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
-          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28" key={type}>
+          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28"
+           key={type} 
+           onClick={() => handleTypeClick(type)}>
             <p className="my-auto">{type}</p>
           </div>
         ))}
@@ -264,13 +283,13 @@ function WearButtons({ handleAnyClick, wearState }) {
   const [selectedItems, setSelectedItems] = useState(wearState);
 
   const handleToggle = (itemName: string) => {
-    handleAnyClick(selectedItems);
     setSelectedItems((prevSelectedItems: string) => {
       const itemIndex = wearItems.indexOf(itemName);
       const newSelectedItems = prevSelectedItems.split('');
       newSelectedItems[itemIndex] = newSelectedItems[itemIndex] === '1' ? '0' : '1';
       return newSelectedItems.join('');
     });
+    handleAnyClick(selectedItems);
   };
 
   const handleOnly = (itemName: string) => {

@@ -23,6 +23,7 @@ export default async function PriceUpdate() {
   const currentTime = new Date().getTime();
 
   // If lastUpdateTime is not set or it's been 12 hours, update prices
+  // Also log number of items in game for randomskin.js
   if (!lastUpdateTime || currentTime - lastUpdateTime >= 12 * 60 * 60 * 1000) {
     const url = 'https://prices.csgotrader.app/latest/prices_v6.json';
 
@@ -31,7 +32,8 @@ export default async function PriceUpdate() {
       const data = response.data;
       //await WriteNullObjects(data);
       await RemoveBadItems(data);
-      console.log(`\nNumber of items in game: ${NumberItems()}\n`);
+      console.log(`\nNumber of items in game: ${NumberItems()}`);
+      console.log("Item prices have been updated\n");
 
       // Update the lastUpdateTime
       fs.writeFile('./src/app/helpers/prices/lastupdate.txt', String(currentTime), (err) => {
