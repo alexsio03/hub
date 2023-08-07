@@ -182,7 +182,7 @@ export default function ItemFilter() {
         <WearButtons handleAnyClick={handleWearClick} wearState={wearState} />
       </div>
       {/* Gun Type buttons */}
-      <div className="relative flex flex-row mt-10 w-full justify-between mx-8 h-1/4">
+      <div className="relative flex flex-row mt-5 w-full justify-between mx-8 h-1/4 ">
         {filterTypes.map((type) => (
           <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick}/>
         ))}
@@ -192,25 +192,39 @@ export default function ItemFilter() {
 }
 
 function TypeButton({itemType, types, handleTypeClick}) {
+  const firstHalfOfTypes = types.slice(0, Math.ceil(types.length / 2));
+  const secondHalfOfTypes = types.slice(Math.ceil(types.length / 2));
   return (
-    <div className="group flex-grow mx-1">
-      {/* <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20" onClick={handleTypeClick(itemType)}>
-        <p className="my-auto">{itemType}</p>
-      </div> */}
-            <div
-        className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm px-2 py-1 my-1 cursor-pointer text-white h-20"
+    <div className="group flex-grow mx-1 h-20">
+      <div
+        className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] flex flex-grow justify-center drop-shadow-lg rounded-sm py-1 cursor-pointer text-white h-20"
         onClick={() => handleTypeClick(itemType)}
       >
         <p className="my-auto">{itemType}</p>
       </div>
-      <div className="hidden group-hover:flex flex-wrap rounded-sm absolute left-0">
-        {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
-          <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-28"
-           key={type} 
-           onClick={() => handleTypeClick(type)}>
-            <p className="my-auto">{type}</p>
-          </div>
-        ))}
+      <div className="hidden group-hover:flex w-full rounded-sm absolute left-0 flex-col">
+        <div className="flex flex-grow">
+          {firstHalfOfTypes.map((type) => (
+            <div
+              className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex flex-grow justify-center rounded-sm px-2 py-1 mx-1 mt-2 cursor-pointer text-xs text-white h-12 w-28"
+              key={type}
+              onClick={() => handleTypeClick(type)}
+            >
+              <p className="my-auto">{type}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-grow">
+          {secondHalfOfTypes.map((type) => (
+            <div
+              className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex flex-grow justify-center rounded-sm px-2 py-1 mx-1 mt-2 cursor-pointer text-xs text-white h-12 w-28"
+              key={type}
+              onClick={() => handleTypeClick(type)}
+            >
+              <p className="my-auto">{type}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -285,12 +299,15 @@ function WearButtons({ handleAnyClick, wearState }) {
   const handleToggle = (itemName: string) => {
     setSelectedItems((prevSelectedItems: string) => {
       const itemIndex = wearItems.indexOf(itemName);
-      const newSelectedItems = prevSelectedItems.split('');
-      newSelectedItems[itemIndex] = newSelectedItems[itemIndex] === '1' ? '0' : '1';
-      return newSelectedItems.join('');
+      const newSelectedItems = prevSelectedItems.split('').map((value, index) =>
+        index === itemIndex ? (value === '1' ? '0' : '1') : value
+      );
+      const newSelectedString = newSelectedItems.join('');
+      handleAnyClick(newSelectedString); // Invoke handleAnyClick after state update
+      return newSelectedString;
     });
-    handleAnyClick(selectedItems);
   };
+  
 
   const handleOnly = (itemName: string) => {
     const newSelectedItems = wearItems.map((item) => (item === itemName ? '1' : '0')).join('');
@@ -299,7 +316,7 @@ function WearButtons({ handleAnyClick, wearState }) {
   };
 
   return (
-    <div className="bg-sky-700 rounded p-2 flex flex-col items-start w-64">
+    <div className="bg-sky-700 rounded p-2 flex flex-col items-start w-64 my-5">
       {wearItems.map((item, index) => (
         <div key={item} className="flex items-center justify-between">
           <label className="inline-flex items-center hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm px-3 py-1 my-1 cursor-pointer">
