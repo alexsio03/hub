@@ -4,9 +4,8 @@ import Nav from '../components/nav';
 import Inventorycard from '../components/inventorycard';
 import axios from 'axios';
 import GenerateInspectLink from '../helpers/getinspectlink';
-import skindata from "../helpers/skindata.json"
 
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { initDB, initFirebase } from '../fb/config';
@@ -18,6 +17,7 @@ import React from 'react';
 import { InformationCircleIcon } from "@heroicons/react/24/outline"; // Import the InfoIcon from Hero Icons
 import SetPrice from '../helpers/prices/setprice';
 import { useRouter } from 'next/navigation';
+import { PlusIcon } from '@heroicons/react/24/solid';
 
 // Initialize Firebase + db and storage
 initFirebase();
@@ -36,6 +36,7 @@ export default function Inventory() {
   const [showInfo, setShowInfo] = useState(false);
   const [infoPosition, setInfoPosition] = useState({ x: 0, y: 0 });
   const [showInfoIndex, setShowInfoIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleInfoWindow = (event, index) => {
     setShowInfo(!showInfo);
@@ -135,6 +136,23 @@ export default function Inventory() {
     setShowModal(false);
   };
 
+  const handleDupe = async (sale, document, index) => {
+      const confirmation = window.confirm(
+        `You already have a listing for ${sale.itemName} at $${document.data().itemInfo.sellPrice}. Do you want to replace it with the new sale at $${sale.sellPrice}?`
+      );
+
+    if (confirmation) {
+      // Remove the existing sale and add the new sale in its place
+      const itemRef = doc(db, "market", document.id);
+      // Delete the trade document from Firestore.
+      await deleteDoc(itemRef);
+    } else {
+      // No existing sale, just add the new sale to the sellingItems array
+      sellingItems.splice(index, 1);
+    }
+  };
+
+
   const handleItemPriceSubmit = async () => {
     // Check if any input field is empty
     const isEmptyField = sellingItems.some((item) => !item.sellPrice);
@@ -143,32 +161,38 @@ export default function Inventory() {
       return;
     }
 
+
+
     // Save trade to the database
     try {
+      setIsLoading(true);
       const marketRef = collection(db, "market");
 
-      console.log(sellingItems)
+      const q = query(marketRef, where("owner", "==", user?.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        sellingItems.forEach((sale, index) => {
+          if (doc.data().itemInfo.id == sale.id) {
+            handleDupe(sale, doc, index);
+          }
+        });
+      });
 
       for(var i = 0; i < sellingItems.length; i++) {
       const sale = {
-        owner: user.uid,
+        owner: user?.uid,
         owner_name: user?.displayName,
-        itemInfo: sellingItems[i]
+        itemInfo: sellingItems[i],
+        listDate: new Date().toISOString()
       };
       await addDoc(marketRef, sale);
     }
-
-      // Redirect to the TradesPage
+      // Redirect
       router.push("/market");
     } catch (error) {
       console.error("Error adding document: ", error);
-    }
-
-    // Submit logic if all fields are filled
-    
-
-    // Close the modal after submission
-    // router.push("/market")
+    } 
   };
 
   const handleInvSearch = (event) => {
@@ -220,14 +244,19 @@ export default function Inventory() {
             className="text-black p-1 rounded-sm ml-2"
           />
         </div>
-        : <button onClick={updateSelling}>Sell Items</button>}
+        : <button
+              className={`bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-yellow-800 
+              font-bold text-lg py-4 px-8 rounded shadow-lg fixed bottom-8 right-9 z-10 cursor-pointer`}
+              onClick={updateSelling}
+            ><span className="mr-2"><PlusIcon className="w-5 h-5 inline-block -mt-1" /></span>Sell Items</button>
+        }
         <div className='flex flex-row flex-wrap'>
           {filteredInventory.map((item, index) => (
             <Inventorycard key={index} item={item} selling={selling} addItem={addSale} />
           ))}
         </div>
         {/* Render the modal when showModal is true */}
-        {showModal && (
+        {showModal && sellingItems[0] && (
         <div className="fixed inset-0 flex justify-center items-center bg-sky-950 p-3">
           <div className="bg-black bg-opacity-50 p-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Enter Prices for Items</h2>
@@ -290,14 +319,18 @@ export default function Inventory() {
               ))}
             </div>
             <div className="flex justify-between mt-2">
-              <button className="bg-red-500 hover:bg-red-600 p-2 rounded-md" onClick={closeModal}>
+              <button className={`bg-red-500 hover:bg-red-600 p-2 rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={closeModal} disabled={isLoading}>
                 Cancel
               </button>
-              <button className="bg-blue-500 hover:bg-blue-600 p-2 rounded-md" onClick={autoFillSuggestedPrices}>
+              <button className={`bg-blue-500 hover:bg-blue-600 p-2 rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={autoFillSuggestedPrices} disabled={isLoading}>
                 Auto-Fill Suggested Price
               </button>
-              <button className="bg-green-500 hover:bg-green-600 p-2 rounded-md" onClick={handleItemPriceSubmit}>
-                Submit
+              <button
+                className={`bg-green-500 hover:bg-green-600 p-2 rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={handleItemPriceSubmit}
+                disabled={isLoading} // Disable the button when loading
+              >
+                {isLoading ? 'Loading...' : 'Submit'}
               </button>
             </div>
           </div>
