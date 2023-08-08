@@ -17,7 +17,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
   if (hasListings){
     return (
       <div className="bg-sky-800 rounded-lg m-3 p-1 flex flex-col">
-        <a href={`/item/${itemName}`} className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] m-2 p-1 items-center w-52 h-64 overflow-hidden relative drop-shadow-lg rounded-sm">
+        <a href={`/item/${itemName}`} className="bg-sky-500 hover:bg-sky-400 hover:scale-[1.025] m-2 p-1 items-center w-52 h-64 overflow-hidden relative drop-shadow-lg rounded-sm">
           <div className="flex flex-col p-2">
             <h6 className='h-14 text-md'>{itemName}</h6>
             <img className="mx-auto object-contain w-32 h-32" src={itemUrl} />

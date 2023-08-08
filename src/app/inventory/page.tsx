@@ -17,7 +17,7 @@ import React from 'react';
 import { InformationCircleIcon } from "@heroicons/react/24/outline"; // Import the InfoIcon from Hero Icons
 import SetPrice from '../helpers/prices/setprice';
 import { useRouter } from 'next/navigation';
-import { PlusIcon } from '@heroicons/react/24/solid';
+import { PlusIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 // Initialize Firebase + db and storage
 initFirebase();
@@ -234,7 +234,11 @@ export default function Inventory() {
         ) : <></>}
         {selling ? 
         <div className="flex flex-row mt-2.5 ml-2">
-          <button className='-mt-2.5' onClick={updateSelling}>Cancel Selling</button> 
+          <button
+              className={`bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-red-800 
+              font-bold text-lg py-4 px-8 rounded shadow-lg fixed bottom-8 right-9 z-10 cursor-pointer`}
+              onClick={updateSelling}
+            ><span className="mr-2"><XMarkIcon className="w-5 h-5 inline-block -mt-1" /></span>Cancel Selling</button>
           <p className="ml-8">Search: </p>
           <input
             type="text"
