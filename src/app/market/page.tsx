@@ -154,7 +154,7 @@ export default function Market() {
         searchResults.map((item, index) => (
           <Marketcard key={index} itemInfo={item} />
         ))
-      ) : (market[0] ? market.map((sale) => ( <Marketcard itemInfo={sale.itemInfo}/> )) : <p>Loading</p>)}
+      ) : (market[0] ? market.map((sale) => ( <Marketcard key={sale.id} itemInfo={sale.itemInfo}/> )) : <p>Loading</p>)}
     </div>
   </>
   );

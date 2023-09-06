@@ -81,15 +81,15 @@ export default function Home() {
                     let opacity = 100;
                     if (index == 0 || index == 4) {
                       scale = 75;
-                      opacity = 70;
+                      opacity = 50;
                     } else if (index == 1 || index == 3) {
-                      scale = 90;
-                      opacity = 80;
+                      scale = 95;
+                      opacity = 70;
                     }
 
                     return (
                       <div
-                        className={`transform scale-${scale} opacity-${opacity}`}
+                        className={`scale-${scale} opacity-${opacity}`}
                         key={index}
                       >
                         <Marketcard itemInfo={sale.itemInfo} />

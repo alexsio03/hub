@@ -184,8 +184,8 @@ export default function ItemFilter({trade}) {
       </div>
       {/* Gun Type buttons */}
       <div className={`relative flex ${trade ? `flex-wrap w-full justify-around` : `flex flex-row justify-between w-full mt-10 mx-8`} `}>
-        {filterTypes.map((type) => (
-          <TypeButton itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick} trade={trade}/>
+        {filterTypes.map((type, index) => (
+          <TypeButton key={index} itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick} trade={trade}/>
         ))}
       </div>
     </div>
