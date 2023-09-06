@@ -24,6 +24,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
             {priceData && (
               // Display price data if it exists
               <>
+                <p className="text-xs opacity-50">Sale Price: {item.itemInfo.sellPrice}</p>
                 <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
                 <p className="text-xs opacity-50">Buff: {priceData.buff}</p>
               </>
@@ -36,7 +37,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
 
   // otherwise return darker card that does not redirect
   return (
-    <div className="bg-sky-900 rounded-lg m-3 p-1 flex flex-col">
+    <div className='bg-sky-900 rounded-lg m-3 p-1 flex flex-col'>
       <div className="bg-sky-800 m-2 p-1 items-center w-52 h-64 overflow-hidden relative drop-shadow-lg rounded-sm">
         <div className="flex flex-col p-2">
           <h6 className='h-14 text-md'>{itemName}</h6>
@@ -44,6 +45,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
           {priceData && (
             // Display price data if it exists
             <>
+              <p className="text-sm opacity-80">Sale Price: ${item.itemInfo.sellPrice}</p>
               <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
               <p className="text-xs opacity-50">Buff: {priceData.buff}</p>
             </>
