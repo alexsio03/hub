@@ -107,7 +107,7 @@ export default function ItemFilter(trade: {trade: boolean;}) {
 
   // Makes sure the redirect occurs when there is text in the search box and enter is pressed
   useEffect(() => {
-    const handleKeyPress = (event) => {
+    const handleKeyPress = (event: { keyCode: number; key: string; }) => {
       // Check if the "Enter" key was pressed (keyCode 13) or (key === "Enter" for newer browsers)
       if (event.keyCode === 13 || event.key === "Enter") {
         // Trim the search term and check if it's not empty
@@ -192,7 +192,7 @@ export default function ItemFilter(trade: {trade: boolean;}) {
   );
 }
 
-function TypeButton({itemType, types, handleTypeClick, trade}) {
+function TypeButton(itemType: string, types: any, handleTypeClick: any, trade: any) {
   const firstHalfOfTypes = types.slice(0, Math.ceil(types.length / 2));
   const secondHalfOfTypes = types.slice(Math.ceil(types.length / 2));
   return (
