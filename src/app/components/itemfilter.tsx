@@ -192,7 +192,14 @@ export default function ItemFilter(trade: {trade: boolean;}) {
   );
 }
 
-function TypeButton(itemType: string, types: any, handleTypeClick: any, trade: any) {
+interface TypeButtonProps {
+  itemType: string;
+  types: string[];
+  handleTypeClick: (itemType: string) => void;
+  trade: boolean;
+}
+
+function TypeButton({itemType, types, handleTypeClick, trade}: TypeButtonProps) {
   const firstHalfOfTypes = types.slice(0, Math.ceil(types.length / 2));
   const secondHalfOfTypes = types.slice(Math.ceil(types.length / 2));
   return (
@@ -249,7 +256,12 @@ function TypeButton(itemType: string, types: any, handleTypeClick: any, trade: a
   );
 }
 
-function SouvenirFilter({ onClick, souvenirState }) {
+interface SouvenirFilterProps {
+  onClick: () => void;
+  souvenirState: number;
+}
+
+function SouvenirFilter({ onClick, souvenirState }: SouvenirFilterProps) {
   const buttonClassNames = [
     "bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-2",
     "bg-yellow-400 hover:bg-yellow-300 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-2",
@@ -270,7 +282,12 @@ function SouvenirFilter({ onClick, souvenirState }) {
   );
 }
 
-function StatTrakFilter({ onClick, stattrakState }) {
+interface StatTrakFilterProps {
+  onClick: () => void;
+  stattrakState: number;
+}
+
+function StatTrakFilter({ onClick, stattrakState }: StatTrakFilterProps) {
   const buttonClassNames = [
     "bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-4",
     "bg-orange-600 hover:bg-orange-500 hover:scale-[1.025] drop-shadow-lg rounded-sm cursor-pointer text-white flex-grow py-4",
@@ -291,7 +308,11 @@ function StatTrakFilter({ onClick, stattrakState }) {
   );
 }
 
-function RarityFilter({trade}){
+interface RarityFilterProps {
+  trade: boolean;
+}
+
+function RarityFilter({trade}: RarityFilterProps){
   return (
     <div className="relative group">
       <div className="bg-sky-700 drop-shadow-lg rounded-sm cursor-pointer text-white flex items-center justify-center py-4 my-2">
@@ -310,7 +331,12 @@ function RarityFilter({trade}){
   );
 }
 
-function WearButtons({ handleAnyClick, wearState }) {
+interface WearButtonsProps {
+  handleAnyClick: (selectedItems: string) => void;
+  wearState: string;
+}
+
+function WearButtons({ handleAnyClick, wearState }: WearButtonsProps) {
   const wearItems = ['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'];
 
   const [selectedItems, setSelectedItems] = useState(wearState);
