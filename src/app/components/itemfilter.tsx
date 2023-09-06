@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-export default function ItemFilter({trade}) {
-  console.log(trade)
+export default function ItemFilter(trade: {trade: boolean;}) {
+
   const URLParams = new URLSearchParams(window.location.search);
   const searchedItem = URLParams.get('search') || "";
   const statusSouvenir = Number(URLParams.get('souvenir')) || 0;
