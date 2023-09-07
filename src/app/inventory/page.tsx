@@ -24,6 +24,10 @@ initFirebase();
 const db = initDB();
 const storage = getStorage();
 
+const backendAxios = axios.create({
+  baseURL: 'https://hub-chi-rust.vercel.app/', // Update with your Vercel app URL
+});
+
 export default function Inventory() {
   const auth = getAuth();
   const router = useRouter();
