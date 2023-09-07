@@ -113,7 +113,7 @@ export default function Nav() {
                   <Menu as="div" className="relative inline-block text-left ml-auto mr-10">
                     <div>
                       <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <><img className='rounded-full h-10 w-10' src={user.photoURL}></img></>
+                        <><img className='rounded-full h-10 w-10' src={user.photoURL?.toString()}></img></>
                       </Menu.Button>
                     </div>
                     <Transition

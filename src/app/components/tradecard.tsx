@@ -10,10 +10,20 @@ import { useState, MouseEvent, useCallback } from "react"; // React hooks for st
 initFirebase();
 const db = initDB();
 
+interface TradeCardProps {
+  owner: string;
+  owner_url: string;
+  offers: any[]; // You should specify the actual type for offers
+  requests: any[]; // You should specify the actual type for requests
+  is_owner: boolean;
+  id: string;
+  onDeleteTrade: (id: any) => void;
+}
+
 // Main TradeCard component
-const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteTrade }) => {
+const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteTrade }: TradeCardProps) => {
   // Function to handle trade deletion
-  const handleDelete = async () => {
+  const handleDelete = async (id: any) => {
     try {
       // Get the reference to the "trades" collection
       const tradesRef = collection(db, 'trades');
@@ -87,8 +97,29 @@ const TradeCard = ({ owner, owner_url, offers, requests, is_owner, id, onDeleteT
   );
 };
 
-// Section component to display items in the trade
-const Section = ({ title, items }) => {
+// Define an interface for the item data
+interface ItemData {
+  itemName: string;
+  // Add other properties as needed
+}
+
+// Define the props interface for the Section component
+interface SectionProps {
+  title: string;
+  items: ItemData[]; // Use the ItemData interface for the items
+}
+
+const Section: React.FC<SectionProps> = ({ title, items }) => {
+  // Function to calculate the total Buff price of the items
+  function getTotal(items: ItemData[]): string {
+    let total = 0;
+    for (let i = 0; i < items.length; i++) {
+      const priceData = SetPrice(items[i].itemName);
+      total += Number(priceData.buff.substring(1));
+    }
+    return total.toFixed(2);
+  }
+
   return (
     <div className="mt-2 p-3 border-t-2 border-sky-950 min-h-[336px] w-1/2">
       <h1 className="text-white tracking-wide text-lg font-bold mb-2">{title}:</h1>
@@ -104,9 +135,9 @@ const Section = ({ title, items }) => {
 };
 
 // Function to calculate the total Buff price of the items
-function getTotal(items) {
-  var total = 0;
-  for (var i = 0; i < items.length; i++) {
+function getTotal(items: ItemData[]): string {
+  let total = 0;
+  for (let i = 0; i < items.length; i++) {
     const priceData = SetPrice(items[i].itemName);
     total += Number(priceData.buff.substring(1));
   }
@@ -122,11 +153,6 @@ TradeCard.propTypes = {
   is_owner: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
   onDeleteTrade: PropTypes.func.isRequired,
-};
-
-Section.propTypes = {
-  title: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 // Throttle function to limit the rate of calling a function
