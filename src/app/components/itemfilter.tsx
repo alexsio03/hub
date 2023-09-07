@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function ItemFilter(trade: {trade: boolean;}) {
+export default function ItemFilter({ trade }: { trade: boolean }) {
 
   const URLParams = new URLSearchParams(window.location.search);
   const searchedItem = URLParams.get('search') || "";
@@ -185,7 +185,13 @@ export default function ItemFilter(trade: {trade: boolean;}) {
       {/* Gun Type buttons */}
       <div className={`relative flex ${trade ? `flex-wrap w-full justify-around` : `flex flex-row justify-between w-full mt-10 mx-8`} `}>
         {filterTypes.map((type, index) => (
-          <TypeButton key={index} itemType={type[0]} types={type[1]} handleTypeClick={handleTypeClick} trade={trade}/>
+          <TypeButton
+          key={index}
+          itemType={type[0].toString()}
+          types={Array.isArray(type[1]) ? type[1] : [type[1]]}
+          handleTypeClick={handleTypeClick}
+          trade={trade}
+        />
         ))}
       </div>
     </div>
@@ -212,7 +218,7 @@ function TypeButton({itemType, types, handleTypeClick, trade}: TypeButtonProps) 
         <p className="my-auto">{itemType}</p>
       </div>
       <div className={`hidden group-hover:flex flex-wrap absolute left-0 w-full rounded-sm ${trade ? `pl-8 bg-sky-600 z-10` : <></>}`}>
-        {types.map((type: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.PromiseLikeOfReactNode | null | undefined) => (
+        {types.map((type: string) => (
           <div className="bg-sky-700 hover:bg-sky-600 hover:scale-[1.025] drop-shadow-lg flex justify-center rounded-sm px-3 py-1 mr-2 my-1 cursor-pointer text-xs text-white h-10 w-32"
            key={type} 
            onClick={() => handleTypeClick(type)}>
