@@ -72,7 +72,7 @@ export default function Inventory() {
         const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
         try {
           // Make an HTTP request to our backend to fetch the JSON data from our storage
-          const response = await axios.get('/fb-proxy', {
+          const response = await backendAxios.get('/fb-proxy', {
             params: {
               downloadURL: downloadURL,
             },
