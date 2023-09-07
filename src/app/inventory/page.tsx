@@ -24,10 +24,6 @@ initFirebase();
 const db = initDB();
 const storage = getStorage();
 
-const backendAxios = axios.create({
-  baseURL: 'https://hub-chi-rust.vercel.app/', // Update with your Vercel app URL
-});
-
 export default function Inventory() {
   const auth = getAuth();
   const router = useRouter();
@@ -72,7 +68,7 @@ export default function Inventory() {
         const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
         try {
           // Make an HTTP request to our backend to fetch the JSON data from our storage
-          const response = await backendAxios.get('/fb-proxy', {
+          const response = await axios.get('/api/test', {
             params: {
               downloadURL: downloadURL,
             },
