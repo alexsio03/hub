@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 
 export default function ItemFilter({ trade }: { trade: boolean }) {
+  let URLParams;
+  let searchedItem = "";
+  let statusSouvenir = 0;
+  let statusStatTrak = 0;
+  let statusWear = '11111'
 
-  const URLParams = new URLSearchParams(window.location.search);
-  const searchedItem = URLParams.get('search') || "";
-  const statusSouvenir = Number(URLParams.get('souvenir')) || 0;
-  const statusStatTrak = Number(URLParams.get('stattrak')) || 0;
-  const statusWear = URLParams.get('wear') || '11111';
+  if (typeof window !== "undefined") {
+    URLParams = new URLSearchParams(window.location.search);
+    searchedItem = URLParams.get('search') || "";
+    statusSouvenir = Number(URLParams.get('souvenir')) || 0;
+    statusStatTrak = Number(URLParams.get('stattrak')) || 0;
+    statusWear = URLParams.get('wear') || '11111';
+  }
 
   const [searchTerm, setSearchTerm] = useState(searchedItem);
   const [souvenirState, setSouvenirState] = useState(statusSouvenir);
