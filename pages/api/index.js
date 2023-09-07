@@ -30,9 +30,9 @@ app.prepare().then(() => {
 
   // Configure the Steam authentication strategy for passport
   passport.use(new SteamStrategy({
-    returnURL: 'http://localhost:3000/auth/steam/return',
-    realm: 'http://localhost:3000/',
-    apiKey: '83B787E996D1E5DCF048B9DEE2999748'
+    returnURL: `${process.env.DOMAIN}/auth/steam/return`,
+    realm: `${process.env.DOMAIN}`,
+    apiKey: `${process.env.STEAM_API_KEY}`
   },
   function(identifier, profile, done) {
     process.nextTick(function () {
@@ -64,6 +64,7 @@ app.prepare().then(() => {
   // Proxy route to fetch Steam inventory data
   server.get('/steam-proxy/:steamid', async (req, res) => {
     try {
+      console.log("got inventory")
       const url1 = `http://steamcommunity.com/inventory/${req.params.steamid}/730/2`;
       const url2 = '?l=english&count=2000';
       const url = url1 + url2; // Add the trailing slash before the query parameters
@@ -72,26 +73,6 @@ app.prepare().then(() => {
       const response = await axios.get(url);
       res.json(response.data);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
-    }
-  });
-
-  // Proxy route to fetch Firebase JSON data
-  server.get('/fb-proxy', async (req, res) => {
-    try {
-      const { downloadURL } = req.query;
-
-      // Fetch the JSON file using the download URL
-      const response = await axios.get(downloadURL);
-
-      // Set the appropriate headers for the response
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', 'attachment; filename="downloaded.json"');
-
-      // Pass back the JSON file
-      res.send(response.data);
-    } catch (error) {
-      console.error('Error occurred:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   });

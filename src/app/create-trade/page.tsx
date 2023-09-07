@@ -142,7 +142,7 @@ export default function CreateTradePage() {
         const downloadURL = await getDownloadURL(ref(storage, `user_inventories/${user.user_id}.json`));
         try {
           // Make an HTTP request to fetch the JSON data from the storage
-          const response = await axios.get('/fb-proxy', {
+          const response = await axios.get('/api/fb-proxy', {
             params: {
               downloadURL: downloadURL,
             },
