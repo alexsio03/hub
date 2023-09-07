@@ -1,6 +1,6 @@
 // Import necessary modules and helper functions
 import SetPrice from '../helpers/prices/setprice.js'; // Module to get price data for items
-import magnifyingGlassImage from './images/magnifyingglass.png'; // Image of a magnifying glass for inspect link
+//import magnifyingGlassImage from './images/magnifyingglass.png'; // Image of a magnifying glass for inspect link
 import findImage from '../helpers/findImage.js'; // Helper function to find the item image
 
 // Component to display individual item cards
@@ -35,7 +35,7 @@ export default function Itemcard(item: any) {
         // Display inspect link icon if itemInspectLink exists
         <div className="absolute bottom-2 right-2">
           <a href={cleanedLink} target="_blank" rel="noopener noreferrer">
-            <img className="w-6 h-6 bg-blue-500 bg-opacity-70 hover:bg-blue-600 rounded-md p-1" src={magnifyingGlassImage.src} alt="Magnifying Glass" />
+            <img className="w-6 h-6 bg-blue-500 bg-opacity-70 hover:bg-blue-600 rounded-md p-1" src="https://clipartmag.com/images/magnifying-glass-clipart-transparent-background-31.png" alt="Magnifying Glass" />
           </a>
         </div>
       )}
