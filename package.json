@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon server/index.js",
-    "build": "next build",
+    "build": "tsc --noEmit --skipLibCheck",
     "start": "next start",
     "lint": "next lint"
   },

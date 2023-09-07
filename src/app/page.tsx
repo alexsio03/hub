@@ -11,10 +11,10 @@ initFirebase();
 const db = initDB(); // Initialize the Firebase database.
 
 export default function Home() {
-  const [market, setMarket] = useState([]);
+  const [market, setMarket] = useState<any[]>([]);
   const [marketStartIndex, setMarketStartIndex] = useState(0);
   const [tradeStartIndex, setTradeStartIndex] = useState(0);
-  const [trades, setTrades] = useState([]);
+  const [trades, setTrades] = useState<any[]>([]);
 
   useEffect(() => {
     const loadMarket = async () => {
@@ -71,7 +71,7 @@ export default function Home() {
       <div className='flex flex-col h-screen my-6'>
         <div className='flex flex-col h-3/8 mx-16 rounded-md bg-blue-700 bg-opacity-50'>
           <div className='p-4'>
-            <h3>Market {'>'}</h3>
+            <a className='tracking-wide text-lg' href="/market">Market {'>'}</a>
             <div className='flex flex-row justify-center overflow-hidden'>
               {market[0] ? (
                 <>
@@ -106,7 +106,7 @@ export default function Home() {
         </div>
         <div className='flex flex-col mx-16 my-6 rounded-md bg-blue-700 bg-opacity-50'>
           <div className='p-4'>
-            <h3>Trades {'>'}</h3>
+            <a className='tracking-wide text-lg' href="/trades">Trades {'>'}</a>
             <div className='flex flex-col  overflow-hidden'>
               {market[0] ? (
                 <>
@@ -133,7 +133,9 @@ export default function Home() {
                               owner_url={trade.owner_steam.steam_url} 
                               offers={trade.offered_items} 
                               requests={trade.requested_items} 
-                              id={trade.id}/>
+                              id={trade.id}
+                              is_owner={false}
+                              onDeleteTrade={() => {return null}}/>
                           </div>
                       );
                     })}
@@ -145,6 +147,9 @@ export default function Home() {
               )}
             </div>
           </div>
+        </div>
+        <div className='mb-20 h-24'>
+          <br></br>
         </div>
       </div>
     </>

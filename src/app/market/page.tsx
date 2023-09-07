@@ -16,13 +16,33 @@ type ItemData = {
   itemIcon: any;
 };
 
+interface SkinAttributes {
+  classid: string;
+  exterior: string;
+  first_sale_date: string;
+  gun_type: string;
+  icon_url: string;
+  icon_url_large: string;
+  marketable: number;
+  name: string;
+  rarity: string;
+  rarity_color: string;
+  stattrak: number;
+  souvenir: number;
+  tournament: string;
+  tradable: number;
+  type: string;
+  weapon_type: string;
+  knife_type: string;
+}
+
 // Initialize Firebase
 initFirebase();
 const db = initDB(); // Initialize the Firebase database.
 
 export default function Market() {
   const [searchResults, setSearchResults] = useState<ItemData[]>([]);
-  const [market, setMarket] = useState([]);
+  const [market, setMarket] = useState<any[]>([]);
 
   useEffect(() => {
     const loadMarket = async () => {
@@ -48,7 +68,8 @@ export default function Market() {
     const itemTypeRequested = searchParams.get('type') || "no type specified";
     
     if (searchQuery) {
-      const skinAttributes = Object.entries(InfoJSONData.items_list);
+      const skinData = Object.entries(InfoJSONData);
+      const skinAttributes = Object.entries(skinData[3][1]);
       const skinPrices = Object.entries(PriceJSONData);
 
       const filteredItems = skinPrices
@@ -59,15 +80,13 @@ export default function Market() {
         );
       })
       .filter(([itemName]) => {
-        if (InfoJSONData.items_list[itemName] == undefined){
-          console.log(InfoJSONData.items_list[itemName])
-          console.log(itemName)
+        const foundItem = skinAttributes.find((item) => item[0] === itemName);
+        const itemData = foundItem ? (foundItem[1] as SkinAttributes) : undefined;
+        console.log(itemData)
+        if (foundItem == undefined){
           return false;
         }
-        return true;
-      })
-      .filter(([itemName]) => {
-        const itemIsStatTrak = InfoJSONData.items_list[itemName].stattrak || 0;
+        const itemIsStatTrak = itemData?.stattrak || 0;
 
         // Apply filtering for stattrakRequested
         if (stattrakRequested === 1 && itemIsStatTrak === 0) {
@@ -75,10 +94,7 @@ export default function Market() {
         } else if (stattrakRequested === 2 && itemIsStatTrak === 1) {
           return false;
         }
-        return true;
-      })
-      .filter(([itemName]) => {
-        const itemIsSouvenir = InfoJSONData.items_list[itemName].souvenir || 0;
+        const itemIsSouvenir = itemData?.souvenir || 0;
 
         // Apply filtering for souvenirRequested
         if (souvenirRequested === 1 && itemIsSouvenir === 0) {
@@ -86,14 +102,11 @@ export default function Market() {
         } else if (souvenirRequested === 2 && itemIsSouvenir === 1) {
           return false;
         }
-        return true;
-      })
-      .filter(([itemName]) => {
         if (permittedWears == "no wear specified"){
           return true;
         }
 
-        const itemWear = InfoJSONData.items_list[itemName].exterior || "No Wear";
+        const itemWear = itemData?.exterior || "No Wear";
 
         const FNpermitted = Number(permittedWears?.charAt(0));
         const MWpermitted = Number(permittedWears?.charAt(1));
@@ -116,26 +129,26 @@ export default function Market() {
         if (BSpermitted == 1 && itemWear == "Battle-Scarred"){
           return true;
         }
-        return false;
-      })
-      .filter(([itemName]) => {
         if (itemTypeRequested == "no type specified"){
           return true;
         }
 
-        const itemWeaponType = InfoJSONData.items_list[itemName].weapon_type || "Not a Weapon";
-        const itemGunType = InfoJSONData.items_list[itemName].gun || "Not a Gun";
-        const itemKnifeType = InfoJSONData.items_list[itemName].knife_type || "Not a Gun";
+        const itemWeaponType = itemData?.weapon_type || "Not a Weapon";
+        const itemGunType = itemData?.gun_type || "Not a Gun";
+        const itemKnifeType = itemData?.knife_type || "Not a Gun";
 
         if (itemTypeRequested == itemGunType || itemTypeRequested == itemWeaponType || itemTypeRequested == itemKnifeType){
           return true;
         }
         return false;
       })
-      .map(([itemName]) => ({
-        itemName: itemName.replaceAll("&#39", "'"),
-        itemIcon: skinAttributes.find((item) => item[0] == itemName) ? SizeIcon(skinAttributes.find((item) => item[0] == itemName)[1]) : null,
-      }));
+      .map(([itemName]) => {
+        const foundItem = skinAttributes.find((item) => item[0] === itemName);
+        return {
+          itemName: itemName.replaceAll("&#39", "'"),
+          itemIcon: foundItem ? SizeIcon(foundItem[1]) : null,
+        }
+      });
       
     setSearchResults(filteredItems);
     } else {
