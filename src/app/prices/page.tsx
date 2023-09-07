@@ -13,12 +13,13 @@ import Head from 'next/head';
 export default function Prices() {
     // State variables to manage the search query and filtered items.
     const [searchQuery, setSearchQuery] = useState("");
-    const [item, setItem] = useState();
-    const [priceData, setPriceData] = useState();
+    const [item, setItem] = useState<any>();
+    const [priceData, setPriceData] = useState<any>();
     const [rotate, setRotate] = useState({ x: 0, y: 0 });
 
     // Get an array of items and their prices from the JSON data.
-    const skinArr = Object.entries(skindata.items_list);
+    const skinData = Object.entries(skindata);
+    const skinArr = Object.entries(skinData[3][1]);
     const skinPrices = Object.entries(skinprices);
     const filteredItems = skinPrices
         .filter(([itemName]) => {
@@ -28,26 +29,31 @@ export default function Prices() {
             );
         })
         .slice(0, 20)
-        .map(([itemName, itemInfo]) => ({
-            itemName: itemName.replaceAll("&#39", "'"),
-            id: hash(itemName),
-            itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
-            priceData: itemInfo
-        }));
+        .map(([itemName, itemInfo]) => {
+            itemName = itemName.replaceAll("&#39", "'"); // Replace HTML entity for '
+            const foundItem = skinArr.find((item) => item[0] === itemName);
+        
+            return {
+              itemName,
+              itemIsMarketable: 1,
+              id: hash(itemName),
+              itemIcon: foundItem ? SizeIcon(foundItem[1]) : null, // Perform a null check
+            };
+          });
     
     // Event handler to handle search query changes.
-    const handleSearch = (event) => {
+    const handleSearch = (event: any) => {
         setSearchQuery(event.target.value);
     };
 
     // Function to handle item selection and update price data.
-    function handleItemRequested(clickedItem) {
+    function handleItemRequested(clickedItem: any) {
         setItem(clickedItem)
         setPriceData(clickedItem.priceData)
     }
 
     // Function to calculate the Steam price based on the SteamData.
-    function getSteamPrice(steamData) {
+    function getSteamPrice(steamData: any) {
         if(steamData.last_24h) {
             return "$" + steamData.last_24h + " (24 hours)";
         } else if (steamData.last_7d) {
@@ -60,9 +66,9 @@ export default function Prices() {
     }
 
     // Function to throttle mouse move events to prevent excessive calls.
-    function throttle(func, delay) {
+    function throttle(func: any, delay: any) {
         let lastCall = 0;
-        return (...args) => {
+        return (...args: any) => {
             const now = new Date().getTime();
             if (now - lastCall < delay) {
                 return;
@@ -73,7 +79,7 @@ export default function Prices() {
     }
 
     // Function to hash the given string.
-    function hash(str) {
+    function hash(str: any) {
         let hash = 0;
         for (let i = 0, len = str.length; i < len; i++) {
             let chr = str.charCodeAt(i);
@@ -174,7 +180,7 @@ export default function Prices() {
     );
 }
 
-function getImage(item) {
+function getImage(item: any) {
     const img = item.itemIcon ? `https://community.cloudflare.steamstatic.com/economy/image/${item.itemIcon}/330x192` : findImage(item.itemName)
     return img
 }

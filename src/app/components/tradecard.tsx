@@ -144,17 +144,6 @@ function getTotal(items: ItemData[]): string {
   return total.toFixed(2);
 }
 
-// Prop types validation for the TradeCard and Section components
-TradeCard.propTypes = {
-  owner: PropTypes.string.isRequired,
-  owner_url: PropTypes.string.isRequired,
-  offers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  requests: PropTypes.arrayOf(PropTypes.object).isRequired,
-  is_owner: PropTypes.bool.isRequired,
-  id: PropTypes.string.isRequired,
-  onDeleteTrade: PropTypes.func.isRequired,
-};
-
 // Throttle function to limit the rate of calling a function
 function throttle<T extends (...args: any[]) => any>(
   func: T,

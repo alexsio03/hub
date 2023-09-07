@@ -24,14 +24,14 @@ export default function TradesPage() {
 
   // Set up state variables for the component.
   const [user] = useAuthState(auth); // 'user' stores the current authenticated user, if any.
-  const [trades, setTrades] = useState([]); // 'trades' holds the list of trades fetched from Firestore.
-  const [offerFilters, setOfferFilters] = useState([]); // 'offerFilters' keeps track of selected offer filters.
-  const [requestFilters, setRequestFilters] = useState([]); // 'requestFilters' stores selected request filters.
+  const [trades, setTrades] = useState<any[]>([]); // 'trades' holds the list of trades fetched from Firestore.
+  const [offerFilters, setOfferFilters] = useState<any[]>([]); // 'offerFilters' keeps track of selected offer filters.
+  const [requestFilters, setRequestFilters] = useState<any[]>([]); // 'requestFilters' stores selected request filters.
   // State variable to track the loading state
   const [isLoading, setIsLoading] = useState(false);
 
   // Filter the trades based on selected filters.
-  const filteredTrades = trades.filter((trade) => {
+  const filteredTrades = trades.filter((trade: any) => {
     const reqs = trade.requested_items;
     const offers = trade.offered_items;
     const bothEmpty = (requestFilters.length == 0 && offerFilters.length == 0)
@@ -72,7 +72,7 @@ export default function TradesPage() {
   }, []);
 
   // Function to handle the deletion of a trade.
-  const handleDeleteTrade = async (tradeId) => {
+  const handleDeleteTrade = async (tradeId: any) => {
     try {
       // Get a reference to the trade document.
       const tradeRef = doc(db, "trades", tradeId);
@@ -94,7 +94,7 @@ export default function TradesPage() {
   };
 
   // Function to update the offer filters based on user selection.
-  const updateOfferFilter = (filter) => {
+  const updateOfferFilter = (filter: never) => {
     const oldFilters = [...offerFilters]; // Create a new array instance
     if (oldFilters.includes(filter)) {
       oldFilters.splice(oldFilters.indexOf(filter), 1); // Remove the filter if already selected.
@@ -105,7 +105,7 @@ export default function TradesPage() {
   };
 
   // Function to update the request filters based on user selection.
-  const updateRequestFilter = (filter) => {
+  const updateRequestFilter = (filter: never) => {
     const oldFilters = [...requestFilters]; // Create a new array instance
     if (oldFilters.includes(filter)) {
       oldFilters.splice(oldFilters.indexOf(filter), 1); // Remove the filter if already selected.

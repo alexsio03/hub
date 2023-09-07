@@ -8,7 +8,6 @@ import { initDB, initFirebase } from "../fb/config";
 import Inventorycard from "../components/inventorycard";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import axios from "axios";
-import Tradecard from "../components/tradecard";
 import skindata from "../helpers/skindata.json"
 import skinprices from '../helpers/prices/skinPrices.json'
 import Itemcard from "../components/itemcard";
@@ -16,6 +15,7 @@ import Nav from "../components/nav";
 import SizeIcon from "../helpers/icons/sizeicon";
 import SetPrice from "../helpers/prices/setprice";
 import findItem from "../helpers/findItem";
+import Tradecard from "../components/tradecard";
 
 // Initialize Firebase
 initFirebase();
@@ -28,10 +28,13 @@ export default function CreateTradePage() {
   const [user] = useAuthState(auth);
 
   // State variables
-  const [inventory, setInventory] = useState([]);
-  const [offeredItems, setOfferedItems] = useState([]);
-  const [requestedItems, setRequestedItems] = useState([]);
-  const [steamInfo, setSteamInfo] = useState({});
+  const [inventory, setInventory] = useState<any[]>([]);
+  const [offeredItems, setOfferedItems] = useState<any[]>([]);
+  const [requestedItems, setRequestedItems] = useState<any[]>([]);
+  const [steamInfo, setSteamInfo] = useState({
+    steam_name: "",
+    steam_url: ""
+  });
 
   const router = useRouter();
 
@@ -46,48 +49,55 @@ export default function CreateTradePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Convert skindata and skinprices to arrays
-  const skinArr = Object.entries(skindata.items_list);
+  const skinData = Object.entries(skindata);
+  const skinArr = Object.entries(skinData[3][1]);
   const skinPrices = Object.entries(skinprices);
 
   // Filter and map the items based on search query and price range for requested items
   const filteredItems = skinPrices
-    .filter(([itemName]) => {
-      const keywords = searchQuery.toLowerCase().split(" ");
-      return keywords.every((keyword) =>
-        itemName.toLowerCase().includes(keyword)
-      );
-    })
-    .filter(([itemName, itemInfo]) => {
-      const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
-      const minPriceValue = convertPriceToDecimal(minReqPrice);
-      const maxPriceValue = convertPriceToDecimal(maxReqPrice);
+  .filter(([itemName]) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+    return keywords.every((keyword) =>
+      itemName.toLowerCase().includes(keyword)
+    );
+  })
+  .filter(([itemName, itemInfo]) => {
+    const price = SetPrice(itemName).buff; // Replace 'buff' with 'steam' if needed
+    const minPriceValue = convertPriceToDecimal(minReqPrice);
+    const maxPriceValue = convertPriceToDecimal(maxReqPrice);
 
-      if (price === null || price === '$null' || price ===  'No Data') {
-        return false; // Exclude items with null price
-      }
+    if (price === null || price === '$null' || price === 'No Data') {
+      return false; // Exclude items with null price
+    }
 
-      const itemPriceValue = convertPriceToDecimal(price);
+    const itemPriceValue = convertPriceToDecimal(price);
 
-      if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
-        return false; // Exclude items with price lower than the minimum price
-      }
+    if (!isNaN(minPriceValue) && itemPriceValue < minPriceValue) {
+      return false; // Exclude items with a price lower than the minimum price
+    }
 
-      if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
-        return false; // Exclude items with price higher than the maximum price
-      }
+    if (!isNaN(maxPriceValue) && itemPriceValue > maxPriceValue) {
+      return false; // Exclude items with a price higher than the maximum price
+    }
 
-      return true;
-    })
-    .slice(0, 39)
-    .map(([itemName, itemInfo]) => ({
-      itemName: itemName.replaceAll("&#39", "'"),
+    return true;
+  })
+  .slice(0, 39)
+  .map(([itemName, itemInfo]) => {
+    itemName = itemName.replaceAll("&#39", "'"); // Replace HTML entity for '
+    const foundItem = skinArr.find((item) => item[0] === itemName);
+
+    return {
+      itemName,
       itemIsMarketable: 1,
       id: hash(itemName),
-      itemIcon: skinArr.find((item) => item[0] == itemName) ? SizeIcon(skinArr.find((item) => item[0] == itemName)[1]) : null,
-    }));
+      itemIcon: foundItem ? SizeIcon(foundItem[1]) : null, // Perform a null check
+    };
+  });
+
 
   // Filter and map the items in the user's inventory based on search query and price range
-  const filteredInventory = inventory.filter((item) =>
+  const filteredInventory = inventory.filter((item: any) =>
     item.itemName.toLowerCase().includes(invSearchQuery)).filter((item) => {
     const price = item.itemIsMarketable ? SetPrice(item.itemName).buff : null; // Replace 'buff' with 'steam' if needed
     const minPriceValue = parseFloat(minInvPrice);
@@ -150,7 +160,7 @@ export default function CreateTradePage() {
           let marketable = invItem.marketable;
           if (invItem.actions) {
             var link = JSON.stringify(invItem.actions[0].link);
-            var assetid = json.assets.find((asset) => asset.classid == invItem.classid).assetid;
+            var assetid = json.assets.find((asset: any) => asset.classid == invItem.classid).assetid;
             link = link.replace("%owner_steamid%", user.steam_info.id).replace("%assetid%", assetid)
           }
 
@@ -211,7 +221,7 @@ export default function CreateTradePage() {
   };
 
   // Handle item offered by the user
-  function handleItemOffered(clickedItem) {
+  function handleItemOffered(clickedItem: any) {
     var updatedOfferedItems = [...offeredItems];
     var updateInv = [...inventory];
     const index = updatedOfferedItems.findIndex((offeredItem) => offeredItem.id === clickedItem.id);
@@ -226,7 +236,7 @@ export default function CreateTradePage() {
   }
 
   // Handle item requested by the user
-  function handleItemRequested(clickedItem) {
+  function handleItemRequested(clickedItem: any) {
     var updatedRequestedItems = [...requestedItems];
     const index = updatedRequestedItems.findIndex((requestedItem) => requestedItem.id === clickedItem.id);
     if (index !== -1) {
@@ -238,7 +248,7 @@ export default function CreateTradePage() {
   }
 
   // Remove an item from the offered or requested items list
-  const removeItem = (item) => {
+  const removeItem = (item: any) => {
     var updatedOfferedItems = [...offeredItems];
     var updatedRequestedItems = [...requestedItems];
     var updateInv = [...inventory];
@@ -264,11 +274,11 @@ export default function CreateTradePage() {
     }
   }
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: any) => {
     setSearchQuery(event.target.value);
   };
 
-  const handleInvSearch = (event) => {
+  const handleInvSearch = (event: any) => {
     setInvSearchQuery(event.target.value);
   };
 
@@ -280,7 +290,7 @@ export default function CreateTradePage() {
             <div className='flex flex-col items-center justify-center flex-wrap w-full'>
               {/* Display the trade card with selected items */}
               <button className="w-5/6" onClick={(item) => removeItem(item)}>
-                <Tradecard offers={offeredItems} requests={requestedItems}/>
+                <Tradecard offers={offeredItems} requests={requestedItems} is_owner={false} onDeleteTrade={() => {return null}} owner={"You"} owner_url="" id={"0"}/>
               </button>
             </div>
             {/* Button to submit the trade */}
@@ -395,7 +405,7 @@ export default function CreateTradePage() {
 }
 
 // Helper function to calculate hash
-function hash(str) {
+function hash(str: any) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
         let chr = str.charCodeAt(i);
@@ -406,7 +416,7 @@ function hash(str) {
 }
 
 // Helper function to convert price to decimal
-function convertPriceToDecimal(price) {
+function convertPriceToDecimal(price: any) {
   // Remove any non-numeric characters from the string (e.g., "$" or commas)
   const numericString = price.replace(/[^\d.-]/g, "");
 

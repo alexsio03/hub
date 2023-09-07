@@ -38,7 +38,7 @@ export default function Inventory() {
   const [showInfoIndex, setShowInfoIndex] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const toggleInfoWindow = (event, index) => {
+  const toggleInfoWindow = (event: any, index: any) => {
     setShowInfo(!showInfo);
     setShowInfoIndex(index);
     setInfoPosition({ x: event.clientX, y: event.clientY });
@@ -112,7 +112,7 @@ export default function Inventory() {
     setSelling(!selling)
   }
 
-  const addSale = (item) => {
+  const addSale = (item: any) => {
     var oldInv = [...inventory]
     var ind = oldInv.findIndex((inv_item) => inv_item.id === item.id)
     oldInv.splice(ind, 1)
@@ -120,7 +120,7 @@ export default function Inventory() {
     setSellingItems([...sellingItems, item]);
   };
 
-  const removeSale = (item) => {
+  const removeSale = (item: any) => {
     var oldSales = [...sellingItems]
     var ind = oldSales.findIndex((sale) => sale.id === item.id)
     oldSales.splice(ind, 1)
@@ -136,7 +136,7 @@ export default function Inventory() {
     setShowModal(false);
   };
 
-  const handleDupe = async (sale, document, index) => {
+  const handleDupe = async (sale: any, document: any, index: any) => {
       const confirmation = window.confirm(
         `You already have a listing for ${sale.itemName} at $${document.data().itemInfo.sellPrice}. Do you want to replace it with the new sale at $${sale.sellPrice}?`
       );
@@ -195,7 +195,7 @@ export default function Inventory() {
     } 
   };
 
-  const handleInvSearch = (event) => {
+  const handleInvSearch = (event: any) => {
     setInvSearchQuery(event.target.value);
   };
 
@@ -346,7 +346,7 @@ export default function Inventory() {
 }
 
 // Helper function to calculate hash
-function hash(str) {
+function hash(str: any) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
         let chr = str.charCodeAt(i);
@@ -356,7 +356,7 @@ function hash(str) {
     return hash;
 }
 
-function getLowest(name) {
+function getLowest(name: any) {
   const prices = Object.entries(SetPrice(name));
   var price = prices[0][1]
   var remove = price.replace("$", "");
