@@ -3,8 +3,11 @@ import axios from 'axios';
 // Loads steam inventory
 export default function LoadInventory(steamid) {
   return new Promise((resolve, reject) => {
-    axios.get(`http://localhost:3000/steam-proxy/${steamid}`)
-      .then(response => {
+    axios.get('/api/steam-proxy', {
+      params: {
+        steamID: steamid,
+      },
+    }).then(response => {
         const data = response.data;
         resolve(data);
       })

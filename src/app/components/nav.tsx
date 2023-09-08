@@ -32,7 +32,7 @@ export default function Nav() {
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const [steamData, setSteamData] = useState("Connect to Steam");
-  const [steamRef, setSteamRef] = useState("/auth/steam");
+  const [steamRef, setSteamRef] = useState("/api/auth/steam");
   const isActive = usePathname();
 
   // Fetch user data from Firestore
@@ -51,7 +51,7 @@ export default function Nav() {
         setSteamRef(info.steam_info.url)
         setSteamData(info.steam_info.name)
       } else {
-        setSteamRef("/auth/steam");
+        setSteamRef("/api/auth/steam");
         setSteamData("Connect to Steam");
       }
     });
@@ -163,7 +163,7 @@ export default function Nav() {
                               </a>
                             )}
                           </Menu.Item>
-                          {steamRef != "/auth/steam" ? (
+                          {steamRef != "/api/auth/steam" ? (
                             <Menu.Item>
                               {({ active }) => (
                                 <a

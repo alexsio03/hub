@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon pages/api/index.js",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -16,6 +16,7 @@
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
+    "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
     "encoding": "^0.1.13",
     "eslint": "8.41.0",
@@ -26,6 +27,7 @@
     "firebase-admin": "^11.9.0",
     "fuzzball": "^2.1.2",
     "next": "13.4.4",
+    "next-connect": "^1.0.0",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
     "passport-steam": "^1.0.17",
@@ -36,5 +38,10 @@
     "react-router-dom": "^6.14.2",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/cookie-session": "^2.0.45",
+    "@types/passport": "^1.0.12",
+    "@types/passport-steam": "^1.0.1"
   }
 }
