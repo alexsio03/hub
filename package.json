@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon pages/api/index.js",
-    "build": "next build",
+    "build": "node pages/api/index.js",
     "start": "next start",
     "lint": "next lint"
   },
