@@ -22,28 +22,18 @@ export default function Home() {
 
     // Fetch data from the API endpoint
     const fetchData = async () => {
+        let URLParams;
+        let steamName;
+        let steamUrl;
+        let steamID;
         if (user) {
-            try {
-                const response = await axios.get("//localhost:3000/api/steam", {
-                    withCredentials: true
-                });
-                if (response.status === 200) {
-                    const data = response.data;
-                    if (data) {
-                        var steamName = data.passport.user._json.personaname;
-                        var steamUrl = data.passport.user._json.profileurl;
-                        var steamID = data.passport.user._json.steamid;
+            try {   
+                    if (typeof window !== "undefined") {
+                        URLParams = new URLSearchParams(window.location.search);
+                        steamName = URLParams.get('name');
+                        steamUrl = URLParams.get('url');
+                        steamID = URLParams.get('id');
                     }
-                    try {
-                        // Update the user document in Firestore with Steam information
-                        await updateDoc(doc(db, "users", user.uid), {
-                            steam_info: {
-                                id: steamID,
-                                url: steamUrl,
-                                name: steamName
-                            }
-                        });
-
                         // Load inventory data using the LoadInventory helper function
                         const inventoryData = await LoadInventory(steamID);
                         if (inventoryData) {
@@ -56,7 +46,7 @@ export default function Home() {
                             // Upload the JSON data to Firebase Storage
                             uploadString(storageRef, jsonData, 'raw', { contentType: 'application/json' })
                                 .then(() => {
-                                    console.log('JSON uploaded successfully!');
+                                    console.log('Inventory uploaded successfully!');
                                 })
                                 .catch(error => {
                                     console.error('Error uploading JSON:', error);
@@ -65,16 +55,9 @@ export default function Home() {
                     } catch (e) {
                         console.error("Error adding document: ", e);
                     }
-                    
                     // Redirect the user to the home page
-                    router.push("/");
-                } else {
-                    console.error("Error getting data:", response.status);
-                }
-            } catch (error) {
-                console.error("Error getting data:", error);
+                    router.push("/inventory");
             }
-        }
     };
 
     // Call the fetchData function

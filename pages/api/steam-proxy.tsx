@@ -12,13 +12,13 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   try {
-    const { steamid } = req.query; // Access the captured parameter
+    const { steamID } = req.query; // Access the captured parameter
 
-    if (!steamid) {
+    if (!steamID) {
       return res.status(400).json({ error: 'Missing steamid parameter' });
     }
 
-    const url1 = `http://steamcommunity.com/inventory/${steamid}/730/2`;
+    const url1 = `http://steamcommunity.com/inventory/${steamID}/730/2`;
     const url2 = '?l=english&count=2000';
     const url = url1 + url2; // Add the trailing slash before the query parameters
 
