@@ -38,6 +38,7 @@ export default function Prices() {
               itemIsMarketable: 1,
               id: hash(itemName),
               itemIcon: foundItem ? SizeIcon(foundItem[1]) : null, // Perform a null check
+              priceData: itemInfo,
             };
           });
     
@@ -49,6 +50,7 @@ export default function Prices() {
     // Function to handle item selection and update price data.
     function handleItemRequested(clickedItem: any) {
         setItem(clickedItem)
+        console.log(clickedItem)
         setPriceData(clickedItem.priceData)
     }
 
