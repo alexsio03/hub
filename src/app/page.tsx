@@ -75,7 +75,7 @@ export default function Home() {
             <div className='flex flex-row justify-center overflow-hidden'>
               {market[0] ? (
                 <>
-                  <button onClick={handlePreviousMarket}>{"←"}</button>
+                  <button className='z-10' onClick={handlePreviousMarket}>{"←"}</button>
                   {visibleMarket.map((sale, index) => {
                     let scale = 100;
                     let opacity = 100;
@@ -96,7 +96,7 @@ export default function Home() {
                       </div>
                     );
                   })}
-                  <button onClick={handleNextMarket}>{"→"}</button>
+                  <button className='z-10' onClick={handleNextMarket}>{"→"}</button>
                 </>
               ) : (
                 <p>Loading</p>
