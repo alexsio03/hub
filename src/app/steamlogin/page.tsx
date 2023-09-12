@@ -34,6 +34,15 @@ export default function Home() {
                         steamUrl = URLParams.get('url');
                         steamID = URLParams.get('id');
                     }
+                    try {
+                        // Update the user document in Firestore with Steam information
+                        await updateDoc(doc(db, "users", user.uid), {
+                            steam_info: {
+                                id: steamID,
+                                url: steamUrl,
+                                name: steamName
+                            }
+                        });
                         // Load inventory data using the LoadInventory helper function
                         const inventoryData = await LoadInventory(steamID);
                         if (inventoryData) {
@@ -57,7 +66,10 @@ export default function Home() {
                     }
                     // Redirect the user to the home page
                     router.push("/inventory");
+            } catch (e) {
+                console.error("Error in steamlogin: ", e);
             }
+        } 
     };
 
     // Call the fetchData function

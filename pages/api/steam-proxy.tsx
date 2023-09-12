@@ -23,7 +23,9 @@ export default async function handler(
     const url = url1 + url2; // Add the trailing slash before the query parameters
 
     // Fetch the Steam inventory data
+    console.log(url)
     const response = await axios.get(url);
+    console.log("Response: " + response.data)
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });

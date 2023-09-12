@@ -11,6 +11,6 @@ export default (req:any, res: NextApiResponse) => {
       return res.redirect('/'); // Redirect to the home page if user data is not available
     }
     // ROUTE TO /steamlogin WITH USER DATA
-    res.redirect(`/steamlogin?name=${JSON.stringify(user._json.personaname)}&id=${JSON.stringify(user._json.steamid)}&url=${JSON.stringify(user._json.profileurl)}`);
+    res.redirect(`/steamlogin?name=${JSON.stringify(user._json.personaname)}&id=${user._json.steamid}&url=${JSON.stringify(user._json.profileurl)}`);
   })(req, res);
 };
