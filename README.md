@@ -73,7 +73,7 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 
 ## Team
 
-[![Alex Warda]https://github.com/account](https://github.com/alexsio03)  | [![Nate Kim](https://avatars.githubusercontent.com/u/66488714?v=4)](https://github.com/Nate-Kim)
+[![Alex Warda](https://avatars.githubusercontent.com/u/61218049?v=4)](https://github.com/alexsio03)  | [![Nate Kim](https://avatars.githubusercontent.com/u/66488714?v=4)](https://github.com/Nate-Kim)
 ---|---
 [Alex Warda](https://github.com/alexsio03) |[Nate Kim](https://github.com/Nate-Kim)
 
