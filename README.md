@@ -75,9 +75,5 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 
 [![Harsh Vijay](https://avatars1.githubusercontent.com/u/12688534?v=3&s=144)](https://github.com/iharsh234)  | [![Quandl.com](https://github.com/iharsh234/WebApp/blob/master/images/quandl.jpg)](https://www.quandl.com/)
 ---|---
-[Harsh Vijay ](https://github.com/iharsh234) |[Quandl](https://www.quandl.com)
-
-## [License](https://github.com/iharsh234/WebApp/blob/master/LICENSE.md)
-
-MIT © [Harsh Vijay ](https://github.com/iharsh234)
+[Alex Warda](https://github.com/alexsio03) |[Nate Kim](https://github.com/Nate-Kim)
 
