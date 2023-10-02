@@ -15,28 +15,22 @@ Here is a working live demo :  https://hub-chi-rust.vercel.app/
 ## Site
 
 ### Landing Page
-Currently it is working on all NSE (India) Stocks, BSE (India) Stocks Symbol will be added soon.
-
 ![](site-images/home.png)
 
-### Query Filled Form
-![](https://iharsh234.github.io/WebApp/images/demo/demo_query.JPG)
+### Market Page
+![](site-images/market.png)
 
-### Charts
-![](https://iharsh234.github.io/WebApp/images/demo/demo_chart1.JPG)
-![](https://iharsh234.github.io/WebApp/images/demo/demo_chart2.JPG)
-![](https://iharsh234.github.io/WebApp/images/demo/demo_chart3.JPG)
+### Trade and Create Trade Pages
+![](site-images/trades.png)
+![](site-images/create-trade.png)
 
+### Pricing Page
+![](site-images/prices.png)
 
-## Mobile support
-The WebApp is compatible with devices of all sizes and all OS's, and consistent improvements are being made.
+### Inventory Page
+![](site-images/inventory.png)
 
-![](https://iharsh234.github.io/WebApp/images/demo/mobile.png)
-
-
-
-
-## [Usage](https://iharsh234.github.io/WebApp/) 
+## [Usage](https://hub-chi-rust.vercel.app/) 
 
 ### Development
 Want to contribute? Great!
@@ -53,9 +47,9 @@ To fix a bug or enhance an existing module, follow these steps:
 
 ### Bug / Feature Request
 
-If you find a bug (the website couldn't handle the query and / or gave undesired results), kindly open an issue [here](https://github.com/iharsh234/WebApp/issues/new) by including your search query and the expected result.
+If you find a bug (the website couldn't handle the query and / or gave undesired results), kindly open an issue [here](https://github.com/alexsio03/hub/issues/new) by including your search query and the expected result.
 
-If you'd like to request a new function, feel free to do so by opening an issue [here](https://github.com/iharsh234/WebApp/issues/new). Please include sample queries and their corresponding results.
+If you'd like to request a new function, feel free to do so by opening an issue [here](https://github.com/alexsio03/hub/issues/new). Please include sample queries and their corresponding results.
 
 
 ## Built with 
@@ -66,9 +60,9 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 
 
 ## To-do
-- Add BSE (India) Symbol to the current App.
-- Decide comparison models of Stocks. (suggestions are most welcome).
-- Another WebApp, capable of comparing at least 10 stocks.
+- Implement filter functionality
+- Create item-focused pages in market (similar to buff163 systems)
+- Add escrow payment system
 
 ## Team
 
