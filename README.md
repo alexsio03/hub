@@ -1,5 +1,4 @@
-# ![WebApp](site-images/home screen.png)
-# WebApp
+# CSHub
 <table>
 <tr>
 <td>
@@ -10,7 +9,7 @@
 
 
 ## Demo
-Here is a working live demo :  https://iharsh234.github.io/WebApp/
+Here is a working live demo :  https://hub-chi-rust.vercel.app/
 
 
 ## Site
@@ -18,7 +17,7 @@ Here is a working live demo :  https://iharsh234.github.io/WebApp/
 ### Landing Page
 Currently it is working on all NSE (India) Stocks, BSE (India) Stocks Symbol will be added soon.
 
-![](https://iharsh234.github.io/WebApp/images/demo/web_app_face.JPG)
+![](site-images/home.png)
 
 ### Query Filled Form
 ![](https://iharsh234.github.io/WebApp/images/demo/demo_query.JPG)
