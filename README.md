@@ -30,8 +30,6 @@ Here is a working live demo :  https://hub-chi-rust.vercel.app/
 ### Inventory Page
 ![](site-images/inventory.png)
 
-## [Usage](https://hub-chi-rust.vercel.app/) 
-
 ### Development
 Want to contribute? Great!
 
