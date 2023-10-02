@@ -10,7 +10,7 @@ A sophisticated web application harnessing the Steam API to provide users with s
 
 ## Demo
 Here is a working live demo :  https://hub-chi-rust.vercel.app/
-
+(Google login required to see features)
 
 ## Site
 
