@@ -1,4 +1,4 @@
-# ![WebApp](https://iharsh234.github.io/WebApp/images/demo/demo_landing.JPG)
+# ![WebApp](site-images/home-screen.png)
 # WebApp
 <table>
 <tr>
