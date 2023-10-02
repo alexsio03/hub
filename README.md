@@ -2,7 +2,7 @@
 <table>
 <tr>
 <td>
-  A webapp using Quandl API to display history of stock growth in a given period of time. It helps predict the growth of stocks from the  charts of stock performace in any period of time. It helps to judge stocks, with the principle of momentum investing, which returns 1% per month on average.
+A sophisticated web application harnessing the Steam API to provide users with seamless access to their inventories. This platform streamlines item management, simplifies sales processes, and fosters trade interactions, thereby optimizing the marketplace experience and enhancing user engagement.
 </td>
 </tr>
 </table>
@@ -54,9 +54,18 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 
 ## Built with 
 
-- [jQuery - Ajax](http://www.w3schools.com/jquery/jquery_ref_ajax.asp) - jQuery simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development.
-- [Google Chart API](https://developers.google.com/chart/interactive/docs/quick_start) - Free , Rich Gallery , Customizable and Cross-browser compatible.
-- [Bootstrap](http://getbootstrap.com/) - Extensive list of components and  Bundled Javascript plugins.
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework that makes it easy to design responsive and maintainable websites.
+
+- [Vercel](https://vercel.com/) - A cloud platform for static sites and serverless functions, used for deployment and hosting.
+
+- [React](https://reactjs.org/) - A JavaScript library for building user interfaces, used for front-end development.
+
+- [Next.js](https://nextjs.org/) - A React framework for building server-rendered React applications, used for server-side rendering and routing.
+
+- [Passport.js](http://www.passportjs.org/) - An authentication middleware for Node.js, used for user authentication.
+
+- [Firebase](https://firebase.google.com/) - A cloud-based platform for building web and mobile applications, used for database and authentication.
+
 
 
 ## To-do
