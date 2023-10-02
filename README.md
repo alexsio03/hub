@@ -1,4 +1,4 @@
-# ![WebApp](site-images/home-screen.png)
+# ![WebApp](site-images/home screen.png)
 # WebApp
 <table>
 <tr>
