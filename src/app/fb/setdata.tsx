@@ -19,6 +19,7 @@ export const signIn = async() => {
       }
       try {
         setDoc(doc(db, "users", result.user.uid), data, { merge: true });
+        window.location.reload();
       } catch (e) {
         console.error("Error adding document: ", e);
       }
