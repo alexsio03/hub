@@ -1,6 +1,6 @@
 // Import necessary dependencies
 'use client';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth"; 
 import { signIn } from '../fb/setdata';
@@ -28,7 +28,7 @@ function classNames(...classes: string[]) {
 initFirebase();
 const db = initDB();
 
-export default function Nav() {
+function Nav() {
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const [steamData, setSteamData] = useState("Connect to Steam");
@@ -280,3 +280,5 @@ export default function Nav() {
     </Disclosure>
   )
 }
+
+export default memo(Nav)

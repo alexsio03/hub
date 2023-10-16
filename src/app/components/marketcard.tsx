@@ -3,7 +3,7 @@ import findImage from '../helpers/findImage.js';
 
 export default function Marketcard(item: { itemInfo: any; }) {
   // Destructure the properties from the 'item' object
-  const { itemName, itemIcon } = item.itemInfo;
+  const { itemName, itemIcon, sellPrice } = item.itemInfo;
 
   // Get the price data for the item if it is marketable, otherwise set to null
   const priceData = SetPrice(itemName) || 0;
@@ -13,8 +13,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
 
   // integrate db and access all listings here
   // search for the item in db to check if it exists, return normal card here
-  var hasListings = false;
-  if (hasListings){
+  if (sellPrice){
     return (
       <div className="bg-sky-800 rounded-lg m-3 p-1 flex flex-col">
         <a href={`/item/${itemName}`} className="bg-sky-500 hover:bg-sky-400 hover:scale-[1.025] m-2 p-1 items-center w-52 h-64 overflow-hidden relative drop-shadow-lg rounded-sm">
