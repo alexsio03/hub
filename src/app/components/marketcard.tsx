@@ -23,7 +23,7 @@ export default function Marketcard(item: { itemInfo: any; }) {
             {priceData && (
               // Display price data if it exists
               <>
-                <p className="text-sm opacity-80">Sale Price: {item.itemInfo.sellPrice}</p>
+                <p className="text-sm opacity-80">Sale Price: ${item.itemInfo.sellPrice}</p>
                 <p className="text-xs opacity-50">Steam: {priceData.steam} {priceData.recency}</p>
                 <p className="text-xs opacity-50">Buff: {priceData.buff}</p>
               </>
